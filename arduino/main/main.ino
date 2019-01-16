@@ -68,7 +68,7 @@ void setup() {
   ttn.showStatus();
 
   debugSerial.println("-- JOIN");
-  //ttn.join(appEui, appKey);
+  ttn.join(appEui, appKey);
 }
 
 void loop() {
