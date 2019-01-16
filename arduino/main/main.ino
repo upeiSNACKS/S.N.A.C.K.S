@@ -13,6 +13,11 @@
 #define DHTPIN 7     // what digital pin DHT temp sensor is connected to
 #define freqPlan TTN_FP_US915     // TTN_FP_EU868 or TTN_FP_US915 for European or US bandwidth
 
+// For LCD debugging with Leonardo (Things Uno), SDA and SCL pins are as follows:
+// SDA: 2 (NOT A2)
+// SCL : 3 (NOT A3)
+// SDA and SCL of LCD need to be connected to the appropriate pins
+
 #define loraSerial Serial1
 #define debugSerial Serial
 
@@ -44,13 +49,26 @@ TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 const char *appEui = "70B3D57ED000F6F6";
 const char *appKey = "ECDEFF8CAAA80B6A7EF0522B027DEFFC";
 
+byte payload[4]; // for transmitting data
+
 void setup() {
   lcd.init(); //initialize the lcd
   lcd.backlight(); //open the backlight
-  Serial.begin(9600);
+  loraSerial.begin(57600);
+  debugSerial.begin(9600);
   Serial.println(F("DHTxx test!"));
 
   dht.begin();
+
+  // Wait a maximum of 10s for Serial Monitor (TTN)
+  while (!debugSerial && millis() < 10000)
+    ;
+
+  debugSerial.println("-- STATUS");
+  ttn.showStatus();
+
+  debugSerial.println("-- JOIN");
+  //ttn.join(appEui, appKey);
 }
 
 void loop() {
@@ -59,9 +77,19 @@ void loop() {
 
   // Reading temperature or humidity takes about 250 milliseconds!
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+
+  // Read sensor values and multiply by 100 to effectively keep 2 decimals
   float h = dht.readHumidity();
+
+  // Unsigned 16 bits integer, 0 up to 65535
+  uint16_t h_binary = h * 100;
+  
   // Read temperature as Celsius (the default)
   float t = dht.readTemperature();
+  
+  // Signed 16 bits integer, -32767 up to +32767
+  int16_t t_binary = t * 100;
+  
   // Read temperature as Fahrenheit (isFahrenheit = true)
   float f = dht.readTemperature(true);
 
@@ -71,22 +99,39 @@ void loop() {
     return;
   }
 
+  payload[0] = t_binary >> 8;
+  payload[1] = t_binary;
+  payload[2] = h_binary >> 8;
+  payload[3] = h_binary;
+
+  debugSerial.print("\n First byte of data sent: ");
+  debugSerial.print(payload[0], HEX);
+  debugSerial.print("\n Second byte of data sent: ");
+  debugSerial.print(payload[1], HEX);
+  debugSerial.print("\n Third byte of data sent: ");
+  debugSerial.print(payload[2], HEX);
+  debugSerial.print("\n Fourth byte of data sent: ");
+  debugSerial.print(payload[3], HEX);
+  debugSerial.println();
+
+  ttn.sendBytes(payload, sizeof(payload));
+  
   // Compute heat index in Fahrenheit (the default)
   float hif = dht.computeHeatIndex(f, h);
   // Compute heat index in Celsius (isFahreheit = false)
   float hic = dht.computeHeatIndex(t, h, false);
 
-  Serial.print(F("Humidity: "));
-  Serial.print(h);
-  Serial.print(F("%  Temperature: "));
-  Serial.print(t);
-  Serial.print(F("°C "));
-  Serial.print(f);
-  Serial.print(F("°F  Heat index: "));
-  Serial.print(hic);
-  Serial.print(F("°C "));
-  Serial.print(hif);
-  Serial.println(F("°F"));
+  debugSerial.print(F("Humidity: "));
+  debugSerial.print(h);
+  debugSerial.print(F("%  Temperature: "));
+  debugSerial.print(t);
+  debugSerial.print(F("°C "));
+  debugSerial.print(f);
+  debugSerial.print(F("°F  Heat index: "));
+  debugSerial.print(hic);
+  debugSerial.print(F("°C "));
+  debugSerial.print(hif);
+  debugSerial.println(F("°F"));
 
   lcd.setCursor(0, 0);
   lcd.print(t);
