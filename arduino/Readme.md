@@ -15,3 +15,5 @@ Valuable answer for encoding and decoding temperature: https://www.thethingsnetw
 Payload format at https://console.thethingsnetwork.org/applications/charlottetown-heatmap/payload-formats is dependent on the binary form of the data received
 
 TODO: might need to add sensor ID to this? or TTN might track that already
+
+Fritzing diagram includes debugging LCD screen attached to DHT11 to view temperature and humidity readings directly on device

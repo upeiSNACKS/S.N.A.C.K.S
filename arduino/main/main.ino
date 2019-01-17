@@ -1,4 +1,5 @@
 // Building on top of DHT11 sensor example code to gather temperature at set intervals.
+// Also incorporates example code from The Things Network to transfer data to a Things Network gateway.
 // Written by Jeremy Thompson 2019
 // Example testing sketch for various DHT humidity/temperature sensors
 // Written by ladyada, public domain
@@ -12,6 +13,8 @@
 #define TIMEDELAY 2000 // waits 2 seconds between measurements
 #define DHTPIN 7     // what digital pin DHT temp sensor is connected to
 #define freqPlan TTN_FP_US915     // TTN_FP_EU868 or TTN_FP_US915 for European or US bandwidth
+
+// #define LCD_ATTACHED 1 // 1 if LCD screen connected, comment out if not
 
 // For LCD debugging with Leonardo (Things Uno), SDA and SCL pins are as follows:
 // SDA: 2 (NOT A2)
@@ -40,7 +43,10 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 // set the LCD address to 0x38 for a 16 chars and 2 linedisplay
+
+#ifdef LCD_ATTACHED
 LiquidCrystal_I2C lcd(0x38, 16, 2);
+#endif
 
 // TTN connection
 TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
@@ -52,11 +58,14 @@ const char *appKey = "ECDEFF8CAAA80B6A7EF0522B027DEFFC";
 byte payload[4]; // for transmitting data
 
 void setup() {
+  #ifdef LCD_ATTACHED
   lcd.init(); //initialize the lcd
   lcd.backlight(); //open the backlight
+  #endif
+
   loraSerial.begin(57600);
   debugSerial.begin(9600);
-  Serial.println(F("DHTxx test!"));
+  //Serial.println(F("DHTxx test!"));
 
   dht.begin();
 
@@ -64,10 +73,10 @@ void setup() {
   while (!debugSerial && millis() < 10000)
     ;
 
-  debugSerial.println("-- STATUS");
+  //debugSerial.println("-- STATUS");
   ttn.showStatus();
 
-  debugSerial.println("-- JOIN");
+  //debugSerial.println("-- JOIN");
   ttn.join(appEui, appKey);
 }
 
@@ -95,7 +104,7 @@ void loop() {
 
   // Check if any reads failed and exit early (to try again).
   if (isnan(h) || isnan(t) || isnan(f)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
+    //Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
 
@@ -104,35 +113,36 @@ void loop() {
   payload[2] = h_binary >> 8;
   payload[3] = h_binary;
 
-  debugSerial.print("\n First byte of data sent: ");
-  debugSerial.print(payload[0], HEX);
-  debugSerial.print("\n Second byte of data sent: ");
-  debugSerial.print(payload[1], HEX);
-  debugSerial.print("\n Third byte of data sent: ");
-  debugSerial.print(payload[2], HEX);
-  debugSerial.print("\n Fourth byte of data sent: ");
-  debugSerial.print(payload[3], HEX);
-  debugSerial.println();
+  //debugSerial.print("\n First byte of data sent: ");
+  //debugSerial.print(payload[0], HEX);
+  //debugSerial.print("\n Second byte of data sent: ");
+  //debugSerial.print(payload[1], HEX);
+  //debugSerial.print("\n Third byte of data sent: ");
+  //debugSerial.print(payload[2], HEX);
+  //debugSerial.print("\n Fourth byte of data sent: ");
+  //debugSerial.print(payload[3], HEX);
+  //debugSerial.println();
 
   ttn.sendBytes(payload, sizeof(payload));
   
   // Compute heat index in Fahrenheit (the default)
-  float hif = dht.computeHeatIndex(f, h);
+  // float hif = dht.computeHeatIndex(f, h);
   // Compute heat index in Celsius (isFahreheit = false)
-  float hic = dht.computeHeatIndex(t, h, false);
+  // float hic = dht.computeHeatIndex(t, h, false);
 
-  debugSerial.print(F("Humidity: "));
-  debugSerial.print(h);
-  debugSerial.print(F("%  Temperature: "));
-  debugSerial.print(t);
-  debugSerial.print(F("°C "));
-  debugSerial.print(f);
-  debugSerial.print(F("°F  Heat index: "));
-  debugSerial.print(hic);
-  debugSerial.print(F("°C "));
-  debugSerial.print(hif);
-  debugSerial.println(F("°F"));
+  //debugSerial.print(F("Humidity: "));
+  //debugSerial.print(h);
+  //debugSerial.print(F("%  Temperature: "));
+  //debugSerial.print(t);
+  //debugSerial.print(F("°C "));
+  //debugSerial.print(f);
+  //debugSerial.print(F("°F  Heat index: "));
+  //debugSerial.print(hic);
+  //debugSerial.print(F("°C "));
+  //debugSerial.print(hif);
+  //debugSerial.println(F("°F"));
 
+  #ifdef LCD_ATTACHED
   lcd.setCursor(0, 0);
   lcd.print(t);
   lcd.setCursor(6, 0);
@@ -141,4 +151,5 @@ void loop() {
   lcd.print(h);
   lcd.setCursor(6, 1);
   lcd.print("% humidity");
+  #endif
 }
