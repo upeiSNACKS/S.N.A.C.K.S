@@ -542,6 +542,16 @@ ___(Risk, Mitigation, Monitoring, Management Plan)___
 ![State diagram](/documentation/Diagrams/State_Diagram.png)
 ## CRC Model
 ___(Class, Responsibilities, Collaborations model)___
+
+| Class  | Responsibilities  | Collaborations  | 
+|--------|-------------------|-----------------|
+|Sensor  | <ul> <li>Collect data<li>Format data<li>send data<li>sound alarm<li>set alarm | <ul><li>The Things Network | 
+|The Things Network | <ul> <li> Gather data from all sensor classes <li> Store data in database | <ul> <li> Sensor <li>Database|
+|Database | <ul> <li> Collect all the data <li> respond to queries <li> remove data <li> modify data <li> Generates backups of data in CSV format | <ul><li> API <li> The Things Network | 
+| API | <ul> <li> Poll database for most recent data <li> Poll database for some previous data | <ul> <li> Database <li> Website UI <li> Applications from general public | 
+| Website UI | <ul> <li> Show information on how to use the API <li> Send modifications to the data visualization as the user wants to the website back-end | <ul> <li> API <li> Data visualization <li> Website back-end | 
+| Data visualization | <ul> <li> Center map over Charlottetown <li> Get most recent data from website back-end <li> Add layer over map representing sensors <li> Add layer over map representing area around sensors | <ul> <li> Website UI <li> Website back-end | 
+| Website back-end | <ul> <li> Get most recent data from the API <li> Communicate with Website UI for changes to the data visualization | <ul><li> API <li> Website UI <li> Data visualization | 
 ## Sequence Diagrams
 ![Use case 1](/documentation/Diagrams/seq_diagram_1.png)
 
