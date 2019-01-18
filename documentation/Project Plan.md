@@ -532,12 +532,22 @@ ___(Risk, Mitigation, Monitoring, Management Plan)___
 | Environmental factors | Winter weather limits the amount of time that we can devote to the project. | Staying on top of work and getting work done when the weather permits it. | If a lot of time is missed due to weather then this risk is becoming real. |  If time missed is substantial, then weekly time worked per developer will have to be increased. | 
 
 
-
-
 ## Use Case Diagram
+![Use case diagram](documentation/Diagrams/use_case_diagram_fixed.png)
 ## Initial Class Definitions
+![Class diagram](documentation/Diagrams/Class_diagram.png)
 ## Activity Diagram
+![Activity diagram](documentation/Diagrams/activity_diagram.png)
 ## State Diagram
+![State diagram](documentation/Diagrams/State_Diagram.png)
 ## CRC Model
 ___(Class, Responsibilities, Collaborations model)___
 ## Sequence Diagrams
+![Use case 1](documentation/diagrams/seq_diagram_1.png)
+![Use case 2](documentation/diagrams/seq_diagram_2.png)
+![Use case 3](documentation/diagrams/seq_diagram_3.png)
+![Use case 4](documentation/diagrams/seq_diagram_4.png)
+![Use case 5](documentation/diagrams/seq_diagram_5.png)
+![Use case 6](documentation/diagrams/seq_diagram_6.png)
+![Use case 7](documentation/diagrams/seq_diagram_7.png)
+
