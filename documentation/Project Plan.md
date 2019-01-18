@@ -411,7 +411,105 @@ __Effort__: 2
 __Time__: 10 hours
 
 
+## Dependency Chart
+![Dependency chart](/documentation/Diagrams/Dependency_chart.png)
 ## Delivery Plan
+### Sprint #1: January 7th to January 13th
+ - Work as a group to develop a project plan
+ - Ensure everyone is on the same page before starting the project
+
+__Deliverables__
+ - Project plan that everyone on the team agrees on and understands
+
+__Milestones__ 
+ - Project started
+
+### Sprint #2: January 14th to January 27th
+ - Create Arudino code to gather and send data to the Things Network (20) 
+ - Design the front-end of the website (20) 
+ - Learn and research AWS database (10) 
+ - Decide what data we need to store in the database (15)
+ - Research data extraction for the Things Network (6) 
+ - Research the AWS API (10) 
+
+__Deliverables__
+ - A way to read sensor data in Arduino
+ - Table diagram of tables in database
+ - Sensor data can flow into The Things Network
+ - Method to extract data from The Things Network
+ - Website without data visualization
+ - Report on each option for the API implementation
+ - Report on AWS databases
+ 
+### Sprint #3: January 28th to February 10th
+ - Research data visualization techniques (14)
+ - Research Google Maps API (20)
+ - Design and implement the database (16)
+ - Create the data transfer scripts to send data from the Things Network to the database (10) 
+ - Develop the API (20) 
+ - Continued test of Arduino sensor and battery life (-)
+
+__Deliverables__
+ - Report on different visualization techniques
+ - Demonstration of Google Maps API 
+ - Operational and documented database
+ - Data from the Things Network sending to database
+ - Functioning and documented API
+ 
+### Sprint #4: February 11th to February 24th
+ - Testing on API (20) 
+ - Ensure security of the database (5) 
+ - Rapid prototyping of data visualization (20)
+ - Build data visualization for the website (20)
+
+__Deliverables__
+ - A crude implementation of what the final data visualization will look like
+ - API tests
+
+__Milestone__
+ - Completed database
+ - Data travels reliably from Arduino to database
+ 
+### Sprint #5: February 25th to March 10th
+ - Write public facing documentation for API (12) 
+ - Build data visualization for the website (continued) (20) 
+ - Test data integrity between Arduino and The Things Network and the database (30)
+ - Build back-end of website that utilizes the API (10)
+
+__Deliverables__
+ - Automated tests for the API, database, and data transfer
+
+__Milestone__
+ - Completion of the project
+ 
+### Sprint #6: March 11th to March 24th
+ - Function to create CSV files (15)
+ - Write documentation for Arduino usage (24)
+ - Write documentation for Admin of the system (12) 
+ - Start alpha tests on system with unfamiliar user (30) 
+
+__Deliverables__
+ - Fully functioning API
+ - CSV Files are being generated
+ - A large amount of documentation
+
+__Milestone__
+ - Complete API
+ 
+### Sprint #7: March 25th to April 7th
+ - Clean up code and repository (30)
+ - Bug fixes as needed (20) 
+ - Additional documentation as needed (20)
+ - Generate testing report (10)
+
+__Deliverables__
+ - Documentation
+ - Testing report
+ - Complete project
+
+__Milestone__
+ - Project completion
+ 
 ## RMMM Plan
 ___(Risk, Mitigation, Monitoring, Management Plan)___
 ## Use Case Diagram
@@ -420,6 +518,4 @@ ___(Risk, Mitigation, Monitoring, Management Plan)___
 ## State Diagram
 ## CRC Model
 ___(Class, Responsibilities, Collaborations model)___
-
-![Dependency Chart](/Diagrams/activity_diagram.png)
 ## Sequence Diagrams
