@@ -411,7 +411,6 @@ __Effort__: 2
 __Time__: 10 hours
 
 
-## Dependency Chart
 ## Delivery Plan
 ## RMMM Plan
 ___(Risk, Mitigation, Monitoring, Management Plan)___
@@ -421,4 +420,6 @@ ___(Risk, Mitigation, Monitoring, Management Plan)___
 ## State Diagram
 ## CRC Model
 ___(Class, Responsibilities, Collaborations model)___
+
+![Dependency Chart](/Diagrams/activity_diagram.png)
 ## Sequence Diagrams
