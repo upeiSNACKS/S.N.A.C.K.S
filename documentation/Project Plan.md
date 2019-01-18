@@ -543,17 +543,17 @@ ___(Risk, Mitigation, Monitoring, Management Plan)___
 ## CRC Model
 ___(Class, Responsibilities, Collaborations model)___
 ## Sequence Diagrams
-![Use case 1](/documentation/diagrams/seq_diagram_1.png)
+![Use case 1](/documentation/Diagrams/seq_diagram_1.png)
 
-![Use case 2](/documentation/diagrams/seq_diagram_2.png)
+![Use case 2](/documentation/Diagrams/seq_diagram_2.png)
 
-![Use case 3](/documentation/diagrams/seq_diagram_3.png)
+![Use case 3](/documentation/Diagrams/seq_diagram_3.png)
 
-![Use case 4](/documentation/diagrams/seq_diagram_4.png)
+![Use case 4](/documentation/Diagrams/seq_diagram_4.png)
 
-![Use case 5](/documentation/diagrams/seq_diagram_5.png)
+![Use case 5](/documentation/Diagrams/seq_diagram_5.png)
 
-![Use case 6](/documentation/diagrams/seq_diagram_6.png)
+![Use case 6](/documentation/Diagrams/seq_diagram_6.png)
 
-![Use case 7](/documentation/diagrams/seq_diagram_7.png)
+![Use case 7](/documentation/Diagrams/seq_diagram_7.png)
 
