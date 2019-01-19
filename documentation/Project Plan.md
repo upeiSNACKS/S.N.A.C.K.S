@@ -1,5 +1,5 @@
 # S.N.A.C.K.S.
-___(Sensor Network Around Charlottetown's Key Surroundings)__
+__(Sensor Network Around Charlottetown's Key Surroundings)__
 
 ![logo](/documentation/SNACKS_LOGO.png)
 ### Project Plan, January 2019
