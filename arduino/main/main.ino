@@ -1,6 +1,7 @@
+// Jeremy Thompson 2019 - SNACKS
+
 // Building on top of DHT11 sensor example code to gather temperature at set intervals.
 // Also incorporates example code from The Things Network to transfer data to a Things Network gateway.
-// Written by Jeremy Thompson 2019
 // Example testing sketch for various DHT humidity/temperature sensors
 // Written by ladyada, public domain
 
@@ -14,7 +15,7 @@
 #define DHTPIN 7     // what digital pin DHT temp sensor is connected to
 #define freqPlan TTN_FP_US915     // TTN_FP_EU868 or TTN_FP_US915 for European or US bandwidth
 
-// #define LCD_ATTACHED 1 // 1 if LCD screen connected, comment out if not
+#define LCD_ATTACHED 1 // defined if LCD screen connected, comment out if not
 
 // For LCD debugging with Leonardo (Things Uno), SDA and SCL pins are as follows:
 // SDA: 2 (NOT A2)
@@ -73,10 +74,10 @@ void setup() {
   while (!debugSerial && millis() < 10000)
     ;
 
-  //debugSerial.println("-- STATUS");
+  debugSerial.println("-- STATUS");
   ttn.showStatus();
 
-  //debugSerial.println("-- JOIN");
+  debugSerial.println("-- JOIN");
   ttn.join(appEui, appKey);
 }
 
@@ -104,7 +105,7 @@ void loop() {
 
   // Check if any reads failed and exit early (to try again).
   if (isnan(h) || isnan(t) || isnan(f)) {
-    //Serial.println(F("Failed to read from DHT sensor!"));
+    Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
 
