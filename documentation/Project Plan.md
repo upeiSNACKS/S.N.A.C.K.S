@@ -587,7 +587,7 @@ __Milestones__
  - Project started
 
 ### Sprint #2: January 14th to January 27th
- - Create Arudino code to gather and send data to the Things Network (20)
+ - Create Arduino code to gather and send data to the Things Network (20)
  - Design the front-end of the website (20)
  - Learn and research AWS database (10)
  - Decide what data we need to store in the database (15)
