@@ -464,7 +464,7 @@ __Time__: 20 hours
 
 
 ### Produce iterative designs for the front-end of the website
-__Description__: TDraw simple mock-ups of what the front-end of the website will look like. Consult with the client and receive feedback to come up with a satisfactory final design.
+__Description__: Draw simple mock-ups of what the front-end of the website will look like. Consult with the client and receive feedback to come up with a satisfactory final design.
 
 __Priority__: 2
 
