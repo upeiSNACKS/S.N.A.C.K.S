@@ -587,12 +587,18 @@ __Milestones__
  - Project started
 
 ### Sprint #2: January 14th to January 27th
- - Create Arduino code to gather and send data to the Things Network (20)
- - Design the front-end of the website (20)
+ - Write Arduino code to accurately sense temperature (5)
+ - Write Arduino code to send temperature at set intervals (10)
+ - Research power consumption of Arduino / how to sleep (5)
+ - Produce iterative designs for the front-end of the website (15)
+ - Build the HTML / CSS / JS shell of website, with drop-down menu (5)
  - Learn and research AWS database (10)
- - Decide what data we need to store in the database (15)
- - Research data extraction for the Things Network (6)
- - Research the AWS API (10)
+ - Decide what data we need to store in the database (2)
+ - Determine if post-relational database is required (8)
+ - Research data extraction for The Things Network (10)
+ - Research what options are possible for an API with AWS (5)
+ - Construct dummy database and retrieve data with the API (5)
+
 
 __Deliverables__
  - A way to read sensor data in Arduino
