@@ -23,6 +23,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
+    <!-- Include Date Picker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
     <div class="wrapper">
         <nav id="sidebar">
             <div id="dismiss">
@@ -58,6 +62,29 @@
                         <li>
                             <a href="#">This month</a>
                         </li>
+                        <li class="form-group ">
+                            <label class="control-label col-sm-2" for="date">
+                                Start Date
+                            </label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+                            </div>
+                        </li>
+                        <li class="form-group ">
+                            <label class="control-label col-sm-2" for="edate">
+                                End Date
+                            </label>
+                            <div class="col-sm-10">
+                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+                                </div>
+                        </li>
+                        <li class="form-group">
+                                <div class="col-sm-10 col-sm-offset-2">
+                                <button class="btn btn-primary " name="submit" type="submit">
+                                Submit
+                                </button>
+                                </div> 
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -81,7 +108,7 @@
     <!-- 
         Navbar function 
         Example code from Bootstrapious
-        TODO: Move to its own file 
+        TODO: Move to the scripts file
     -->
     <script type="text/javascript">
         $(document).ready(function () {
@@ -101,6 +128,25 @@
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
         });
+    </script>
+
+
+    <!--
+        Date picker function
+        Code from Bootstrap Form Builder
+        TODO: Move to the scripts file
+    -->
+    <script>
+        $(document).ready(function(){
+            var date_input=$('input[name="date"]'); //our date input has the name "date"
+            var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+            date_input.datepicker({
+                format: 'mm/dd/yyyy',
+                container: container,
+                todayHighlight: true,
+                autoclose: true,
+            })
+        })
     </script>
 </body>
 </html>
