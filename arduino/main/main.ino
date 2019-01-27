@@ -15,6 +15,7 @@
 #define freqPlan TTN_FP_US915     // TTN_FP_EU868 or TTN_FP_US915 for European or US bandwidth
 
 // #define LCD_ATTACHED 1 // 1 if LCD screen connected, comment out if not
+#define DEBUG 1 // 1 if debugging, comment out if not
 
 // For LCD debugging with Leonardo (Things Uno), SDA and SCL pins are as follows:
 // SDA: 2 (NOT A2)
@@ -25,8 +26,8 @@
 #define debugSerial Serial
 
 // Uncomment whatever type you're using!
-#define DHTTYPE DHT11   // DHT 11
-//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+//#define DHTTYPE DHT11   // DHT 11
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
 // Connect pin 1 (on the left) of the sensor to +5V
@@ -77,7 +78,7 @@ void setup() {
   ttn.showStatus();
 
   //debugSerial.println("-- JOIN");
-  ttn.join(appEui, appKey);
+  //ttn.join(appEui, appKey);
 }
 
 void loop() {
@@ -113,15 +114,17 @@ void loop() {
   payload[2] = h_binary >> 8;
   payload[3] = h_binary;
 
-  //debugSerial.print("\n First byte of data sent: ");
-  //debugSerial.print(payload[0], HEX);
-  //debugSerial.print("\n Second byte of data sent: ");
-  //debugSerial.print(payload[1], HEX);
-  //debugSerial.print("\n Third byte of data sent: ");
-  //debugSerial.print(payload[2], HEX);
-  //debugSerial.print("\n Fourth byte of data sent: ");
-  //debugSerial.print(payload[3], HEX);
-  //debugSerial.println();
+  #ifdef DEBUG
+  debugSerial.print("\n First byte of data sent: ");
+  debugSerial.print(payload[0], HEX);
+  debugSerial.print("\n Second byte of data sent: ");
+  debugSerial.print(payload[1], HEX);
+  debugSerial.print("\n Third byte of data sent: ");
+  debugSerial.print(payload[2], HEX);
+  debugSerial.print("\n Fourth byte of data sent: ");
+  debugSerial.print(payload[3], HEX);
+  debugSerial.println();
+  #endif
 
   ttn.sendBytes(payload, sizeof(payload));
   
@@ -130,11 +133,13 @@ void loop() {
   // Compute heat index in Celsius (isFahreheit = false)
   // float hic = dht.computeHeatIndex(t, h, false);
 
-  //debugSerial.print(F("Humidity: "));
-  //debugSerial.print(h);
-  //debugSerial.print(F("%  Temperature: "));
-  //debugSerial.print(t);
-  //debugSerial.print(F("°C "));
+  #ifdef DEBUG
+  debugSerial.print(F("Humidity: "));
+  debugSerial.print(h);
+  debugSerial.print(F("%  Temperature: "));
+  debugSerial.print(t);
+  debugSerial.print(F("°C "));
+  #endif
   //debugSerial.print(f);
   //debugSerial.print(F("°F  Heat index: "));
   //debugSerial.print(hic);

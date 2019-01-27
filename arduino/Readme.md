@@ -1,6 +1,7 @@
 Libraries in use:
 
 https://github.com/adafruit/DHT-sensor-library (downloaded and installed manually)
+https://github.com/adafruit/Adafruit_Sensor (header file copied to above folder)
 TheThingsNetwork (installed from Arduino IDE)
 
 Things Network Library intro:
