@@ -14,6 +14,11 @@
 #define DHTPIN 7     // what digital pin DHT temp sensor is connected to
 #define freqPlan TTN_FP_US915     // TTN_FP_EU868 or TTN_FP_US915 for European or US bandwidth
 
+//LED constants
+#define LED_GREEN 13
+#define LED_YELLOW 12
+#define LED_RED 11
+
 // #define LCD_ATTACHED 1 // 1 if LCD screen connected, comment out if not
 #define DEBUG 1 // 1 if debugging, comment out if not
 
@@ -64,6 +69,13 @@ void setup() {
   lcd.backlight(); //open the backlight
   #endif
 
+  //set up the status LEDs
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_YELLOW, OUTPUT);
+  pinMode(LED_RED, OUTPUT);
+
+  resetState(); //resets all LEDs to off
+
   loraSerial.begin(57600);
   debugSerial.begin(9600);
   //Serial.println(F("DHTxx test!"));
@@ -74,11 +86,37 @@ void setup() {
   while (!debugSerial && millis() < 10000)
     ;
 
+  waitState();
+
   //debugSerial.println("-- STATUS");
   ttn.showStatus();
 
   //debugSerial.println("-- JOIN");
-  //ttn.join(appEui, appKey);
+  ttn.join(appEui, appKey);
+}
+
+void waitState() {
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_YELLOW, HIGH);
+  digitalWrite(LED_RED, LOW);
+}
+
+void errorState() {
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_YELLOW, LOW);
+  digitalWrite(LED_RED, HIGH);
+}
+
+void runningState() {
+  digitalWrite(LED_GREEN, HIGH);
+  digitalWrite(LED_YELLOW, LOW);
+  digitalWrite(LED_RED, LOW);
+}
+
+void resetState() {
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_YELLOW, LOW);
+  digitalWrite(LED_RED, LOW);
 }
 
 void loop() {
@@ -93,19 +131,20 @@ void loop() {
 
   // Unsigned 16 bits integer, 0 up to 65535
   uint16_t h_binary = h * 100;
-  
+
   // Read temperature as Celsius (the default)
   float t = dht.readTemperature();
-  
+
   // Signed 16 bits integer, -32767 up to +32767
   int16_t t_binary = t * 100;
-  
+
   // Read temperature as Fahrenheit (isFahrenheit = true)
   float f = dht.readTemperature(true);
 
   // Check if any reads failed and exit early (to try again).
   if (isnan(h) || isnan(t) || isnan(f)) {
     //Serial.println(F("Failed to read from DHT sensor!"));
+    errorState();
     return;
   }
 
@@ -126,8 +165,15 @@ void loop() {
   debugSerial.println();
   #endif
 
-  ttn.sendBytes(payload, sizeof(payload));
-  
+  ttn_response_t response = ttn.sendBytes(payload, sizeof(payload));
+
+  if(response != TTN_SUCCESSFUL_TRANSMISSION) {
+    errorState();
+  }
+  else {
+    runningState();
+  }
+
   // Compute heat index in Fahrenheit (the default)
   // float hif = dht.computeHeatIndex(f, h);
   // Compute heat index in Celsius (isFahreheit = false)
