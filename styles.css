@@ -105,6 +105,8 @@ a:focus {
 #sidebar .sidebar-header {
     padding: 20px;
     background: #6d7fcc;
+    z-index: -1;
+    position: relative;
 }
 
 #sidebar ul.components {
