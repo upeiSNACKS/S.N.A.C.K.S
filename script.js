@@ -7,7 +7,7 @@ $(document).ready(function () {
         theme: "minimal"
     });
 
-    $('#dismiss, .overlay').on('click', function () {
+    $('#dismiss, .overlay, #submit').on('click', function () {
         $('#sidebar').removeClass('active');
         $('.overlay').removeClass('active');
     });
