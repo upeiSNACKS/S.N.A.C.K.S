@@ -727,19 +727,54 @@ __Deliverables__
  - Report on AWS databases
 
 ### Sprint #3: January 28th to February 10th
- - Research data visualization techniques (14)
- - Research Google Maps API (20)
- - Design and implement the database (16)
- - Create the data transfer scripts to send data from the Things Network to the database (10)
- - Develop the API (20)
- - Continued test of Arduino sensor and battery life (-)
+ - Research data visualization techniques and create drawings of options
+ - Add hotkey for sidebar open/close
+ - Fix up the Javascript code
+ - Add logo to the sidebar
+ - Make submit button close sidebar
+ - Fix date picker
+ - Research how to integrate Google Maps into website
+ - Research overlays on Google Maps
+ - Research power consumption of Arduino / how to sleep
+ - Research LoRaWAN devices and sensors that best suit our needs
+ - Upload Arduino code to new devices
+ - Project management planning and tasks
+ - Create database
+ - Define some metrics for the database
+ - Create scripts to generate test data
+ - Fill database with the generated test data
+ - Fix CSS to improve look of website
+ - Set up Github page
+ - Create the data transfer scripts to send data from the Things Network to the database
+ - Measure power consumption of Arduino in different operation states
+ - Research solutions for the power consumption
+ - Implement solutions for the power consumption
+ - Construct dummy database and retrieve data with the API
 
 __Deliverables__
- - Report on different visualization techniques
- - Demonstration of Google Maps API
- - Operational and documented database
- - Data from the Things Network sending to database
- - Functioning and documented API
+ - A selection of visualizations for the client to choose from
+ - Be able to open/close the sidebar with a hotkey
+ - Remove inline Javascript and have an external scripts file
+ - Replace header text with the logo
+ - Submit button closes sidebar
+ - End date should no longer be able to be before start date
+ - Demonstration of Google Maps API integrated to site
+ - Demonstration of Google Maps overlay
+ - Report of power usage of LoRaWAN device with temp. sensor
+ - Report of options of sensors and pros / cons
+ - All Arduinos working and sending temp and humidity data
+ - Project being managed
+ - A production database
+ - Table metrics to measure
+ - A script that will generate test data
+ - Database filled with data to test with
+ - Good looking CSS
+ - Configure Github to only commit to a develop branch and educate team on branching
+ - Data in the database
+ - A small report showing the power consumption for each state
+ - A list of options that can be taken/ a solution
+ - An Arduino working on battery power
+ - Dummy database with working API for data retrieval
 
 ### Sprint #4: February 11th to February 24th
  - Testing on API (20)
