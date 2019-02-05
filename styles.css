@@ -136,41 +136,6 @@ a[aria-expanded="true"] {
     background: #6d7fcc;
 }
 
-a[data-toggle="collapse"] {
-    position: relative;
-}
-
-.dropdown-toggle::after {
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-}
-
-ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #6d7fcc;
-}
-
-ul.CTAs {
-    padding: 20px;
-}
-
-ul.CTAs a {
-    text-align: center;
-    font-size: 0.9em !important;
-    display: block;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-a.download {
-    background: #fff;
-    color: #7386D5;
-}
-
 a.article,
 a.article:hover {
     background: #6d7fcc !important;
@@ -189,4 +154,48 @@ a.article:hover {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+/* ---------------------------------------------------
+    DROPDOWN STYLE
+----------------------------------------------------- */
+
+.dropdown-menu {
+    width: 600px;
+}
+
+.dropdown-menu.columns-2 {
+	min-width: 600px;
+}
+
+.dropdown-menu li a {
+	padding: 5px 15px;
+	font-weight: 300;
+}
+
+.multi-column-dropdown {
+	list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.multi-column-dropdown li a {
+	display: block;
+	clear: both;
+	line-height: 1.428571429;
+	color: #333;
+	white-space: normal;
+}
+
+.multi-column-dropdown li a:hover {
+	text-decoration: none;
+	color: #262626;
+	background-color: #999;
+}
+ 
+@media (max-width: 767px) {
+	.dropdown-menu.multi-column {
+		min-width: 240px !important;
+		overflow-x: hidden;
+	}
 }
