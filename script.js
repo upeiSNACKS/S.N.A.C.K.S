@@ -25,19 +25,26 @@ $(document).ready(function () {
     */
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
 
-    // trying to create custom icons
+    // creating custom differently sized icons
 
-    var arduinoIcon = L.icon({
-        iconUrl: 'arduino_uno.png',
-        iconSize:     [50, 50], // size of the icon
-        iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
+    var grapes_small = L.icon({
+        iconUrl: 'grape.png',
+        iconSize:     [20, 20], // size of the icon
+        iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
-    var arduinoIconSmall = L.icon({
-        iconUrl: 'arduino_uno.png',
-        iconSize:     [26, 26], // size of the icon
-        iconAnchor:   [13, 13], // point of the icon which will correspond to marker's location
+    var grapes_medium = L.icon({
+        iconUrl: 'grape.png',
+        iconSize:     [40, 40], // size of the icon
+        iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var grapes_large = L.icon({
+        iconUrl: 'grape.png',
+        iconSize:     [60, 60], // size of the icon
+        iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
@@ -64,15 +71,19 @@ $(document).ready(function () {
     all_sensors.addTo(mymap);
 
     //attempting resizing of all markers based on zoom levels
+    // highest is level 18, when zoomed all the way in
+    // lowest is level 0, where you can see entire world repeated multiple times
+    // TODO: determine if this is necessary or how to resize on zoom levels
     mymap.on('zoomend', function() {
         var currentZoom = mymap.getZoom();
+        console.log(currentZoom);
         if (currentZoom > 12) {
             all_sensors.eachLayer(function(layer) {
-                return layer.setIcon(arduinoIcon);
+                return layer.setIcon(grapes_medium);
             });
         } else {
             all_sensors.eachLayer(function(layer) {
-                return layer.setIcon(arduinoIconSmall);
+                return layer.setIcon(grapes_small);
             });
         }
     });
