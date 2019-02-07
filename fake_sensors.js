@@ -1,7 +1,10 @@
 var sensors = [
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 1",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -12,7 +15,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 2",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -23,7 +29,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 3",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -34,7 +43,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 4",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -45,7 +57,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 5",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -56,7 +71,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 6",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -67,7 +85,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 7",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -78,7 +99,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 8",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -89,7 +113,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 9",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -100,7 +127,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 10",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -111,7 +141,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 11",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -122,7 +155,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 12",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -133,7 +169,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 13",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [
@@ -144,7 +183,10 @@ var sensors = [
   },
   {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "name": "Test Sensor 14",
+      "subname": "subtitle"
+    },
     "geometry": {
       "type": "Point",
       "coordinates": [

@@ -66,12 +66,12 @@ $(document).ready(function () {
         L.marker(event.latlng).addTo(mymap);
     });
 
-    //add all markers to the map, in sensors.js
-    var all_sensors = L.geoJSON(sensors);
-
-    all_sensors.eachLayer(function(layer) {
-        return layer.setIcon(grapes_medium);
-    });
+    var all_sensors = L.geoJSON(sensors, {
+      onEachFeature: function (feature, layer) {
+        layer.setIcon(grapes_medium);;
+        layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
+      }
+    }).addTo(mymap);
 
     all_sensors.addTo(mymap);
 
