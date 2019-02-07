@@ -8,7 +8,6 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="script.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
@@ -25,8 +24,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
     <!-- Include Date Picker -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <!-- Include Leaflet code -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
@@ -64,113 +64,25 @@
                 <li>
                     <a href="about.html">About</a>
                 </li>
-                <li>
-                    <a href="#timeSubmenu" data-toggle="collapse" aria-expanded="false">Select Time Range</a>
-                    <ul class="collapse list-unstyled" id="timeSubmenu">
-                        <li>
-                            <a href="#">Today</a>
-                        </li>
-                        <li>
-                            <a href="#">This week</a>
-                        </li>
-                        <li>
-                            <a href="#">This month</a>
-                        </li>
-                        <li class="form-group ">
-                            <label class="control-label col-sm-6" for="date">
-                                <br>Start Date
-                            </label>
-                            <div class="col-sm-10">
-                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
-                            </div>
-                        </li>
-                        <li class="form-group ">
-                            <label class="control-label col-sm-6" for="edate">
-                                End Date
-                            </label>
-                            <div class="col-sm-10">
-                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
-                            </div>
-                        </li>
-                        <li class="form-group">
-                            <div class="col-sm-10 col-sm-offset-2">
-                                <button class="btn btn-primary " name="submit" type="submit" id="submit">
-                                    Submit
-                                </button>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </nav>
 
         <div id="content">
-            <button type="button" id="sidebarCollapse" class="btn btn-info" accesskey="q">
-                <i class="fas fa-align-left"></i>
-            </button>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info" accesskey="q">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+
+                    <input type="text" name="datetimes" style="width: 20%" accesskey="t"/>
+                </div>
+            </nav>
 
             <div id="mapid"></div>
 
-    		<script>
-
-				var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
-
-        // trying to create custom icons
-
-        var arduinoIcon = L.icon({
-            iconUrl: 'arduino_uno.png',
-            iconSize:     [50, 50], // size of the icon
-            iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-        });
-
-        var arduinoIconSmall = L.icon({
-            iconUrl: 'arduino_uno.png',
-            iconSize:     [26, 26], // size of the icon
-            iconAnchor:   [13, 13], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-        });
-
-        L.marker([46.2512, -63.1350], {icon: arduinoIcon}).addTo(mymap);
-
-				var polygon = L.polygon([
-				    [51.509, -0.08],
-				    [51.503, -0.06],
-				    [51.51, -0.047]
-				]).addTo(mymap);
-
-				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					maxZoom: 18,
-					attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-				}).addTo(mymap);
-
-				mymap.on("contextmenu", function (event) {
-				  console.log("user right-clicked on map coordinates: " + event.latlng.toString());
-				  L.marker(event.latlng).addTo(mymap);
-				});
-
-        //add all markers to the map, in sensors.js
-				var all_sensors = L.geoJSON(sensors)
-        all_sensors.addTo(mymap);
-
-        //attempting resizing of all markers based on zoom levels
-        mymap.on('zoomend', function() {
-            var currentZoom = mymap.getZoom();
-            if (currentZoom > 12) {
-                all_sensors.eachLayer(function(layer) {
-                      return layer.setIcon(arduinoIcon);
-                });
-            } else {
-                all_sensors.eachLayer(function(layer) {
-                      return layer.setIcon(arduinoIconSmall);
-                });
-            }
-        });
-
-			</script>
     		<!--
             <div class="container_fluid">
-                <div class="row">
+		<div class="row">
                     <img src="map.png" class="col">
                 </div>
             </div>
