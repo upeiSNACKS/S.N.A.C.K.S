@@ -34,7 +34,6 @@ RX Delay 1: 1000
 RX Delay 2: 2000
 
 Use the EUI to register the device for OTAA
--------------------------------------------
 
 
 
@@ -51,4 +50,3 @@ RX Delay 1: 1000
 RX Delay 2: 2000
 
 Use the EUI to register the device for OTAA
--------------------------------------------
