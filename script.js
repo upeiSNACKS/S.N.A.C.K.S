@@ -67,7 +67,12 @@ $(document).ready(function () {
     });
 
     //add all markers to the map, in sensors.js
-    var all_sensors = L.geoJSON(sensors)
+    var all_sensors = L.geoJSON(sensors);
+
+    all_sensors.eachLayer(function(layer) {
+        return layer.setIcon(grapes_medium);
+    });
+
     all_sensors.addTo(mymap);
 
     //attempting resizing of all markers based on zoom levels
