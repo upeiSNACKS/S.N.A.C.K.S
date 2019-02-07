@@ -1,14 +1,18 @@
-// Building on top of DHT11 sensor example code to gather temperature at set intervals.
-// Also incorporates example code from The Things Network to transfer data to a Things Network gateway.
+// SNACKS Arduino code that gathers temperature data every ~10 seconds and sends the data to The Things Network (TTN)
+// Various variables will need to be set at the start of the program to make the device work with specific TTN applications
+
+// NOTES:
+// The Adafruit SleepyDog library currently breaks the functionality of the serial
+
 // Written by Jeremy Thompson 2019
-// Example testing sketch for various DHT humidity/temperature sensors
-// Written by ladyada, public domain
+
 
 // required libraries
 #include "DHT.h" //temperature sensor library
 #include <Wire.h> //LCD display for debugging
 #include <LiquidCrystal_I2C.h> //LCD display for debugging
 #include <TheThingsNetwork.h> //TTN LoRaWAN communication
+#include <Adafruit_SleepyDog.h>
 
 #define TIMEDELAY 2000 // waits 2 seconds between measurements
 #define DHTPIN 7     // what digital pin DHT temp sensor is connected to
@@ -58,8 +62,8 @@ LiquidCrystal_I2C lcd(0x38, 16, 2);
 TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
 // AppEUI and AppKey for The Things Network
-const char *appEui = "70B3D57ED000F6F6";
-const char *appKey = "ECDEFF8CAAA80B6A7EF0522B027DEFFC";
+const char *appEui = "70B3D57ED001712B";
+const char *appKey = "748D533BFDE87C4875F4AB2EBBFA9927";
 
 byte payload[4]; // for transmitting data
 
@@ -123,6 +127,18 @@ void loop() {
   // Wait a few seconds between measurements.
   delay(TIMEDELAY);
 
+  // To enter low power sleep mode call Watchdog.sleep() like below
+  // and the watchdog will allow low power sleep for as long as possible.
+  // The actual amount of time spent in sleep will be returned (in
+  // milliseconds).
+
+  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
+  digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
+  int sleepMS = Watchdog.sleep();
+
+  digitalWrite(LED_BUILTIN, HIGH); // indicate that the temperature is being read
+
+
   // Reading temperature or humidity takes about 250 milliseconds!
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
 
@@ -141,10 +157,12 @@ void loop() {
   // Read temperature as Fahrenheit (isFahrenheit = true)
   float f = dht.readTemperature(true);
 
-  // Check if any reads failed and exit early (to try again).
+  // Check if any reads failed and exit early (which will restart the loop, sleeping again and eventually attempting another read)
   if (isnan(h) || isnan(t) || isnan(f)) {
-    //Serial.println(F("Failed to read from DHT sensor!"));
+    #ifdef DEBUG
+    Serial.println(F("Failed to read from DHT sensor!"));
     errorState();
+    #endif
     return;
   }
 
