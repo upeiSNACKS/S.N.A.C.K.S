@@ -21,7 +21,7 @@ Fritzing diagram includes debugging LCD screen attached to DHT11 to view tempera
 
 
 
-New Device 1: (WORKING)
+## New Device 1: (WORKING)
 
 Device Information
 
@@ -37,7 +37,7 @@ Use the EUI to register the device for OTAA
 
 
 
-New Device 2: (SAME CODE NOT WORKING)
+## New Device 2: (SAME CODE NOT WORKING)
 
 Device Information
 
