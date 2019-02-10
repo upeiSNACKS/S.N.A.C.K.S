@@ -70,8 +70,6 @@ $(document).ready(function () {
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
-    //L.marker([46.2512, -63.1350], {icon: arduinoIcon}).addTo(mymap);
-
     var polygon = L.polygon([
         [51.509, -0.08],
         [51.503, -0.06],
