@@ -25,6 +25,28 @@ $(document).ready(function () {
     */
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
 
+    L.Control.MyControl = L.Control.extend({
+      onAdd: function(map) {
+        var el = L.DomUtil.create('div', 'leaflet-bar my-control');
+
+        el.innerHTML = 'Menu';
+
+        return el;
+      },
+
+      onRemove: function(map) {
+        // Nothing to do here
+      }
+    });
+
+    L.control.myControl = function(opts) {
+      return new L.Control.MyControl(opts);
+    }
+
+    L.control.myControl({
+      position: 'topright'
+    }).addTo(mymap);
+
     // creating custom differently sized icons
 
     var grapes_small = L.icon({
