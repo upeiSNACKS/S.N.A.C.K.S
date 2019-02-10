@@ -28,20 +28,16 @@ $(document).ready(function () {
     // trying to create custom icons
 
     var arduinoIcon = L.icon({
-        iconUrl: 'arduino_uno.png',
         iconSize:     [50, 50], // size of the icon
         iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
     var arduinoIconSmall = L.icon({
-        iconUrl: 'arduino_uno.png',
         iconSize:     [26, 26], // size of the icon
         iconAnchor:   [13, 13], // point of the icon which will correspond to marker's location
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
-
-    //L.marker([46.2512, -63.1350], {icon: arduinoIcon}).addTo(mymap);
 
     var polygon = L.polygon([
         [51.509, -0.08],
