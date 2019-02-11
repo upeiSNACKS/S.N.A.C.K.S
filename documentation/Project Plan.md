@@ -727,42 +727,51 @@ __Deliverables__
  - Report on AWS databases
 
 ### Sprint #3: January 28th to February 10th
- - Research data visualization techniques and create drawings of options
- - Add hotkey for sidebar open/close
- - Fix up the Javascript code
- - Add logo to the sidebar
- - Make submit button close sidebar
- - Fix date picker
- - Research how to integrate Google Maps into website
- - Research overlays on Google Maps
- - Research power consumption of Arduino / how to sleep
- - Research LoRaWAN devices and sensors that best suit our needs
- - Upload Arduino code to new devices
- - Project management planning and tasks
- - Create database
- - Define some metrics for the database
- - Create scripts to generate test data
- - Fill database with the generated test data
- - Fix CSS to improve look of website
- - Set up Github page
- - Create the data transfer scripts to send data from the Things Network to the database
- - Measure power consumption of Arduino in different operation states
- - Research solutions for the power consumption
- - Implement solutions for the power consumption
- - Construct dummy database and retrieve data with the API
+ - Research data visualization techniques and create drawings of options (8)
+ - Add hotkey for sidebar open/close (3)
+ - Fix up the Javascript code (3)
+ - Add logo to the sidebar (1)
+ - Make submit button close sidebar (2)
+ - Fix date picker (3)
+ - Move time range selector (3)
+ - Fix icons on street maps (1)
+ - Research how to integrate Google Maps into website (5)
+ - Research overlays on Google Maps (5)
+ - Research floating menu OSM (3)
+ - Research how to sleep Arduino with library (2)
+ - Research LoRaWAN devices and sensors that best suit our needs (2)
+ - Upload Arduino code to new devices (4)
+ - Ensure Arduino only sends to TTN when value read correctly (2)
+ - Project management related tasks (3)
+ - Create database (5)
+ - Define some metrics for the database (5)
+ - Create scripts to generate test data (3)
+ - Fill database with the generated test data (3)
+ - Fix CSS to improve look of website (5)
+ - Set up Github page (5)
+ - Create the data transfer scripts to send data from the Things Network to the database (10)
+ - Measure power consumption of Arduino in different operation states (5)
+ - Research solutions for the power consumption (5)
+ - Implement solutions for the power consumption (5)
+ - Find a solution to the different regions in IoT and other AWS services (5)
+ - Migrate RDS, lambda functions, EC2 instance, security groups and APIs to new region (5)
+ - Construct dummy database and retrieve data with the API (5)
 
 __Deliverables__
- - A selection of visualizations for the client to choose from
  - Be able to open/close the sidebar with a hotkey
- - Remove inline Javascript and have an external scripts file
  - Replace header text with the logo
+ - Remove inline Javascript and have an external scripts file
  - Submit button closes sidebar
- - End date should no longer be able to be before start date
+ - Replace date picker with one that allows for time stamps
+ - Time range selector should be in a bar at the top of the main page
+ - Icons should no longer turn into Arduinos
  - Demonstration of Google Maps API integrated to site
  - Demonstration of Google Maps overlay
- - Report of power usage of LoRaWAN device with temp. sensor
+ - Floating menu code
+ - Demonstration code with Adafruit sleepy dog library
  - Report of options of sensors and pros / cons
  - All Arduinos working and sending temp and humidity data
+ - Arduino code that accomplishes goal
  - Project being managed
  - A production database
  - Table metrics to measure
@@ -774,6 +783,8 @@ __Deliverables__
  - A small report showing the power consumption for each state
  - A list of options that can be taken/ a solution
  - An Arduino working on battery power
+ - All AWS services in the same region/communicating accross regions
+ - All AWS services in the same region
  - Dummy database with working API for data retrieval
 
 ### Sprint #4: February 11th to February 24th
