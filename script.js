@@ -25,27 +25,29 @@ $(document).ready(function () {
     */
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
 
-    L.Control.MyControl = L.Control.extend({
-      onAdd: function(map) {
-        var el = L.DomUtil.create('div', 'leaflet-bar my-control');
+	  // adding custom menu button
+    var menuControl = L.Control.extend({
 
-        el.innerHTML = 'Menu';
-
-        return el;
+      options: {
+        position: 'topleft'
+        //control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
       },
 
-      onRemove: function(map) {
-        // Nothing to do here
-      }
+      onAdd: function (map) {
+        var navigation = L.DomUtil.create('nav');
+        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom', navigation);
+        var menu = L.DomUtil.create('button', 'btn btn-info', container);
+        var menubutton = L.DomUtil.create('i', 'fas fa-align-left', menu);
+
+        menu.id = 'sidebarCollapse';
+        menu.type = 'button';
+
+        return container;
+      },
+
     });
 
-    L.control.myControl = function(opts) {
-      return new L.Control.MyControl(opts);
-    }
-
-    L.control.myControl({
-      position: 'topright'
-    }).addTo(mymap);
+    mymap.addControl(new menuControl());
 
     // creating custom differently sized icons
 
