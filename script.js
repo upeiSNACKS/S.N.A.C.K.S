@@ -41,6 +41,7 @@ $(document).ready(function () {
 
         menu.id = 'sidebarCollapse';
         menu.type = 'button';
+        menu.accessKey = 'q';
 
         menu.onclick = function() {
           $('#sidebar').toggleClass('active');
