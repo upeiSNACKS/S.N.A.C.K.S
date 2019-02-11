@@ -57,8 +57,8 @@ LiquidCrystal_I2C lcd(0x38, 16, 2);
 TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
 // AppEUI and AppKey for The Things Network
-const char *appEui = "70B3D57ED000F6F6";
-const char *appKey = "604ED61F7957391923AA1C53ED1D3167";
+const char *appEui = "70B3D57ED001712B";
+const char *appKey = "306779362F22C597DC992AF3A128F01E";
 
 byte payload[4]; // for transmitting data
 
