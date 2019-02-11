@@ -207,10 +207,5 @@ a.article:hover {
 #mapid {
     width: 100%;
     height: 600px;
-}
-
- /* custom menu button on leaflet map */
-.leaflet-menu {
-  background: #fff;
-  padding: 5px;
+    z-index: 998; /* 1 behind the navbar */
 }

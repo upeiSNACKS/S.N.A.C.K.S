@@ -35,12 +35,19 @@ $(document).ready(function () {
 
       onAdd: function (map) {
         var navigation = L.DomUtil.create('nav');
-        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom', navigation);
+        var container = L.DomUtil.create('div', '', navigation);
         var menu = L.DomUtil.create('button', 'btn btn-info', container);
         var menubutton = L.DomUtil.create('i', 'fas fa-align-left', menu);
 
         menu.id = 'sidebarCollapse';
         menu.type = 'button';
+
+        menu.onclick = function() {
+          $('#sidebar').toggleClass('active');
+          $('.overlay').toggleClass('active');
+          $('.collapse.in').toggleClass('in');
+          $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        }
 
         return container;
       },
@@ -52,24 +59,33 @@ $(document).ready(function () {
     // creating custom differently sized icons
 
     var grapes_small = L.icon({
-        iconUrl: 'grape.png',
+        iconUrl: 'map-icon.png',
         iconSize:     [20, 20], // size of the icon
         iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
     var grapes_medium = L.icon({
-        iconUrl: 'grape.png',
+        iconUrl: 'map-icon.png',
         iconSize:     [40, 40], // size of the icon
         iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
     var grapes_large = L.icon({
-        iconUrl: 'grape.png',
+        iconUrl: 'map-icon.png',
         iconSize:     [60, 60], // size of the icon
         iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    // using fontawesome icons instead of images
+
+    const fontAwesomeIcon = L.divIcon({
+        html: '<i class="fas fa-map-marker-alt fa-2x"></i>',
+        iconSize: [40, 40],
+        iconAnchor: [20,20],
+        className: 'myDivIcon'
     });
 
     var polygon = L.polygon([
@@ -90,12 +106,18 @@ $(document).ready(function () {
 
     var all_sensors = L.geoJSON(sensors, {
       onEachFeature: function (feature, layer) {
-        layer.setIcon(grapes_medium);;
+        //layer.setIcon(fontAwesomeIcon);
+        //layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
+        layer.setIcon(grapes_medium);
         layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
       }
-    }).addTo(mymap);
+    });
 
-    all_sensors.addTo(mymap);
+    var markers = L.markerClusterGroup();
+    markers.addLayer(all_sensors);
+
+    mymap.addLayer(markers);
+    //all_sensors.addTo(mymap);
 
     //attempting resizing of all markers based on zoom levels
     // highest is level 18, when zoomed all the way in
@@ -105,13 +127,13 @@ $(document).ready(function () {
         var currentZoom = mymap.getZoom();
         console.log(currentZoom);
         if (currentZoom > 12) {
-            all_sensors.eachLayer(function(layer) {
-                return layer.setIcon(grapes_medium);
-            });
+            //all_sensors.eachLayer(function(layer) {
+                //return layer.setIcon(fontAwesomeIcon);
+            //});
         } else {
-            all_sensors.eachLayer(function(layer) {
-                return layer.setIcon(grapes_small);
-            });
+            //all_sensors.eachLayer(function(layer) {
+                //return layer.setIcon(fontAwesomeIcon);
+            //});
         }
     });
 });
