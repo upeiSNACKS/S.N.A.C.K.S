@@ -1,4 +1,11 @@
 <?php
+    /*
+     * login.php contains:
+     * $db_hostname
+     * $db_username
+     * $db_password
+     * $db_database
+     */
     require_once 'login.php';
     $min_lat = 46.227094;
     $max_lat = 46.306999;
@@ -11,27 +18,25 @@
     $sensors = array();
     $connection = new mysqli($db_hostname, $db_username, $db_password, $db_database);
     if($connection->connect_error) die($connection->connect_error);
-    $owners_q = "SELECT sensor_owner_email FROM Owners";
-    $types_q = "SELECT sensor_type, sensor_subtype FROM Types";
-    $sensors_q = "SELECT sensor_id FROM Sensors";
 
     /*
      * OWNERS GETTING
      */
+    $owners_q = "SELECT email FROM Owners";
     $result = $connection->query($owners_q);
     if(!$result) echo "SELECT failed: $owners_q<br>" . $connection->error . "<br><br>";
-    $sensor_count = $result->num_rows;
     $rows = $result->num_rows;
+    $owners_count = $result->num_rows;
     echo "getting owners <br>";
     for($j = 0; $j <$rows; ++$j){
         $result->data_seek($j);
         $row = $result->fetch_array(MYSQLI_NUM);
         $owners[$j] = $row[0];
     }
-    // Poll for Sensor IDs
+    // Greate random sensors in random places
     echo "generating sensors <br>";
-    for($j = 0; $j<24; $j++) {
-        $email = $owners[rand()%4];
+    for($j = 0; $j<30; $j++) {
+        $email = $owners[rand()%$owners_count];
         $id = rand(10, 9999) . '-' . generateRandomString() . '-' . rand(100, 99999);
         $lat = '46.' . rand(2268, 3065);
         $lon = rand(811, 1977);
@@ -40,26 +45,32 @@
         $sensor_in = "INSERT INTO Sensors VALUES ('$id', '$email', '$lat', '$lon')";
         $result = $connection->query($sensor_in);
         if(!$result) echo "INSERT INTO failed: $sensor_in<br>" . $connection->error . "<br><br>";
+        else echo "Successfully inserted $id, $email, $lat, $lon<br>";
     }
     /*
      * SENSOR_ID GETTING
      */
-     echo "getting sensor ID's <br>";
-     $result = $connection->query($sensors_q);
-     if(!$result) echo "SELECT failed: $sensors_q<br>" . $connection->error . "<br><br>";
-     $rows = $result->num_rows;
-     for($j = 0; $j <$rows; ++$j){
+    echo "getting sensor ID's -------------------------------------------------<br>";
+    $sensors_q = "SELECT sensor_id FROM Sensors";
+    $result = $connection->query($sensors_q);
+    if(!$result) echo "SELECT failed: $sensors_q<br>" . $connection->error . "<br><br>";
+    $rows = $result->num_rows;
+    $sensor_count = $result->num_rows;
+    for($j = 0; $j <$rows; ++$j){
          $result->data_seek($j);
          $row = $result->fetch_array(MYSQLI_NUM);
          $sensors[$j] = $row[0];
-     }
+         echo "$row[0]<br>";
+    }
      /*
       * TYPE GETTING
       */
-      echo "getting types <br>";
+     echo "getting types <br>";
+     $types_q = "SELECT sensor_type, sensor_subtype FROM Types";
      $result = $connection->query($types_q);
      if(!$result) echo "SELECT failed: $types_q<br>" . $connection->error . "<br><br>";
      $rows = $result->num_rows;
+     $types_count = $result->num_rows;
      for($j = 0; $j <$rows; ++$j){
          $result->data_seek($j);
          $row = $result->fetch_array(MYSQLI_NUM);
@@ -67,17 +78,19 @@
          $subtypes[$j] = $row[1];
      }
      // insert readings
-     echo "inserting readings <br>";
+     echo "inserting readings~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ <br>";
      for($j = 0; $j<100; $j++) {
-         $type = $types[1];
-         $subtype = $subtypes[1];
+         $type_chosen = rand() % $types_count;
+         $type = $types[$type_chosen];
+         $subtype = $subtypes[$type_chosen];
          $time = generateRandomDate();
          for($i = 0; $i < $sensor_count; $i++) {
              $id = $sensors[$i];
              $reading = rand(-30, 30);
-             $reading_in = "INSERT INTO Readings set sensor_id='$id', sensor_type='$type', sensor_subtype='$subtype', sensor_time='$time', sensor_reading='$reading'";
+             $reading_in = "INSERT INTO Readings set sensor_id='$id', sensor_type='$type', sensor_subtype='$subtype', reading_time='$time', reading='$reading'";
              $result = $connection->query($reading_in);
              if(!$result) echo "INSERT INTO failed: $reading_in<br>" . $connection->error . "<br><br>";
+             else echo "Successfully inserted $id, $type, $subtype, $time, $reading <br>";
          }
      }
 

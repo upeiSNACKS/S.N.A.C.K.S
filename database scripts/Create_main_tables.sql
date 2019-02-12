@@ -21,7 +21,7 @@ CREATE TABLE Readings (
     sensor_type varchar(32) default '', 
     sensor_subtype varchar(32) not null, 
     reading_time TIMESTAMP default CURRENT_TIMESTAMP, 
-    reading varchar(16),
+    reading integer,
     CONSTRAINT PRIMARY KEY (sensor_id, sensor_type, sensor_subtype, reading_time), 
     CONSTRAINT FOREIGN KEY (sensor_id) references Sensors (sensor_id)
 		ON UPDATE CASCADE ON DELETE NO ACTION, 

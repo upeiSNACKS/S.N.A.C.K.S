@@ -7,7 +7,7 @@ CREATE VIEW Sensor_metrics AS
             min(reading) as minimum, 
             max(reading) as maximum, 
             avg(reading) as average
-            from Readings group by sensor_id;
+            from Readings group by sensor_id, sensor_type, sensor_subtype;
 CREATE VIEW Max_values as 
 select sensor_type, 
 					sensor_subtype, 
