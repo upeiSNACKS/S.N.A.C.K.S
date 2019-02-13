@@ -148,6 +148,8 @@ $(function() {
         timePicker: true,
         startDate: moment().startOf('hour'),
         endDate: moment().startOf('hour').add(32, 'hour'),
+        applyButtonClasses: 'apply',
+        cancelButtonClasses: 'cancel',
         locale: {
             format: 'M/DD hh:mm A'
         }
@@ -162,7 +164,7 @@ $(function() {
         httpc.open("POST", url, true); // sending as POST
 
         httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        httpc.setRequestHeader("Content-Length", params.length); // POST request MUST have a Content-Length header (as per HTTP/1.1)
+        //httpc.setRequestHeader("Content-Length", params.length); // POST request MUST have a Content-Length header (as per HTTP/1.1)
 
         httpc.onreadystatechange = function() { //Call a function when the state changes.
             if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors

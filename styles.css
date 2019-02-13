@@ -211,3 +211,15 @@ a.article:hover {
     height: 600px;
     z-index: 998; /* 1 behind the navbar */
 }
+
+/* ---------------------------------------------------
+    DATETIME PICKER STYLE
+----------------------------------------------------- */
+
+.apply {
+    background: #8d2663;
+    color: #fff;
+}
+.cancel {
+    background: #ababab;
+}
