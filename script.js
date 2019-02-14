@@ -25,6 +25,8 @@ $(document).ready(function () {
     */
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
 
+    mymap.zoomControl.setPosition('topright');
+
 	  // adding custom menu button
     var menuControl = L.Control.extend({
 
