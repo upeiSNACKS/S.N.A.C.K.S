@@ -63,7 +63,7 @@ TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
 // AppEUI and AppKey for The Things Network
 const char *appEui = "70B3D57ED001712B";
-const char *appKey = "748D533BFDE87C4875F4AB2EBBFA9927";
+const char *appKey = "63F967509B129C05801CAEA96A57D0D4";
 
 byte payload[4]; // for transmitting data
 
