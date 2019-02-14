@@ -1,4 +1,4 @@
-// SNACKS Arduino code that gathers temperature data every ~10 seconds and sends the data to The Things Network (TTN)
+m// SNACKS Arduino code that gathers temperature data every ~10 seconds and sends the data to The Things Network (TTN)
 // Various variables will need to be set at the start of the program to make the device work with specific TTN applications
 
 // NOTES:
