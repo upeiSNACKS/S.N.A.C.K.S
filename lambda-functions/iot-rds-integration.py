@@ -48,42 +48,41 @@ def log_err(errmsg):
 logger.info("Cold start complete.")
 
 def handler(event,context):
-    command = 'INSERT INTO Readings (sensor_id, sensor_type, sensor_subtype, reading_time, reading) VALUES ('
-    logger.info('Data received: ', str(event))
+
+    #logger.info('Data received: ', str(event))
     #TODO: add the values to the command here
-
-    try:
-        cnx = make_connection()
-        cursor=cnx.cursor()
+    payload_fields = event['payload_fields']
+    for field in payload_fields:
+        command = 'INSERT INTO Readings (sensor_id, sensor_type, sensor_subtype, reading_time, reading) VALUES ('
+        command += '\''+event['hardware_serial']+'\', '
+        command += '\''+field.capitalize()+'\', ' #TODO: add sql statement to query other table
+        command += '\'Indoors\', ' #TODO: add sql statement to query other table
+        time = event['metadata']['time']
+        time = time.replace('T', ' ')
+        time = time.split('.')[0]
+        command += '\'' + time +'\', '
+        command += '\'' + str(payload_fields[field]) + '\')'
 
         try:
-            cursor.execute(command)
-        except:
-            return log_err ("ERROR: Cannot execute cursor.\n{}".format(
-                traceback.format_exc()) )
+            cnx = make_connection()
+            cursor=cnx.cursor()
 
-        try:
-            result=cursor.fetchall()[0]
-            cursor.close()
+            try:
+                cursor.execute(command)
+            except:
+                logger.error("ERROR: Cannot execute cursor.\n{}".format(
+                    traceback.format_exc()) )
 
         except:
-            return log_err ("ERROR: Cannot retrieve query data.\n{}".format(
+            logger.error("ERROR: Cannot connect to database from handler.\n{}".format(
                 traceback.format_exc()))
 
-        return {"body": str(result), "headers": {}, "statusCode": 200,
-        "isBase64Encoded":"false"}
 
-
-    except:
-        return log_err("ERROR: Cannot connect to database from handler.\n{}".format(
-            traceback.format_exc()))
-
-
-    finally:
-        try:
-            cnx.close()
-        except:
-            pass
+        finally:
+            try:
+                cnx.close()
+            except:
+                pass
 
 if __name__== "__main__":
     handler(None,None)
