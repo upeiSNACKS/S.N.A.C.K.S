@@ -74,10 +74,10 @@ $(document).ready(function () {
         },
 
     });
-   
+
 
     mymap.addControl(new menuControl());
-    mymap.addControl(new timeeControl());
+    mymap.addControl(new timeControl());
 
     // creating custom differently sized icons
 
