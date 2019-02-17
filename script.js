@@ -64,9 +64,10 @@ $(document).ready(function () {
 
         onAdd: function (map) {
             var navigation = L.DomUtil.create('nav');
-            var container = L.DomUtil.create('div', '', navigation);
+            var container = L.DomUtil.create('div', 'timecontrol', navigation);
             var timepicker = L.DomUtil.create('input', '', container);
             timepicker.name = 'datetimes';
+            timepicker.id = 'timepicker';
             timepicker.type = 'input';
             timepicker.accessKey = 't';
 

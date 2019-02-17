@@ -207,7 +207,49 @@ a.article:hover {
 ----------------------------------------------------- */
 
 #mapid {
-    width: 100%;
-    height: 600px;
+    height: 100vh;
     z-index: 998; /* 1 behind the navbar */
+}
+
+/* ---------------------------------------------------
+    TIMEPICKER STYLE
+----------------------------------------------------- */
+
+/* Custom, iPhone Retina */ 
+@media only screen and (min-width : 320px) {
+    .timecontrol {
+        width: 275px;
+    }
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+    .timecontrol {
+        width: 375px;
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    .timecontrol {
+        width: 500px;
+    }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+    .timecontrol {
+        width: 500px;
+    }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+    .timecontrol {
+        width: 500px;
+    }
+}
+
+#timepicker {
+    width: 100%;
 }
