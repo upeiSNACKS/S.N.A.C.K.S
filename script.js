@@ -101,6 +101,7 @@ $(document).ready(function () {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
 
+    /* add marker on right click */
     mymap.on("contextmenu", function (event) {
         console.log("user right-clicked on map coordinates: " + event.latlng.toString());
         L.marker(event.latlng).addTo(mymap);
