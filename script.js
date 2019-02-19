@@ -136,7 +136,8 @@ $(document).ready(function () {
       }
     });
 
-    var markers = L.markerClusterGroup();
+    // disable clustering once zoomed in close enough
+    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
     markers.addLayer(all_sensors);
 
     mymap.addLayer(markers);
