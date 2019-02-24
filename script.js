@@ -76,9 +76,25 @@ $(document).ready(function () {
 
     });
 
-
     mymap.addControl(new menuControl());
     mymap.addControl(new timeControl());
+
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function(map) {
+            var img = L.DomUtil.create('img');
+    
+            img.src = 'Charlottetown_Logo.png';
+            img.style.width = '200px';
+    
+            return img;
+        }
+    });
+    
+    L.control.watermark = function(opts) {
+        return new L.Control.Watermark(opts);
+    }
+    
+    L.control.watermark({ position: 'bottomleft'}).addTo(mymap);
 
     // creating custom differently sized icons
 
