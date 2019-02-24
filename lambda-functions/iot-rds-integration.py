@@ -29,7 +29,7 @@ from os import environ
 
 endpoint=environ.get('ENDPOINT')
 port=environ.get('PORT')
-dbuser=environ.get('DBTTNUSER_IN')
+dbuser=environ.get('DBUSER_OUT')
 password=environ.get('DBPASSWORD_IN')
 database=environ.get('DATABASE')
 

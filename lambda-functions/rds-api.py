@@ -25,11 +25,12 @@ as environment parameters.
 import pymysql
 import logging
 import traceback
+import json
 from os import environ
 
 endpoint=environ.get('ENDPOINT')
 port=environ.get('PORT')
-dbuser=environ.get('DBTTNUSER_OUT')
+dbuser=environ.get('DBUSER_OUT')
 password=environ.get('DBPASSWORD_OUT')
 database=environ.get('DATABASE')
 
@@ -48,13 +49,22 @@ def log_err(errmsg):
 logger.info("Cold start complete.")
 
 def handler(event,context):
-    for k in event:
-        logger.info(k + ' -- ' + event[k])
-    command = 'SELECT * FROM \'Readings\';'
+    #for k in event:
+    #    logger.info(k + ' -- ' + event[k])
+    command = 'SELECT * FROM Readings;'
+
+    '''
+    TODO: range selection (everything if none)
+    TODO: time selection (everything if none)
+    TODO: sensor selection (all sensors if none)
+    TODO: max measurements (20 if none)
+    TODO: measurement type (list options, all if none)
+    '''
+
     data = None
     try:
         cnx = make_connection()
-        cursor=cnx.cursor()
+        cursor=cnx.cursor(pymysql.cursors.DictCursor)
 
         try:
             cursor.execute(command)
@@ -80,7 +90,17 @@ def handler(event,context):
             cnx.close()
         except:
             pass
-    return data
+    for d in data:
+        for k in d:
+            d[k] = str(d[k])
+    response = {
+        "statusCode" : 200,
+        "headers" : {
+            "header1" : "its working yall!"},
+        "body" : json.dumps(data),
+        "isBase64Encoded" : "false"
+    }
+    return response
 
 if __name__== "__main__":
     handler(None,None)
