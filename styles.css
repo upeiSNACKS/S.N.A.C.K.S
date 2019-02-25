@@ -186,6 +186,7 @@ a.article:hover {
 	clear: both;
 	line-height: 1.428571429;
 	color: #333;
+}
 	white-space: normal;
 }
 
@@ -193,7 +194,6 @@ a.article:hover {
 	text-decoration: none;
 	color: #262626;
 	background-color: #999;
-}
 
 @media (max-width: 767px) {
 	.dropdown-menu.multi-column {
@@ -222,4 +222,47 @@ a.article:hover {
 }
 .cancel {
     background: #ababab;
+}
+=======
+    TIMEPICKER STYLE
+----------------------------------------------------- */
+
+/* Custom, iPhone Retina */
+@media only screen and (min-width : 320px) {
+    .timecontrol {
+        width: 275px;
+    }
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (min-width : 480px) {
+    .timecontrol {
+        width: 375px;
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    .timecontrol {
+        width: 500px;
+    }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+    .timecontrol {
+        width: 500px;
+    }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+    .timecontrol {
+        width: 500px;
+    }
+}
+
+#timepicker {
+    width: 100%;
+    text-align: right;
 }
