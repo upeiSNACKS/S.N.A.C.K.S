@@ -221,15 +221,13 @@ a.article:hover {
 .cancel {
     background: #ababab;
 }
-
-/* Custom, iPhone Retina */
->>>>>>> gh-pages
+/* Custom, iPhone Retina */ 
 @media only screen and (min-width : 320px) {
     .timecontrol {
         width: 275px;
     }
 }
-/* Extra Small Devices, Phones */
+/* Extra Small Devices, Phones */ 
 @media only screen and (min-width : 480px) {
     .timecontrol {
         width: 375px;
@@ -261,3 +259,4 @@ a.article:hover {
     width: 100%;
     text-align: right;
 }
+
