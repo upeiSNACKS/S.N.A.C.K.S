@@ -66,9 +66,10 @@ $(document).ready(function () {
 
         onAdd: function (map) {
             var navigation = L.DomUtil.create('nav');
-            var container = L.DomUtil.create('div', '', navigation);
+            var container = L.DomUtil.create('div', 'timecontrol', navigation);
             var timepicker = L.DomUtil.create('input', '', container);
             timepicker.name = 'datetimes';
+            timepicker.id = 'timepicker';
             timepicker.type = 'input';
             timepicker.accessKey = 't';
 
@@ -77,9 +78,25 @@ $(document).ready(function () {
 
     });
 
-
     mymap.addControl(new menuControl());
     mymap.addControl(new timeControl());
+
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function(map) {
+            var img = L.DomUtil.create('img');
+    
+            img.src = 'Charlottetown_Logo.png';
+            img.style.width = '200px';
+    
+            return img;
+        }
+    });
+    
+    L.control.watermark = function(opts) {
+        return new L.Control.Watermark(opts);
+    }
+    
+    L.control.watermark({ position: 'bottomleft'}).addTo(mymap);
 
     // creating custom differently sized icons
 
@@ -174,8 +191,30 @@ $(function() {
         timePicker: true,
         startDate: moment().startOf('hour'),
         endDate: moment().startOf('hour').add(32, 'hour'),
+        applyButtonClasses: 'apply',
+        cancelButtonClasses: 'cancel',
         locale: {
-        format: 'M/DD hh:mm A'
+            format: 'M/DD hh:mm A'
         }
+    });
+    $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
+        var start = picker.startDate.format('YYYY-MM-DD hh:mm');
+        var end   = picker.endDate.format('YYYY-MM-DD hh:mm');
+        var params = "start=" + start + "&end=" + end;
+        // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
+        var httpc = new XMLHttpRequest(); // simplified for clarity
+        var url = "API.php"; // TODO: CHANGE THIS TO BE THE API LINK
+        httpc.open("POST", url, true); // sending as POST
+
+        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        //httpc.setRequestHeader("Content-Length", params.length); // POST request MUST have a Content-Length header (as per HTTP/1.1)
+
+        httpc.onreadystatechange = function() { //Call a function when the state changes.
+            if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+                alert(httpc.responseText); // some processing here, or whatever you want to do with the response
+            }
+        };
+        httpc.send(params);
+
     });
 });
