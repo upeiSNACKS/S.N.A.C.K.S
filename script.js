@@ -84,18 +84,18 @@ $(document).ready(function () {
     L.Control.Watermark = L.Control.extend({
         onAdd: function(map) {
             var img = L.DomUtil.create('img');
-    
+
             img.src = 'Charlottetown_Logo.png';
             img.style.width = '200px';
-    
+
             return img;
         }
     });
-    
+
     L.control.watermark = function(opts) {
         return new L.Control.Watermark(opts);
     }
-    
+
     L.control.watermark({ position: 'bottomleft'}).addTo(mymap);
 
     // creating custom differently sized icons
@@ -129,12 +129,6 @@ $(document).ready(function () {
         iconAnchor: [20,20],
         className: 'myDivIcon'
     });
-
-    var polygon = L.polygon([
-        [51.509, -0.08],
-        [51.503, -0.06],
-        [51.51, -0.047]
-    ]).addTo(mymap);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
