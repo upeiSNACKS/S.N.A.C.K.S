@@ -150,7 +150,7 @@ a.article:hover {
 
 #content {
     width: 100%;
-    height:100%;
+    height: 100%;
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
@@ -187,7 +187,6 @@ a.article:hover {
 	clear: both;
 	line-height: 1.428571429;
 	color: #333;
-}
 	white-space: normal;
 }
 
@@ -195,6 +194,7 @@ a.article:hover {
 	text-decoration: none;
 	color: #262626;
 	background-color: #999;
+}
 
 @media (max-width: 767px) {
 	.dropdown-menu.multi-column {
