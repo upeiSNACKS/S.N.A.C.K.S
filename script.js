@@ -25,6 +25,12 @@ $(document).ready(function () {
     */
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
 
+    // limit zoom level since Charlottetown is not that large
+    mymap.options.minZoom = 12;
+
+
+    // mymap.zoomControl.setPosition('topright');
+
 	  // adding custom menu button
     var menuControl = L.Control.extend({
 
@@ -82,18 +88,18 @@ $(document).ready(function () {
     L.Control.Watermark = L.Control.extend({
         onAdd: function(map) {
             var img = L.DomUtil.create('img');
-    
+
             img.src = 'Charlottetown_Logo.png';
             img.style.width = '200px';
-    
+
             return img;
         }
     });
-    
+
     L.control.watermark = function(opts) {
         return new L.Control.Watermark(opts);
     }
-    
+
     L.control.watermark({ position: 'bottomleft'}).addTo(mymap);
 
     // creating custom differently sized icons
@@ -128,17 +134,12 @@ $(document).ready(function () {
         className: 'myDivIcon'
     });
 
-    var polygon = L.polygon([
-        [51.509, -0.08],
-        [51.503, -0.06],
-        [51.51, -0.047]
-    ]).addTo(mymap);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
 
+    /* add marker on right click */
     mymap.on("contextmenu", function (event) {
         console.log("user right-clicked on map coordinates: " + event.latlng.toString());
         L.marker(event.latlng).addTo(mymap);
