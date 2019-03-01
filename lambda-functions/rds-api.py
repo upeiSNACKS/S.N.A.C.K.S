@@ -49,18 +49,47 @@ def log_err(errmsg):
 logger.info("Cold start complete.")
 
 def handler(event,context):
-    #for k in event:
-    #    logger.info(k + ' -- ' + event[k])
-    command = 'SELECT * FROM Readings;'
-
+    print('parameters: ', event['queryStringParameters'])
+    command = 'SELECT * FROM Readings'
+    max_readings = 10
     '''
+    TODO: sort by date
     TODO: range selection (everything if none)
-    TODO: time selection (everything if none)
-    TODO: sensor selection (all sensors if none)
-    TODO: max measurements (20 if none)
-    TODO: measurement type (list options, all if none)
+    [DONE] TODO: time selection (everything if none)
+    [DONE] TODO: sensor selection (all sensors if none)
+    [DONE] TODO: max measurements (10 if none)
+    [DONE] TODO: measurement type (list options, all if none)
     '''
+    parameters = event['queryStringParameters']
+    if parameters is not None:
+        command += ' WHERE '
+        if 'max_readings' in parameters:
+            pass
+            max_readings = int(parameters['max_readings'])
+        if 'sensor_id' in parameters:
+            pass
+            command += 'sensor_id = \'' + parameters['sensor_id'] + '\' AND '
+        if 'start_time' in parameters:
+            pass
+            command += 'reading_time > \'' + parameters['start_time'] + '\' AND '
+        if 'end_time' in parameters:
+            pass
+            command += 'reading_time < \'' + parameters['end_time'] + '\' AND '
+        if 'type' in parameters:
+            pass
+            command += 'sensor_type = \'' + parameters['type'] + '\' AND '
+        if 'subtype' in parameters:
+            pass
+            command += 'sensor_subtype = \'' + parameters['subtype'] + '\' AND '
+        '''
+        Now that we have a query statement, we need to get rid of the last AND,
+        and limit the query to the default max.
+        '''
+        command = command[:-5] + ' LIMIT ' + str(max_readings) + ';'
+        print(command)
 
+    else:
+        command += 'LIMIT 10;'
     data = None
     try:
         cnx = make_connection()
