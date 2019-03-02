@@ -50,7 +50,7 @@ logger.info("Cold start complete.")
 
 def handler(event,context):
     print('parameters: ', event['queryStringParameters'])
-    command = 'SELECT * FROM Readings'
+    command = 'SELECT Readings.*, Sensors.sensor_lat, Sensors.sensor_lon FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND '
     max_readings = 10
     '''
     TODO: sort by date
@@ -61,8 +61,9 @@ def handler(event,context):
     [DONE] TODO: measurement type (list options, all if none)
     '''
     parameters = event['queryStringParameters']
+
     if parameters is not None:
-        command += ' WHERE '
+        pass
         if 'max_readings' in parameters:
             pass
             max_readings = int(parameters['max_readings'])
@@ -81,15 +82,28 @@ def handler(event,context):
         if 'subtype' in parameters:
             pass
             command += 'sensor_subtype = \'' + parameters['subtype'] + '\' AND '
+        if 'lat' in parameters and 'lon' in parameters:
+            pass
+            radius_to_degrees = 111
+            lon = str(float(parameters['lon']))
+            lat = str(float(parameters['lat']))
+            command += 'SQRT(POW(Sensors.sensor_lat - ' + lat + ', 2) + POW(Sensors.sensor_lon - ' + lon + ', 2)) <= '
+            if 'radius' in parameters:
+                pass
+                #define here the range in which sensor readings can be accepted
+                radius = str(float(parameters['radius']) / radius_to_degrees)
+                command += radius + ' AND '
+            else:
+                #set the range of accepted sensors to 10km
+                command += str(float(10 / radius_to_degrees)) + ' AND '
         '''
         Now that we have a query statement, we need to get rid of the last AND,
         and limit the query to the default max.
         '''
-        command = command[:-5] + ' LIMIT ' + str(max_readings) + ';'
-        print(command)
+    command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
 
-    else:
-        command += 'LIMIT 10;'
+
+    print(command)
     data = None
     try:
         cnx = make_connection()
