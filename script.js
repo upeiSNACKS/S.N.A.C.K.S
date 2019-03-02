@@ -28,6 +28,9 @@ $(document).ready(function () {
     // limit zoom level since Charlottetown is not that large
     mymap.options.minZoom = 12;
 
+    // sometimes bounce will break grouping fnctionality - so disable it
+    mymap.options.bounceAtZoomLimits = false;
+
 
     // mymap.zoomControl.setPosition('topright');
 
