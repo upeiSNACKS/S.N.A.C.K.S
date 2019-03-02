@@ -41,9 +41,31 @@
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
-
-
    <script src=""></script>
+
+   <!-- Template HTML Div for marker popup -->
+   <!-- TODO: based on type of data recieved, may have to construct additional tr -->
+   
+   <div class="hide" id="popup_template" style="display:none">
+     <h2 id="title"></h2>
+     <table id="popup_table">
+       <tbody>
+         <tr>
+           <td>Last Measurement</td>
+           <td id="last_measurement"></td>
+         </tr>
+         <tr>
+           <td>Temperature</td>
+           <td id="temperature"></td>
+         </tr>
+         <tr>
+           <td>Humidity</td>
+           <td id="humidity"></td>
+         </tr>
+       </tbody>
+     </table>
+
+   </div>
 
 
    <!-- Test Sensor Points in GEOJSON file -->
@@ -78,7 +100,7 @@
         </nav>
 
         <div id="mapid"></div> <!--leaflet map wrapper div -->
-        
+
     </div>
 
     <div class="overlay"></div>
