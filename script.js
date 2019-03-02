@@ -144,10 +144,23 @@ $(document).ready(function () {
         //layer.setIcon(fontAwesomeIcon);
         //layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
         layer.setIcon(grapes_medium);
-        layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
+        layer.bindPopup(
+          constructPopupHTML(feature)
+        );
       }
     });
 
+    function constructPopupHTML(feature) {
+      $("#popup_template #title").html(feature.properties.name);
+
+      //TODO: however our API call fetches dat will determine how data is displayed in these popups
+      $("#popup_template #last_measurement").html('2019-01-01 12:00');
+      $("#popup_template #temperature").html('4.4⁰C');
+      $("#popup_template #humidity").html('50%');
+
+      //$("#popup_template").removeAttr('style');
+      return $("#popup_template").html();
+    }
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
     markers.addLayer(all_sensors);
