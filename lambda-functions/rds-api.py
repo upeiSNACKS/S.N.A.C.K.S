@@ -49,8 +49,8 @@ def log_err(errmsg):
 logger.info("Cold start complete.")
 
 def handler(event,context):
-    print('parameters: ', event['queryStringParameters'])
-    command = 'SELECT Readings.*, Sensors.sensor_lat, Sensors.sensor_lon FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND '
+    #print('parameters: ', event['queryStringParameters'])
+    command = 'FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND '
     max_readings = 10
     '''
     TODO: sort by date
@@ -61,7 +61,7 @@ def handler(event,context):
     [DONE] TODO: measurement type (list options, all if none)
     '''
     parameters = event['queryStringParameters']
-
+    
     if parameters is not None:
         pass
         if 'max_readings' in parameters:
@@ -96,13 +96,24 @@ def handler(event,context):
             else:
                 #set the range of accepted sensors to 10km
                 command += str(float(10 / radius_to_degrees)) + ' AND '
+        if 'sensor_location' in parameters: 
+            if parameters['sensor_location'] == 'true':
+                print("sensor location is true")
+                command = 'SELECT Readings.*, Sensors.sensor_lat, Sensors.sensor_lon ' + command
+            else:
+                print("Sensor location is false")
+                command = 'SELECT Readings.* ' + command
+        
+            
         '''
         Now that we have a query statement, we need to get rid of the last AND,
         and limit the query to the default max.
         '''
+    else:
+        command = 'SELECT Readings.* ' + command
     command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
 
-
+    
     print(command)
     data = None
     try:
@@ -114,7 +125,7 @@ def handler(event,context):
         except:
             logger.error("ERROR: Cannot execute cursor.\n{}".format(
                 traceback.format_exc()) )
-            return data
+            return cursor.errmsg
 
         try:
             data = cursor.fetchall()
