@@ -94,22 +94,6 @@ void loop() {
   // The actual amount of time spent in sleep will be returned (in 
   // milliseconds).
 
-  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
-  digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
-
-  // 1 hour = 60s/min x 60min = 3600 s
-  // 14400 s / 8 s = 450
-
-  // 1/2 hour = 1800 s
-  // 1800 s / 8 s = 225
-  
-  unsigned int sleepCounter;
-  
-  for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
-  {
-    Watchdog.sleep();
-  }
-
   digitalWrite(LED_BUILTIN, HIGH); // indicate that the temperature is being read
 
 
@@ -187,4 +171,20 @@ void loop() {
   lcd.setCursor(6, 1);
   lcd.print("% humidity");
   #endif
+
+  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
+  digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
+
+  // 1 hour = 60s/min x 60min = 3600 s
+  // 14400 s / 8 s = 450
+
+  // 1/2 hour = 1800 s
+  // 1800 s / 8 s = 225
+  
+  unsigned int sleepCounter;
+  
+  for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
+  {
+    Watchdog.sleep();
+  }
 }
