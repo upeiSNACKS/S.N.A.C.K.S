@@ -1,7 +1,5 @@
 
 $(document).ready(function () {
-
-
     /*
         Map
     */
@@ -46,8 +44,6 @@ $(document).ready(function () {
 
     L.control.watermark2({ position: 'bottomright'}).addTo(mymap);
 
-
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -58,18 +54,5 @@ $(document).ready(function () {
         layer.setIcon(grapes_medium);
         layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
       }
-    });
-
-    // disable clustering once zoomed in close enough
-    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
-    markers.addLayer(all_sensors);
-
-    //attempting resizing of all markers based on zoom levels
-    // highest is level 18, when zoomed all the way in
-    // lowest is level 0, where you can see entire world repeated multiple times
-    // TODO: determine if this is necessary or how to resize on zoom levels
-    mymap.on('zoomend', function() {
-        var currentZoom = mymap.getZoom();
-        console.log(currentZoom);
     });
 });

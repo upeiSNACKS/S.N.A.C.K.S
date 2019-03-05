@@ -1,3 +1,4 @@
+@@ -1,269 +0,0 @@
 /*
     This stylesheet was taken and modified from Bootstrapious
 */
@@ -150,7 +151,7 @@ a.article:hover {
 
 #content {
     width: 100%;
-    height: 100%;
+height: 100%;
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
@@ -229,6 +230,7 @@ a.article:hover {
 .cancel {
     background: #ababab;
 }
+/* Small Devices, Tablets */
 /* Custom, iPhone Retina */
 @media only screen and (min-width : 320px) {
     .timecontrol {
@@ -242,7 +244,6 @@ a.article:hover {
     }
 }
 
-/* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
     .timecontrol {
         width: 500px;
