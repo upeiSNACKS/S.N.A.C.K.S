@@ -82,9 +82,10 @@ $(document).ready(function () {
 
     });
 
-    mymap.addControl(new menuControl());
-    mymap.addControl(new timeControl());
+    //mymap.addControl(new menuControl());
+    //mymap.addControl(new timeControl());
 
+    //Map
     L.Control.Watermark = L.Control.extend({
         onAdd: function(map) {
             var img = L.DomUtil.create('img');
@@ -102,6 +103,24 @@ $(document).ready(function () {
 
     L.control.watermark({ position: 'bottomleft'}).addTo(mymap);
 
+    //Contstruction logo
+    L.Control.Watermark2 = L.Control.extend({
+        onAdd: function(map) {
+            var img = L.DomUtil.create('img');
+
+            img.src = 'under-constriction.jpg';
+            img.style.width = '200px';
+
+            return img;
+        }
+    });
+
+    L.control.watermark2 = function(opts) {
+        return new L.Control.Watermark2(opts);
+    }
+
+    L.control.watermark2({ position: 'bottomright'}).addTo(mymap);
+    
     // creating custom differently sized icons
 
     var grapes_small = L.icon({
@@ -152,7 +171,7 @@ $(document).ready(function () {
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
     markers.addLayer(all_sensors);
 
-    mymap.addLayer(markers);
+    //mymap.addLayer(markers);
     //all_sensors.addTo(mymap);
 
     //attempting resizing of all markers based on zoom levels
