@@ -46,12 +46,9 @@ def log_err(errmsg):
     return {"body": errmsg , "headers": {}, "statusCode": 400,
         "isBase64Encoded":"false"}
 
-logger.info("Cold start complete.")
-
 def handler(event,context):
-    #print('parameters: ', event['queryStringParameters'])
     command = 'FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND '
-    max_readings = 10
+    max_readings = 500
     '''
     TODO: sort by date
     TODO: range selection (everything if none)
@@ -60,8 +57,11 @@ def handler(event,context):
     [DONE] TODO: max measurements (10 if none)
     [DONE] TODO: measurement type (list options, all if none)
     '''
+    
+    #Here we extract the parameters encoded in the URL (courtesy of AWS)
     parameters = event['queryStringParameters']
     
+    #If the parameters dictionary isn't empty, we evaluate it
     if parameters is not None:
         pass
         if 'max_readings' in parameters:
@@ -113,8 +113,6 @@ def handler(event,context):
         command = 'SELECT Readings.* ' + command
     command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
 
-    
-    print(command)
     data = None
     try:
         cnx = make_connection()
