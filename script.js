@@ -128,15 +128,6 @@ $(document).ready(function () {
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
-    // using fontawesome icons instead of images
-
-    const fontAwesomeIcon = L.divIcon({
-        html: '<i class="fas fa-map-marker-alt fa-2x"></i>',
-        iconSize: [40, 40],
-        iconAnchor: [20,20],
-        className: 'myDivIcon'
-    });
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
