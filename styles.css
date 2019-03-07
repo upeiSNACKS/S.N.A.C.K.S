@@ -96,7 +96,12 @@ a:focus {
     z-index: 998;
     opacity: 0;
     transition: all 0.5s ease-in-out;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
+
 .overlay.active {
     display: block;
     opacity: 1;
@@ -209,7 +214,7 @@ a.article:hover {
     height: 100%;
     min-height: 100vh;
     transition: all 0.3s;
-    z-index: -10;
+    z-index: 10;
     margin: auto;
 }
 
