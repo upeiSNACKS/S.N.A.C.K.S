@@ -31,36 +31,6 @@ $(document).ready(function () {
     // sometimes bounce will break grouping fnctionality - so disable it
     mymap.options.bounceAtZoomLimits = false;
 
-	  // adding custom menu button
-    var menuControl = L.Control.extend({
-
-        options: {
-            position: 'topleft'
-            //control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
-        },
-
-        onAdd: function (map) {
-            var navigation = L.DomUtil.create('nav');
-            var container = L.DomUtil.create('div', '', navigation);
-            var menu = L.DomUtil.create('button', 'btn btn-info', container);
-            var menubutton = L.DomUtil.create('i', 'fas fa-align-left', menu);
-
-            menu.id = 'sidebarCollapse';
-            menu.type = 'button';
-            menu.accessKey = 'q';
-
-            menu.onclick = function() {
-                $('#sidebar').toggleClass('active');
-                $('.overlay').toggleClass('active');
-                $('.collapse.in').toggleClass('in');
-                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-            }
-
-            return container;
-        },
-
-    });
-
     var timeControl = L.Control.extend({
 
         options: {
@@ -82,7 +52,6 @@ $(document).ready(function () {
 
     });
 
-    mymap.addControl(new menuControl());
     mymap.addControl(new timeControl());
 
     L.Control.Watermark = L.Control.extend({
