@@ -2,7 +2,7 @@
 // Various variables will need to be set at the start of the program to make the device work with specific TTN applications
 
 // NOTES:
-// The Adafruit SleepyDog library currently breaks the functionality of the serial 
+// The Adafruit SleepyDog library currently breaks the functionality of the serial
 
 // Written by Jeremy Thompson 2019
 
@@ -91,7 +91,7 @@ void loop() {
 
   // To enter low power sleep mode call Watchdog.sleep() like below
   // and the watchdog will allow low power sleep for as long as possible.
-  // The actual amount of time spent in sleep will be returned (in 
+  // The actual amount of time spent in sleep will be returned (in
   // milliseconds).
 
   digitalWrite(LED_BUILTIN, HIGH); // indicate that the temperature is being read
@@ -104,13 +104,13 @@ void loop() {
 
   // Unsigned 16 bits integer, 0 up to 65535
   uint16_t h_binary = h * 100;
-  
+
   // Read temperature as Celsius (the default)
   float t = dht.readTemperature();
-  
+
   // Signed 16 bits integer, -32767 up to +32767
   int16_t t_binary = t * 100;
-  
+
   // Read temperature as Fahrenheit (isFahrenheit = true)
   float f = dht.readTemperature(true);
 
@@ -140,7 +140,7 @@ void loop() {
   #endif
 
   ttn.sendBytes(payload, sizeof(payload));
-  
+
   // Compute heat index in Fahrenheit (the default)
   // float hif = dht.computeHeatIndex(f, h);
   // Compute heat index in Celsius (isFahreheit = false)
@@ -179,9 +179,9 @@ void loop() {
 
   // 1/2 hour = 1800 s
   // 1800 s / 8 s = 225
-  
+
   unsigned int sleepCounter;
-  
+
   for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
   {
     Watchdog.sleep();
