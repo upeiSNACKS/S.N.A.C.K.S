@@ -93,10 +93,10 @@ void setup() {
   waitState();
 
   //debugSerial.println("-- STATUS");
-  ttn.showStatus();
+  // ttn.showStatus();
 
   //debugSerial.println("-- JOIN");
-  ttn.join(appEui, appKey);
+  // ttn.join(appEui, appKey);
 }
 
 void waitState() {
@@ -178,14 +178,14 @@ void loop() {
   debugSerial.println();
   #endif
 
-  ttn_response_t response = ttn.sendBytes(payload, sizeof(payload));
+  //ttn_response_t response = ttn.sendBytes(payload, sizeof(payload));
 
-  if(response != TTN_SUCCESSFUL_TRANSMISSION) {
-    errorState();
-  }
-  else {
+  //if(response != TTN_SUCCESSFUL_TRANSMISSION) {
+  //  errorState();
+  //}
+  //else {
     runningState();
-  }
+  //}
 
   // Compute heat index in Fahrenheit (the default)
   // float hif = dht.computeHeatIndex(f, h);
@@ -217,7 +217,6 @@ void loop() {
   lcd.print("% humidity");
   #endif
 
-  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
   digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
 
   // 1 hour = 60s/min x 60min = 3600 s
@@ -230,6 +229,7 @@ void loop() {
   
   for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
   {
-    Watchdog.sleep();
+    // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
+    //Watchdog.sleep();
   }
 }
