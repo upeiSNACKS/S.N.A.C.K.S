@@ -238,6 +238,6 @@ void loop() {
   for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
   {
     // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
-    //Watchdog.sleep();
+    Watchdog.sleep();
   }
 }
