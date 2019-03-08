@@ -87,19 +87,14 @@ void setup() {
 
 void loop() {
   // Wait a few seconds between measurements.
-  delay(TIMEDELAY);
+  // delay(TIMEDELAY);
 
   // To enter low power sleep mode call Watchdog.sleep() like below
   // and the watchdog will allow low power sleep for as long as possible.
   // The actual amount of time spent in sleep will be returned (in
   // milliseconds).
 
-  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
-  digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
-  int sleepMS = Watchdog.sleep();
-
   digitalWrite(LED_BUILTIN, HIGH); // indicate that the temperature is being read
-
 
   // Reading temperature or humidity takes about 250 milliseconds!
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
@@ -175,4 +170,20 @@ void loop() {
   lcd.setCursor(6, 1);
   lcd.print("% humidity");
   #endif
+
+  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
+  digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
+
+  // 1 hour = 60s/min x 60min = 3600 s
+  // 14400 s / 8 s = 450
+
+  // 1/2 hour = 1800 s
+  // 1800 s / 8 s = 225
+  
+  unsigned int sleepCounter;
+  
+  for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
+  {
+    Watchdog.sleep();
+  }
 }
