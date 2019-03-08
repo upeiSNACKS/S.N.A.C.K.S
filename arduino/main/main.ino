@@ -18,6 +18,17 @@
 #define DHTPIN 7     // what digital pin DHT temp sensor is connected to
 #define freqPlan TTN_FP_US915     // TTN_FP_EU868 or TTN_FP_US915 for European or US bandwidth
 
+// magic numbers for subtype of sensors, additional types can be added in the futures
+byte subtypes[10] = {
+  0x00, // indoor
+  0x01, // outdoor
+};
+
+//LED constants
+#define LED_GREEN 13
+#define LED_YELLOW 12
+#define LED_RED 11
+
 // #define LCD_ATTACHED 1 // 1 if LCD screen connected, comment out if not
 #define DEBUG 1 // 1 if debugging, comment out if not
 
@@ -30,8 +41,8 @@
 #define debugSerial Serial
 
 // Uncomment whatever type you're using!
-//#define DHTTYPE DHT11   // DHT 11
-#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+#define DHTTYPE DHT11   // DHT 11
+//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
 // Connect pin 1 (on the left) of the sensor to +5V
@@ -58,15 +69,22 @@ TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
 // AppEUI and AppKey for The Things Network
 const char *appEui = "70B3D57ED001712B";
-const char *appKey = "748D533BFDE87C4875F4AB2EBBFA9927";
+const char *appKey = "63F967509B129C05801CAEA96A57D0D4";
 
-byte payload[4]; // for transmitting data
+byte payload[5]; // for transmitting data
 
 void setup() {
   #ifdef LCD_ATTACHED
   lcd.init(); //initialize the lcd
   lcd.backlight(); //open the backlight
   #endif
+
+  //set up the status LEDs for debugging
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_YELLOW, OUTPUT);
+  pinMode(LED_RED, OUTPUT);
+
+  resetState(); //resets all LEDs to off
 
   loraSerial.begin(57600);
   debugSerial.begin(9600);
@@ -78,16 +96,42 @@ void setup() {
   while (!debugSerial && millis() < 10000)
     ;
 
+  waitState();
+
   //debugSerial.println("-- STATUS");
-  ttn.showStatus();
+   ttn.showStatus();
 
   //debugSerial.println("-- JOIN");
-  ttn.join(appEui, appKey);
+   ttn.join(appEui, appKey);
+}
+
+void waitState() {
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_YELLOW, HIGH);
+  digitalWrite(LED_RED, LOW);
+}
+
+void errorState() {
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_YELLOW, LOW);
+  digitalWrite(LED_RED, HIGH);
+}
+
+void runningState() {
+  digitalWrite(LED_GREEN, HIGH);
+  digitalWrite(LED_YELLOW, LOW);
+  digitalWrite(LED_RED, LOW);
+}
+
+void resetState() {
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_YELLOW, LOW);
+  digitalWrite(LED_RED, LOW);
 }
 
 void loop() {
   // Wait a few seconds between measurements.
-  // delay(TIMEDELAY);
+  delay(TIMEDELAY);
 
   // To enter low power sleep mode call Watchdog.sleep() like below
   // and the watchdog will allow low power sleep for as long as possible.
@@ -118,6 +162,7 @@ void loop() {
   if (isnan(h) || isnan(t) || isnan(f)) {
     #ifdef DEBUG
     Serial.println(F("Failed to read from DHT sensor!"));
+    errorState();
     #endif
     return;
   }
@@ -126,6 +171,8 @@ void loop() {
   payload[1] = t_binary;
   payload[2] = h_binary >> 8;
   payload[3] = h_binary;
+
+  payload[4] = subtypes[0]; // indoor
 
   #ifdef DEBUG
   debugSerial.print("\n First byte of data sent: ");
@@ -139,7 +186,14 @@ void loop() {
   debugSerial.println();
   #endif
 
-  ttn.sendBytes(payload, sizeof(payload));
+  ttn_response_t response = ttn.sendBytes(payload, sizeof(payload));
+
+  if(response != TTN_SUCCESSFUL_TRANSMISSION) {
+    errorState();
+  }
+  else {
+    runningState();
+  }
 
   // Compute heat index in Fahrenheit (the default)
   // float hif = dht.computeHeatIndex(f, h);
@@ -171,7 +225,6 @@ void loop() {
   lcd.print("% humidity");
   #endif
 
-  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
   digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
 
   // 1 hour = 60s/min x 60min = 3600 s
@@ -184,6 +237,7 @@ void loop() {
 
   for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
   {
+    // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
     Watchdog.sleep();
   }
 }
