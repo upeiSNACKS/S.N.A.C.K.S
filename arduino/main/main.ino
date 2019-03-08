@@ -73,7 +73,7 @@ void setup() {
   lcd.backlight(); //open the backlight
   #endif
 
-  //set up the status LEDs
+  //set up the status LEDs for debugging
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_YELLOW, OUTPUT);
   pinMode(LED_RED, OUTPUT);
