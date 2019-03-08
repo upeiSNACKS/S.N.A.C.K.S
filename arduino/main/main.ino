@@ -18,6 +18,12 @@
 #define DHTPIN 7     // what digital pin DHT temp sensor is connected to
 #define freqPlan TTN_FP_US915     // TTN_FP_EU868 or TTN_FP_US915 for European or US bandwidth
 
+// magic numbers for subtype of sensors, additional types can be added in the futures
+byte subtypes[10] = {
+  0x00, // indoor
+  0x01, // outdoor
+};
+
 //LED constants
 #define LED_GREEN 13
 #define LED_YELLOW 12
@@ -65,7 +71,7 @@ TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 const char *appEui = "70B3D57ED001712B";
 const char *appKey = "63F967509B129C05801CAEA96A57D0D4";
 
-byte payload[4]; // for transmitting data
+byte payload[5]; // for transmitting data
 
 void setup() {
   #ifdef LCD_ATTACHED
@@ -93,10 +99,10 @@ void setup() {
   waitState();
 
   //debugSerial.println("-- STATUS");
-  // ttn.showStatus();
+   ttn.showStatus();
 
   //debugSerial.println("-- JOIN");
-  // ttn.join(appEui, appKey);
+   ttn.join(appEui, appKey);
 }
 
 void waitState() {
@@ -125,7 +131,7 @@ void resetState() {
 
 void loop() {
   // Wait a few seconds between measurements.
-  // delay(TIMEDELAY);
+  delay(TIMEDELAY);
 
   // To enter low power sleep mode call Watchdog.sleep() like below
   // and the watchdog will allow low power sleep for as long as possible.
@@ -166,6 +172,8 @@ void loop() {
   payload[2] = h_binary >> 8;
   payload[3] = h_binary;
 
+  payload[4] = subtypes[0]; // indoor
+
   #ifdef DEBUG
   debugSerial.print("\n First byte of data sent: ");
   debugSerial.print(payload[0], HEX);
@@ -178,14 +186,14 @@ void loop() {
   debugSerial.println();
   #endif
 
-  //ttn_response_t response = ttn.sendBytes(payload, sizeof(payload));
+  ttn_response_t response = ttn.sendBytes(payload, sizeof(payload));
 
-  //if(response != TTN_SUCCESSFUL_TRANSMISSION) {
-  //  errorState();
-  //}
-  //else {
+  if(response != TTN_SUCCESSFUL_TRANSMISSION) {
+    errorState();
+  }
+  else {
     runningState();
-  //}
+  }
 
   // Compute heat index in Fahrenheit (the default)
   // float hif = dht.computeHeatIndex(f, h);
@@ -224,9 +232,9 @@ void loop() {
 
   // 1/2 hour = 1800 s
   // 1800 s / 8 s = 225
-  
+
   unsigned int sleepCounter;
-  
+
   for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
   {
     // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
