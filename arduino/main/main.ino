@@ -41,8 +41,8 @@ byte subtypes[10] = {
 #define debugSerial Serial
 
 // Uncomment whatever type you're using!
-#define DHTTYPE DHT11   // DHT 11
-//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+//#define DHTTYPE DHT11   // DHT 11
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
 // Connect pin 1 (on the left) of the sensor to +5V
@@ -69,7 +69,7 @@ TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
 // AppEUI and AppKey for The Things Network
 const char *appEui = "70B3D57ED001712B";
-const char *appKey = "63F967509B129C05801CAEA96A57D0D4";
+const char *appKey = "748D533BFDE87C4875F4AB2EBBFA9927";
 
 byte payload[5]; // for transmitting data
 
