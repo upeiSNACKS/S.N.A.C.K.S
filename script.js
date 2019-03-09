@@ -23,11 +23,10 @@ $(document).ready(function () {
         Map
     */
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
-
+    
     // limit zoom level since Charlottetown is not that large
     mymap.options.minZoom = 12;
 
-    // adding custom menu button
     // sometimes bounce will break grouping fnctionality - so disable it
     mymap.options.bounceAtZoomLimits = false;
 
@@ -134,7 +133,6 @@ $(document).ready(function () {
     // TODO: determine if this is necessary or how to resize on zoom levels
     mymap.on('zoomend', function() {
         var currentZoom = mymap.getZoom();
-        console.log(currentZoom);
         if (currentZoom > 12) {
             //all_sensors.eachLayer(function(layer) {
                 //return layer.setIcon(fontAwesomeIcon);
