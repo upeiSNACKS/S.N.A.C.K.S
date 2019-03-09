@@ -59,7 +59,6 @@ void setup() {
 
   loraSerial.begin(57600);
   debugSerial.begin(9600);
-  //Serial.println(F("DHTxx test!"));
 
   dht.begin();
 
@@ -132,11 +131,6 @@ void loop() {
 
   ttn_response_t response = ttn.sendBytes(payload, sizeof(payload));
 
-  // Compute heat index in Fahrenheit (the default)
-  // float hif = dht.computeHeatIndex(f, h);
-  // Compute heat index in Celsius (isFahreheit = false)
-  // float hic = dht.computeHeatIndex(t, h, false);
-
   #ifdef DEBUG
   debugSerial.print(F("Humidity: "));
   debugSerial.print(h);
@@ -144,12 +138,6 @@ void loop() {
   debugSerial.print(t);
   debugSerial.print(F("°C "));
   #endif
-  //debugSerial.print(f);
-  //debugSerial.print(F("°F  Heat index: "));
-  //debugSerial.print(hic);
-  //debugSerial.print(F("°C "));
-  //debugSerial.print(hif);
-  //debugSerial.println(F("°F"));
 
   digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
 
