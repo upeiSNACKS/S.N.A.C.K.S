@@ -10,7 +10,6 @@
 // required libraries
 #include "DHT.h" //temperature sensor library
 #include <Wire.h> //LCD display for debugging
-#include <LiquidCrystal_I2C.h> //LCD display for debugging
 #include <TheThingsNetwork.h> //TTN LoRaWAN communication
 #include <Adafruit_SleepyDog.h>
 
@@ -24,13 +23,7 @@ byte subtypes[10] = {
   0x01, // outdoor
 };
 
-// #define LCD_ATTACHED 1 // 1 if LCD screen connected, comment out if not
 #define DEBUG 1 // 1 if debugging, comment out if not
-
-// For LCD debugging with Leonardo (Things Uno), SDA and SCL pins are as follows:
-// SDA: 2 (NOT A2)
-// SCL : 3 (NOT A3)
-// SDA and SCL of LCD need to be connected to the appropriate pins
 
 #define loraSerial Serial1
 #define debugSerial Serial
@@ -53,12 +46,6 @@ byte subtypes[10] = {
 // as the current DHT reading algorithm adjusts itself to work on faster procs.
 DHT dht(DHTPIN, DHTTYPE);
 
-// set the LCD address to 0x38 for a 16 chars and 2 linedisplay
-
-#ifdef LCD_ATTACHED
-LiquidCrystal_I2C lcd(0x38, 16, 2);
-#endif
-
 // TTN connection
 TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
@@ -69,10 +56,6 @@ const char *appKey = "748D533BFDE87C4875F4AB2EBBFA9927";
 byte payload[5]; // for transmitting data
 
 void setup() {
-  #ifdef LCD_ATTACHED
-  lcd.init(); //initialize the lcd
-  lcd.backlight(); //open the backlight
-  #endif
 
   loraSerial.begin(57600);
   debugSerial.begin(9600);
@@ -167,17 +150,6 @@ void loop() {
   //debugSerial.print(F("°C "));
   //debugSerial.print(hif);
   //debugSerial.println(F("°F"));
-
-  #ifdef LCD_ATTACHED
-  lcd.setCursor(0, 0);
-  lcd.print(t);
-  lcd.setCursor(6, 0);
-  lcd.print("deg C");
-  lcd.setCursor(0, 1);
-  lcd.print(h);
-  lcd.setCursor(6, 1);
-  lcd.print("% humidity");
-  #endif
 
   digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
 
