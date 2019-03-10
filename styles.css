@@ -247,31 +247,32 @@ a.article:hover {
         width: 225px;
     }
 }
+
 /* Extra Small Devices, Phones */
 @media only screen and (min-width : 480px) {
     .timecontrol {
-        width: 375px;
+        width: 400px;
     }
 }
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
     .timecontrol {
-        width: 500px;
+        width: 550px;
     }
 }
 
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px) {
     .timecontrol {
-        width: 500px;
+        width: 550px;
     }
 }
 
 /* Large Devices, Wide Screens */
 @media only screen and (min-width : 1200px) {
     .timecontrol {
-        width: 500px;
+        width: 550px;
     }
 }
 
