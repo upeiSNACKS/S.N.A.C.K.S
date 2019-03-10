@@ -93,7 +93,7 @@ void setup() {
 
 void loop() {
   // Wait a few seconds between measurements.
-  delay(TIMEDELAY);
+  // delay(TIMEDELAY);
 
   // To enter low power sleep mode call Watchdog.sleep() like below
   // and the watchdog will allow low power sleep for as long as possible.
