@@ -46,9 +46,11 @@ def log_err(errmsg):
     return {"body": errmsg , "headers": {}, "statusCode": 400,
         "isBase64Encoded":"false"}
 
+logger.info("Cold start complete.")
+
 def handler(event,context):
-    command = 'FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND '
-    max_readings = 500
+    #print('parameters: ', event['queryStringParameters'])
+    command = 'SELECT Readings.*, Sensors.sensor_lat, sensor_lon FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND '
     '''
     TODO: sort by date
     TODO: range selection (everything if none)
@@ -57,25 +59,21 @@ def handler(event,context):
     [DONE] TODO: max measurements (10 if none)
     [DONE] TODO: measurement type (list options, all if none)
     '''
-    
-    #Here we extract the parameters encoded in the URL (courtesy of AWS)
     parameters = event['queryStringParameters']
-    
-    #If the parameters dictionary isn't empty, we evaluate it
+    print(parameters)
     if parameters is not None:
         pass
-        if 'max_readings' in parameters:
-            pass
-            max_readings = int(parameters['max_readings'])
         if 'sensor_id' in parameters:
             pass
-            command += 'sensor_id = \'' + parameters['sensor_id'] + '\' AND '
+            command += 'Sensors.sensor_id = \'' + parameters['sensor_id'] + '\' AND '
         if 'start_time' in parameters:
-            pass
-            command += 'reading_time > \'' + parameters['start_time'] + '\' AND '
+            if parameters['start_time'] == 'now':
+                command += 'reading_time >= all (select date_format(reading_time, \'%Y-%m-%d %H\') from Readings) AND '
+            else: 
+                command += 'reading_time > \'' + parameters['start_time'] + '\' AND '
         if 'end_time' in parameters:
-            pass
-            command += 'reading_time < \'' + parameters['end_time'] + '\' AND '
+            if'start_time' not in parameters:
+                command += 'reading_time < \'' + parameters['end_time'] + '\' AND '
         if 'type' in parameters:
             pass
             command += 'sensor_type = \'' + parameters['type'] + '\' AND '
@@ -96,23 +94,22 @@ def handler(event,context):
             else:
                 #set the range of accepted sensors to 10km
                 command += str(float(10 / radius_to_degrees)) + ' AND '
-        if 'sensor_location' in parameters: 
-            if parameters['sensor_location'] == 'true':
-                print("sensor location is true")
-                command = 'SELECT Readings.*, Sensors.sensor_lat, Sensors.sensor_lon ' + command
-            else:
-                print("Sensor location is false")
-                command = 'SELECT Readings.* ' + command
-        
             
         '''
         Now that we have a query statement, we need to get rid of the last AND,
         and limit the query to the default max.
         '''
+        if 'max_readings' in parameters:
+            max_readings = int(parameters['max_readings'])
+            command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
+        else: 
+            command = command[:-5] + ' ORDER BY reading_time DESC;'
     else:
-        command = 'SELECT Readings.* ' + command
-    command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
+        command = command[:-5] + ' ORDER BY reading_time DESC;' #FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND 
 
+
+    
+    print(command)
     data = None
     try:
         cnx = make_connection()
