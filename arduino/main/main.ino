@@ -50,8 +50,12 @@ DHT dht(DHTPIN, DHTTYPE);
 TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
 // AppEUI and AppKey for The Things Network
+
+// SNACKS App EUI from TTN  -may change in the future if application changes
 const char *appEui = "70B3D57ED001712B";
-const char *appKey = "748D533BFDE87C4875F4AB2EBBFA9927";
+
+// REPLACE WITH YOUR SPECIFIC DEVICE APP KEY
+const char *appKey = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
 byte payload[5]; // for transmitting data
 
