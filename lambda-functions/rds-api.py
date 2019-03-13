@@ -146,6 +146,8 @@ def handler(event,context):
         "statusCode" : 200,
         "headers" : {
             "header1" : "its working yall!"},
+            "Access-Control-Allow-Origin" : "*"
+        },
         "body" : json.dumps(data),
         "isBase64Encoded" : "false"
     }
