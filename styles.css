@@ -24,12 +24,11 @@ a:focus {
 }
 
 .navbar {
-    padding: 15px 10px;
+    position: fixed !important;
+    top: 0;
+    width: 100%;
     background: #fff;
-    border: none;
-    border-radius: 0;
-    margin-bottom: 40px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 997;
 }
 
 .line {
@@ -39,16 +38,15 @@ a:focus {
     margin: 40px 0;
 }
 
-.btn-info {
-    position: fixed;
-    top: 5px;
-    left: 5px;
-    z-index: 995;
-}
-
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
 
 #sidebar {
     width: 250px;
@@ -279,4 +277,16 @@ a.article:hover {
 #timepicker {
     width: 100%;
     text-align: right;
+}
+
+/* ---------------------------------------------------
+    CARD STYLE
+----------------------------------------------------- */
+
+#card {
+    padding: 5px;
+}
+
+.card-text {
+    line-height: 1;    
 }
