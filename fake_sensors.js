@@ -2,8 +2,7 @@ var sensors = [
   {
     "type": "Feature",
     "properties": {
-      "name": "Test Sensor 1",
-      "subname": "subtitle"
+      "name": "Test Sensor 1"
     },
     "geometry": {
       "type": "Point",
