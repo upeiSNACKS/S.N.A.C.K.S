@@ -38,16 +38,16 @@ $(document).ready(function () {
         $('.collapse.in').toggleClass('in');
         $('a[aria-expanded=true]').attr('aria-expanded', 'false');
     });
-    
+
     $('#help').on('click', function () {
-       window.open('help.html', '_blank'); 
+       window.open('help.html', '_blank');
     });
 
     /*
         Map
     */
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
-    
+
     // limit zoom level since Charlottetown is not that large
     mymap.options.minZoom = 12;
 
@@ -114,10 +114,6 @@ $(document).ready(function () {
     // TODO: determine if this is necessary or how to resize on zoom levels
     mymap.on('zoomend', function() {
         var currentZoom = mymap.getZoom();
-<<<<<<< HEAD
-=======
-        //console.log(currentZoom);
->>>>>>> APIPHP
         if (currentZoom > 12) {
             //all_sensors.eachLayer(function(layer) {
                 //return layer.setIcon(fontAwesomeIcon);
@@ -258,9 +254,4 @@ $(function() {
         ajax(params);
 
     });
-<<<<<<< HEAD
 });
-=======
-
-});
->>>>>>> APIPHP
