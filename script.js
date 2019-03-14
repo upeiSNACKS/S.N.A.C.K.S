@@ -130,25 +130,11 @@ $(document).ready(function () {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
-    // console.log(sensors.length);
-    // var all_sensors = L.geoJSON(sensors, {
-    //   onEachFeature: function (feature, layer) {
-    //     //layer.setIcon(fontAwesomeIcon);
-    //     //layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
-    //     layer.setIcon(grapes_medium);
-    //     layer.bindPopup(
-    //       constructPopupHTML(feature)
-    //     );
-    //   }
-    // });
     setMap(mymap);
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
-    //markers.addLayer(all_sensors);
     setLayer(markers);
-    ajax("");
-    //mymap.addLayer(markers);
-    //all_sensors.addTo(mymap);
+    ajax("?start_time=now");
 
     //attempting resizing of all markers based on zoom levels
     // highest is level 18, when zoomed all the way in
@@ -185,23 +171,31 @@ function getMap() {
 function constructPopupHTML(feature) {
   $("#popup_template #title").html(feature.properties.name);
 
-  //TODO: however our API call fetches dat will determine how data is displayed in these popups
-  $("#popup_template #last_measurement").html('2019-01-01 12:00');
-  $("#popup_template #temperature").html('4.4⁰C');
-  $("#popup_template #humidity").html('50%');
-
-  //$("#popup_template").removeAttr('style');
+  // This currently has hardcoded HTML objects in it. Want it to somehow
+  // Create these dynamically based on the types that we get.
+  $("#popup_template #last_measurement").html(feature.properties.reading_time);
+  $("#popup_template #humidity").html(feature.properties.readings.filter(function(a) {
+      return a.type=="Humidity";
+  })[0].reading);
+  $("#popup_template #temperature").html(feature.properties.readings.filter(function(a) {
+      return a.type=="Temperature";
+  })[0].reading);
   return $("#popup_template").html();
 }
+/**
+ * This function uses AJAX to populate a JSON array which gets used by our leaflet map
+ */
 function ajax(params) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     var httpc = new XMLHttpRequest(); // simplified for clarity
     httpc.withCredentials = false;
+    if (params.indexOf("?") != 0) {
+        params = "?" + params;
+    }
     var url = "https://jm6ctx1smj.execute-api.us-east-2.amazonaws.com/beta/DBapiAccess" + params;
-    httpc.open("GET", url, true); // sending as GET
+    httpc.open("GET", url, true);
     console.log(url);
     httpc.setRequestHeader("Content-Type", "application/json");
-    // POST request MUST have a Content-Length header (as per HTTP/1.1)
 
     httpc.onreadystatechange = function() { //Call a function when the state changes.
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
@@ -209,9 +203,26 @@ function ajax(params) {
             //console.log(receivedJSON.length);
             var modifiedJSON = [];
             for(var i = 0; i<receivedJSON.length; i++) {
-                if(!checkThere(modifiedJSON, receivedJSON[i].sensor_id)) {
-
-                    var newObj = { "type": "Feature","properties": {"name": receivedJSON[i].sensor_id},"geometry": {"type": "Point","coordinates": [receivedJSON[i].sensor_lon, receivedJSON[i].sensor_lat]}};
+                // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
+                if(!checkThere(modifiedJSON, receivedJSON[i])) {
+                    var newObj = {  "type": "Feature",
+                                    "properties": {
+                                        "name": receivedJSON[i].sensor_id,
+                                        "reading_time" : receivedJSON[i].reading_time,
+                                        // An array of readings, to hold every reading over the time period that we received
+                                        "readings": [
+                                            {"type": receivedJSON[i].sensor_type,
+                                             "subtype": receivedJSON[i].sensor_subtype,
+                                             "reading": receivedJSON[i].reading}
+                                        ]},
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [
+                                            receivedJSON[i].sensor_lon,
+                                            receivedJSON[i].sensor_lat
+                                        ]
+                                    }
+                                };
                     modifiedJSON.push(newObj)
                 }
             }
@@ -219,8 +230,6 @@ function ajax(params) {
             var map = getMap();
             var all_sensors = L.geoJSON(sensors, {
               onEachFeature: function (feature, layer) {
-                //layer.setIcon(fontAwesomeIcon);
-                //layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
                 layer.setIcon(grapes_medium);
                 layer.bindPopup(
                   constructPopupHTML(feature)
@@ -236,10 +245,17 @@ function ajax(params) {
     };
     httpc.send();
 }
-function checkThere(list, id) {
+/*
+ * This function checks our list of GEOJSON objects to see if the sensorID already
+ * has an element. If it does we take the reading and put it in the sensorID's object
+ */
+function checkThere(list, obj) {
     for(var i = 0; i<list.length; i++) {
-        if(id == list[i].properties.name) {
-
+        if(obj.sensor_id == list[i].properties.name) {
+            list[i].properties.readings.push({
+                "type": obj.sensor_type,
+                "subtype": obj.sensor_subtype,
+                "reading": obj.reading});
             return true;
         }
     }
@@ -263,9 +279,6 @@ $(function() {
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
         var start = picker.startDate.format('YYYY-MM-DD hh:mm');
         var end   = picker.endDate.format('YYYY-MM-DD hh:mm');
-        //if(start) {
-            start = "now";
-        //}
         var params = "?start_time=" + start + "&end_time=" + end;
         ajax(params);
 
