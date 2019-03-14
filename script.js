@@ -1,3 +1,23 @@
+var grapes_small = L.icon({
+    iconUrl: 'map-icon.png',
+    iconSize:     [20, 20], // size of the icon
+    iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+});
+
+var grapes_medium = L.icon({
+    iconUrl: 'map-icon.png',
+    iconSize:     [40, 40], // size of the icon
+    iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+});
+
+var grapes_large = L.icon({
+    iconUrl: 'map-icon.png',
+    iconSize:     [60, 60], // size of the icon
+    iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+});
 $(document).ready(function () {
     /*
         Navbar
@@ -76,60 +96,17 @@ $(document).ready(function () {
 
     // creating custom differently sized icons
 
-    var grapes_small = L.icon({
-        iconUrl: 'map-icon.png',
-        iconSize:     [20, 20], // size of the icon
-        iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
-        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-    });
 
-    var grapes_medium = L.icon({
-        iconUrl: 'map-icon.png',
-        iconSize:     [40, 40], // size of the icon
-        iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
-        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-    });
-
-    var grapes_large = L.icon({
-        iconUrl: 'map-icon.png',
-        iconSize:     [60, 60], // size of the icon
-        iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
-        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
-
-    var all_sensors = L.geoJSON(sensors, {
-      onEachFeature: function (feature, layer) {
-        //layer.setIcon(fontAwesomeIcon);
-        //layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
-        layer.setIcon(grapes_medium);
-        layer.bindPopup(
-          constructPopupHTML(feature)
-        );
-      }
-    });
-
-    function constructPopupHTML(feature) {
-      $("#popup_template #title").html(feature.properties.name);
-
-      //TODO: however our API call fetches dat will determine how data is displayed in these popups
-      $("#popup_template #last_measurement").html('2019-01-01 12:00');
-      $("#popup_template #temperature").html('4.4⁰C');
-      $("#popup_template #humidity").html('50%');
-
-      //$("#popup_template").removeAttr('style');
-      return $("#popup_template").html();
-    }
+    setMap(mymap);
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
-    markers.addLayer(all_sensors);
-
-    mymap.addLayer(markers);
-    //all_sensors.addTo(mymap);
+    setLayer(markers);
+    ajax("?start_time=now");
 
     //attempting resizing of all markers based on zoom levels
     // highest is level 18, when zoomed all the way in
@@ -137,6 +114,10 @@ $(document).ready(function () {
     // TODO: determine if this is necessary or how to resize on zoom levels
     mymap.on('zoomend', function() {
         var currentZoom = mymap.getZoom();
+<<<<<<< HEAD
+=======
+        //console.log(currentZoom);
+>>>>>>> APIPHP
         if (currentZoom > 12) {
             //all_sensors.eachLayer(function(layer) {
                 //return layer.setIcon(fontAwesomeIcon);
@@ -148,7 +129,113 @@ $(document).ready(function () {
         }
     });
 });
+var globalMap;
+var layer;
+function setLayer(l) {
+    layer = l;
+}
+function getLayer() {
+    return layer;
+}
+function setMap(map) {
+    globalMap = map;
+}
+function getMap() {
+    return globalMap;
+}
+function constructPopupHTML(feature) {
+  $("#popup_template #title").html(feature.properties.name);
 
+  // This currently has hardcoded HTML objects in it. Want it to somehow
+  // Create these dynamically based on the types that we get.
+  $("#popup_template #last_measurement").html(feature.properties.reading_time);
+  $("#popup_template #humidity").html(feature.properties.readings.filter(function(a) {
+      return a.type=="Humidity";
+  })[0].reading);
+  $("#popup_template #temperature").html(feature.properties.readings.filter(function(a) {
+      return a.type=="Temperature";
+  })[0].reading);
+  return $("#popup_template").html();
+}
+/**
+ * This function uses AJAX to populate a JSON array which gets used by our leaflet map
+ */
+function ajax(params) {
+    // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
+    var httpc = new XMLHttpRequest(); // simplified for clarity
+    httpc.withCredentials = false;
+    if (params.indexOf("?") != 0) {
+        params = "?" + params;
+    }
+    var url = "https://jm6ctx1smj.execute-api.us-east-2.amazonaws.com/beta/DBapiAccess" + params;
+    httpc.open("GET", url, true);
+    console.log(url);
+    httpc.setRequestHeader("Content-Type", "application/json");
+
+    httpc.onreadystatechange = function() { //Call a function when the state changes.
+        if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+            var receivedJSON = JSON.parse(httpc.responseText);
+            //console.log(receivedJSON.length);
+            var modifiedJSON = [];
+            for(var i = 0; i<receivedJSON.length; i++) {
+                // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
+                if(!checkThere(modifiedJSON, receivedJSON[i])) {
+                    var newObj = {  "type": "Feature",
+                                    "properties": {
+                                        "name": receivedJSON[i].sensor_id,
+                                        "reading_time" : receivedJSON[i].reading_time,
+                                        // An array of readings, to hold every reading over the time period that we received
+                                        "readings": [
+                                            {"type": receivedJSON[i].sensor_type,
+                                             "subtype": receivedJSON[i].sensor_subtype,
+                                             "reading": receivedJSON[i].reading}
+                                        ]},
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [
+                                            receivedJSON[i].sensor_lon,
+                                            receivedJSON[i].sensor_lat
+                                        ]
+                                    }
+                                };
+                    modifiedJSON.push(newObj)
+                }
+            }
+            sensors=modifiedJSON;
+            var map = getMap();
+            var all_sensors = L.geoJSON(sensors, {
+              onEachFeature: function (feature, layer) {
+                layer.setIcon(grapes_medium);
+                layer.bindPopup(
+                  constructPopupHTML(feature)
+                );
+              }
+            });
+            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+            map.removeLayer(getLayer());
+            markers.addLayer(all_sensors);
+
+            map.addLayer(markers);
+        }
+    };
+    httpc.send();
+}
+/*
+ * This function checks our list of GEOJSON objects to see if the sensorID already
+ * has an element. If it does we take the reading and put it in the sensorID's object
+ */
+function checkThere(list, obj) {
+    for(var i = 0; i<list.length; i++) {
+        if(obj.sensor_id == list[i].properties.name) {
+            list[i].properties.readings.push({
+                "type": obj.sensor_type,
+                "subtype": obj.sensor_subtype,
+                "reading": obj.reading});
+            return true;
+        }
+    }
+    return false;
+}
 /*
     Date picker
     Example code taken from daterangepicker.com
@@ -167,21 +254,13 @@ $(function() {
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
         var start = picker.startDate.format('YYYY-MM-DD hh:mm');
         var end   = picker.endDate.format('YYYY-MM-DD hh:mm');
-        var params = "start=" + start + "&end=" + end;
-        // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
-        var httpc = new XMLHttpRequest(); // simplified for clarity
-        var url = "API.php"; // TODO: CHANGE THIS TO BE THE API LINK
-        httpc.open("POST", url, true); // sending as POST
-
-        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        // POST request MUST have a Content-Length header (as per HTTP/1.1)
-
-        httpc.onreadystatechange = function() { //Call a function when the state changes.
-            if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
-                alert(httpc.responseText); // some processing here, or whatever you want to do with the response
-            }
-        };
-        httpc.send(params);
+        var params = "?start_time=" + start + "&end_time=" + end;
+        ajax(params);
 
     });
+<<<<<<< HEAD
 });
+=======
+
+});
+>>>>>>> APIPHP
