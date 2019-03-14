@@ -102,51 +102,76 @@ $(document).ready(function () {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
 
-    var all_sensors = L.geoJSON(sensors, {
-      onEachFeature: function (feature, layer) {
-        //layer.setIcon(fontAwesomeIcon);
-        //layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
-        layer.setIcon(grapes_medium);
-        layer.bindPopup(
-          constructPopupHTML(feature)
-        );
-      }
-    });
-
-    function constructPopupHTML(feature) {
-      $("#popup_template #title").html(feature.properties.name);
-
-      //TODO: however our API call fetches dat will determine how data is displayed in these popups
-      $("#popup_template #last_measurement").html('2019-01-01 12:00');
-      $("#popup_template #temperature").html('4.4⁰C');
-      $("#popup_template #humidity").html('50%');
-
-      //$("#popup_template").removeAttr('style');
-      return $("#popup_template").html();
+    //From: https://leafletjs.com/examples/choropleth/
+    function getColor(d) {
+        return d > 1000 ? '#800026' :
+               d > 500  ? '#BD0026' :
+               d > 200  ? '#E31A1C' :
+               d > 100  ? '#FC4E2A' :
+               d > 50   ? '#FD8D3C' :
+               d > 20   ? '#FEB24C' :
+               d > 10   ? '#FED976' :
+                          '#FFEDA0';
     }
-    // disable clustering once zoomed in close enough
-    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
-    markers.addLayer(all_sensors);
 
-    mymap.addLayer(markers);
-    //all_sensors.addTo(mymap);
+    function style(feature) {
+        return {
+            fillColor: getColor(feature.properties.density),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
+    }
 
-    //attempting resizing of all markers based on zoom levels
-    // highest is level 18, when zoomed all the way in
-    // lowest is level 0, where you can see entire world repeated multiple times
-    // TODO: determine if this is necessary or how to resize on zoom levels
-    mymap.on('zoomend', function() {
-        var currentZoom = mymap.getZoom();
-        if (currentZoom > 12) {
-            //all_sensors.eachLayer(function(layer) {
-                //return layer.setIcon(fontAwesomeIcon);
-            //});
-        } else {
-            //all_sensors.eachLayer(function(layer) {
-                //return layer.setIcon(fontAwesomeIcon);
-            //});
-        }
-    });
+    L.geoJson(sensors, {style: style}).addTo(mymap);
+
+    // var all_sensors = L.geoJSON(sensors, {
+    //   onEachFeature: function (feature, layer) {
+    //     //layer.setIcon(fontAwesomeIcon);
+    //     //layer.bindPopup('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.subname+'</p>');
+    //     layer.setIcon(grapes_medium);
+    //     layer.bindPopup(
+    //       constructPopupHTML(feature)
+    //     );
+    //   }
+    // });
+
+    // function constructPopupHTML(feature) {
+    //   $("#popup_template #title").html(feature.properties.name);
+
+    //   //TODO: however our API call fetches dat will determine how data is displayed in these popups
+    //   $("#popup_template #last_measurement").html('2019-01-01 12:00');
+    //   $("#popup_template #temperature").html('4.4⁰C');
+    //   $("#popup_template #humidity").html('50%');
+
+    //   //$("#popup_template").removeAttr('style');
+    //   return $("#popup_template").html();
+    // }
+    // // disable clustering once zoomed in close enough
+    // var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+    // markers.addLayer(all_sensors);
+
+    // mymap.addLayer(markers);
+    // all_sensors.addTo(mymap);
+
+    // //attempting resizing of all markers based on zoom levels
+    // // highest is level 18, when zoomed all the way in
+    // // lowest is level 0, where you can see entire world repeated multiple times
+    // // TODO: determine if this is necessary or how to resize on zoom levels
+    // mymap.on('zoomend', function() {
+    //     var currentZoom = mymap.getZoom();
+    //     if (currentZoom > 12) {
+    //         //all_sensors.eachLayer(function(layer) {
+    //             //return layer.setIcon(fontAwesomeIcon);
+    //         //});
+    //     } else {
+    //         //all_sensors.eachLayer(function(layer) {
+    //             //return layer.setIcon(fontAwesomeIcon);
+    //         //});
+    //     }
+    // });
 });
 
 /*

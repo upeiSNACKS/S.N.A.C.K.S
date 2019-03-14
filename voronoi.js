@@ -2,7 +2,7 @@ var w = 960,
     h = 500;
 
 var vertices = d3.range(100).map(function(d) {
-    // return [Math.random() * w, Math.random() * h];
+    return [Math.random() * w, Math.random() * h];
 });
 
 var svg = d3.select("#chart")
