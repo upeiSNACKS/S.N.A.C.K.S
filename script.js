@@ -113,12 +113,7 @@ $(document).ready(function () {
     // lowest is level 0, where you can see entire world repeated multiple times
     // TODO: determine if this is necessary or how to resize on zoom levels
     mymap.on('zoomend', function() {
-        var currentZoom = mymap.getZoom();
-<<<<<<< HEAD
-=======
-        //console.log(currentZoom);
->>>>>>> APIPHP
-        if (currentZoom > 12) {
+        var currentZoom = mymap.getZoom();        if (currentZoom > 12) {
             //all_sensors.eachLayer(function(layer) {
                 //return layer.setIcon(fontAwesomeIcon);
             //});
@@ -129,20 +124,26 @@ $(document).ready(function () {
         }
     });
 });
+
 var globalMap;
 var layer;
+
 function setLayer(l) {
     layer = l;
 }
+
 function getLayer() {
     return layer;
 }
+
 function setMap(map) {
     globalMap = map;
 }
+
 function getMap() {
     return globalMap;
 }
+
 function constructPopupHTML(feature) {
   $("#popup_template #title").html(feature.properties.name);
 
@@ -157,6 +158,7 @@ function constructPopupHTML(feature) {
   })[0].reading);
   return $("#popup_template").html();
 }
+
 /**
  * This function uses AJAX to populate a JSON array which gets used by our leaflet map
  */
@@ -201,7 +203,7 @@ function ajax(params) {
                     modifiedJSON.push(newObj)
                 }
             }
-            sensors=modifiedJSON;
+            sensors = modifiedJSON;
             var map = getMap();
             var all_sensors = L.geoJSON(sensors, {
               onEachFeature: function (feature, layer) {
@@ -258,9 +260,4 @@ $(function() {
         ajax(params);
 
     });
-<<<<<<< HEAD
 });
-=======
-
-});
->>>>>>> APIPHP
