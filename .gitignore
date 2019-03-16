@@ -1,2 +1,7 @@
 login.php
 loginAPI.php
+node_modules
+fake_sensors.json
+package.json
+package-lock.json
+test.html
