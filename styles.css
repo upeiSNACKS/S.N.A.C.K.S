@@ -1,7 +1,31 @@
 /*
     This stylesheet was taken and modified from Bootstrapious
 */
-
+.swal-modal {
+  background-color: #014876;
+  border: 3px solid white;
+}
+.swal-title {
+  font-size: 24px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+  color: #FFFEFA
+}
+.swal-button {
+  padding: 7px 19px;
+  border-radius: 2px;
+  background-color: #056CB7;
+  font-size: 14px;
+  border: 1px solid #3e549a;
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+}
+.swal-text {
+  padding: 14px;
+  display: block;
+  margin: 22px;
+  font-size: 18px;
+  text-align: center;
+  color: #FFFEFA;
+}
 body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
@@ -289,5 +313,5 @@ a.article:hover {
 }
 
 .card-text {
-    line-height: 1;    
+    line-height: 1;
 }
