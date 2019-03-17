@@ -139,19 +139,43 @@ function setMap(map) {
 function getMap() {
     return globalMap;
 }
+/*
+ * creates the popup you see when a pin is clicked. Ran for each pin.
+ */
 function constructPopupHTML(feature) {
-  $("#popup_template #title").html(feature.properties.name);
+    var table = document.createElement("table");
 
-  // This currently has hardcoded HTML objects in it. Want it to somehow
-  // Create these dynamically based on the types that we get.
-  $("#popup_template #last_measurement").html(feature.properties.reading_time);
-  $("#popup_template #humidity").html(feature.properties.readings.filter(function(a) {
-      return a.type=="Humidity";
-  })[0].reading);
-  $("#popup_template #temperature").html(feature.properties.readings.filter(function(a) {
-      return a.type=="Temperature";
-  })[0].reading);
-  return $("#popup_template").html();
+    // Add table header containing the last reading time
+    var tr = table.insertRow(-1);
+    var th = document.createElement("th");
+    th.innerHTML = "Last measurement"
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = feature.properties.reading_time;
+    tr.appendChild(th);
+
+    for (var i = 0; i < feature.properties.readings.length; i++) {
+        //console.log(feature.properties.readings[i]);
+        tr = table.insertRow(-1);
+        var tabCell = tr.insertCell(-1);
+        tabCell.innerHTML = feature.properties.readings[i].type + ", " + feature.properties.readings[i].subtype;
+        tabCell = tr.insertCell(-1);
+        tabCell.innerHTML = feature.properties.readings[i].reading;
+    }
+
+    var divContainer = document.getElementById("popup_template");
+    divContainer.innerHTML = "";
+    divContainer.appendChild(createHeader(feature.properties.name));
+    divContainer.appendChild(table);
+    return $("#popup_template").html();
+}
+/*
+ * Creates the header for the popupHTML (usually the sensor name)
+ */
+function createHeader(name) {
+    var header = document.createElement("h2");
+    header.innerHTML = name;
+    return header
 }
 /**
  * This function uses AJAX to populate a JSON array which gets used by our leaflet map
@@ -176,6 +200,7 @@ function ajax(params) {
             for(var i = 0; i<receivedJSON.length; i++) {
                 // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
                 if(!checkThere(modifiedJSON, receivedJSON[i])) {
+                    // This is how GEOJSON is supposed to look. The stuff in properties is optional, but helps us.
                     var newObj = {  "type": "Feature",
                                     "properties": {
                                         "name": receivedJSON[i].sensor_id,
