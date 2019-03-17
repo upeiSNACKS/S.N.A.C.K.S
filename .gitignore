@@ -1,5 +1,6 @@
 login.php
 loginAPI.php
+loginPending.php
 node_modules
 fake_sensors.json
 package.json

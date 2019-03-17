@@ -5,12 +5,20 @@ function validate(form){
     fail += validateUsername(form.sensorID.value)
     fail += validateLat(form.sensor_lat.value)
     fail += validateLon(form.sensor_lon.value)
+    fail += validatecheck(form.dataconsent.checked)
     if (fail == "") {
-        return true;        
+        return true;
     } else {
         swal("Error", fail, "error");
         return false;
      }
+}
+function validatecheck(field) {
+    if(!field) {
+        return "You must consent to the data being publicly available";
+    } else {
+        return "";
+    }
 }
 function validateForename(field){
     return (field == "") ? "No first name was entered.\n" : ""
