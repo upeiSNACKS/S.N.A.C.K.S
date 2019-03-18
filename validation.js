@@ -33,15 +33,6 @@ function validateSensorID(field){
         return "No sensor ID  was entered.\n"
     else if (/[^a-zA-Z0-9_-]/.test(field))
         return "Only a-z, A-Z, 0-9, - and _ allowed in sensor ID.\n"
-    else {
-        var json = ajax("");
-        for(sensor in json) {
-            if(field.toUpperCase() === sensor.properties.name.toUpperCase()) {
-                console.log(sensor);
-                return "Sensor name already in use\n";
-            }
-        }
-    }
     return ""
 }
 function validateEmail(field)
