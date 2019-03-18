@@ -18,6 +18,7 @@ var grapes_large = L.icon({
     iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 });
+
 $(document).ready(function () {
     /*
         Navbar
@@ -122,7 +123,7 @@ $(document).ready(function () {
                 //return layer.setIcon(fontAwesomeIcon);
             //});
         }
-    });
+    });    
 });
 
 var globalMap;

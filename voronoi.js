@@ -5,7 +5,7 @@ var vertices = d3.range(100).map(function(d) {
     return [Math.random() * w, Math.random() * h];
 });
 
-var svg = d3.select("#chart")
+var svg = d3.select("mymap")
     .append("svg:svg")
     .attr("width", w)
     .attr("height", h);

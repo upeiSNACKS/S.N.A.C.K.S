@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Mapbox(leaflet.js) Voronoi Diagram</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
+
+<style>
+html, body{
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+#map {
+  width:100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet-src.js"></script>
+
+<script>
+d3.json('point.geojson', function(geojson){
+  mapDraw(geojson);
+});
+
+
+function mapDraw(geojson){
+  
+  var pointdata = geojson.features;
+  
+  
+	//leaflet初期設定
+	var map = L.map('map');  
+	map.setView([36.3894816, 139.0634281], 14);
+	map.on("viewreset moveend", update);
+ 
+	var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+	
+	L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+		{
+			attribution: 'Map data &copy; ' + mapLink,
+			maxZoom: 18
+		}
+	).addTo(map); 
+ 
+   
+	// オーバーレイレイヤ追加
+	map._initPathRoot();
+	var svg = d3.select("#map").select("svg");
+	var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+  
+	//ボロノイジェネレーター
+	var voronoi = d3.geom.voronoi()
+		.x(function(d) { return d.x; })
+		.y(function(d) { return d.y; });
+
+
+
+   update();
+ 
+    
+	function update() {
+	
+		//ピクセルポジション情報保存用
+		var positions = [];
+		
+		//位置情報→ピクセルポジション変換
+		pointdata.forEach(function(d) {        
+			var latlng = new L.LatLng(d.geometry.coordinates[1], d.geometry.coordinates[0]);
+			positions.push({
+				x :map.latLngToLayerPoint(latlng).x,
+				y :map.latLngToLayerPoint(latlng).y
+			});
+		});
+        
+    
+		//前サークルを削除
+		d3.selectAll('.AEDpoint').remove();
+		//サークル要素を追加
+		var circle = g.selectAll("circle")
+			.data(positions)
+			.enter()
+			.append("circle")
+			.attr("class", "AEDpoint")
+			.attr({
+				"cx":function(d, i) { return d.x; },
+				"cy":function(d, i) { return d.y; },
+				"r":2,
+				fill:"red"            
+			});
+      
+		//ボロノイ変換関数
+		var polygons = voronoi(positions);
+		polygons.forEach(function(v) { v.cell = v; });
+      
+		//前ボロノイPathを削除
+		svg.selectAll(".volonoi").remove();
+		//path要素を追加
+		svg.selectAll("path")
+			.data(polygons)
+			.enter()
+			.append("svg:path")
+			.attr("class", "volonoi")
+			.attr({
+				"d": function(d) {
+				if(!d) return null; 
+					return "M" + d.cell.join("L") + "Z";
+				},
+				stroke:"black",
+				fill:"none"            
+			});
+
+    } 
+   
+}
+</script>
+</body>
+</html>
