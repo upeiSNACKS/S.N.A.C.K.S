@@ -1,12 +1,14 @@
 function validate(form){
+    console.log("VALIDATED");
     fail = validateForename(form.fname.value)
     fail += validateSurname(form.lname.value)
     fail += validateEmail(form.email.value)
-    fail += validateUsername(form.sensorID.value)
+    fail += validateSensorID(form.sensorID.value)
     fail += validateLat(form.sensor_lat.value)
     fail += validateLon(form.sensor_lon.value)
     fail += validatecheck(form.dataconsent.checked)
     if (fail == "") {
+        swal("Success!", "you did it!", "success");
         return true;
     } else {
         swal("Error", fail, "error");
@@ -26,11 +28,20 @@ function validateForename(field){
 function validateSurname(field){
     return (field == "") ? "No last name was entered.\n" : ""
 }
-function validateUsername(field){
+function validateSensorID(field){
     if (field == "")
         return "No sensor ID  was entered.\n"
     else if (/[^a-zA-Z0-9_-]/.test(field))
         return "Only a-z, A-Z, 0-9, - and _ allowed in sensor ID.\n"
+    else {
+        var json = ajax("");
+        for(sensor in json) {
+            if(field.toUpperCase() === sensor.properties.name.toUpperCase()) {
+                console.log(sensor);
+                return "Sensor name already in use\n";
+            }
+        }
+    }
     return ""
 }
 function validateEmail(field)

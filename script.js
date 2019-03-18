@@ -191,11 +191,9 @@ function ajax(params) {
     httpc.open("GET", url, true);
     console.log(url);
     httpc.setRequestHeader("Content-Type", "application/json");
-
     httpc.onreadystatechange = function() { //Call a function when the state changes.
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
             var receivedJSON = JSON.parse(httpc.responseText);
-            //console.log(receivedJSON.length);
             var modifiedJSON = [];
             for(var i = 0; i<receivedJSON.length; i++) {
                 // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
@@ -277,6 +275,5 @@ $(function() {
         var end   = picker.endDate.format('YYYY-MM-DD hh:mm');
         var params = "?start_time=" + start + "&end_time=" + end;
         ajax(params);
-
     });
 });
