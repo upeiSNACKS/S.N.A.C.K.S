@@ -50,7 +50,7 @@ $(document).ready(function () {
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
     
     // limit zoom level since Charlottetown is not that large
-    mymap.options.minZoom = 12;
+    //mymap.options.minZoom = 12;
 
     // sometimes bounce will break grouping fnctionality - so disable it
     mymap.options.bounceAtZoomLimits = false;
@@ -123,8 +123,32 @@ $(document).ready(function () {
                 //return layer.setIcon(fontAwesomeIcon);
             //});
         }
-    });    
+    });
+    
+        
 });
+
+function getColor(d) {
+    return d > 1000 ? '#800026' :
+    d > 500  ? '#BD0026' :
+    d > 200  ? '#E31A1C' :
+    d > 100  ? '#FC4E2A' :
+    d > 50   ? '#FD8D3C' :
+    d > 20   ? '#FEB24C' :
+    d > 10   ? '#FED976' :
+    '#FFEDA0';
+}
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.density),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
 
 var globalMap;
 var layer;
@@ -207,18 +231,31 @@ function ajax(params) {
             sensors = modifiedJSON;
             var map = getMap();
             var all_sensors = L.geoJSON(sensors, {
-              onEachFeature: function (feature, layer) {
-                layer.setIcon(grapes_medium);
-                layer.bindPopup(
-                  constructPopupHTML(feature)
-                );
-              }
+                onEachFeature: function (feature, layer) {
+                    layer.setIcon(grapes_medium);
+                    layer.bindPopup(
+                        constructPopupHTML(feature)
+                    );
+                }
             });
             var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
             map.removeLayer(getLayer());
             markers.addLayer(all_sensors);
 
             map.addLayer(markers);
+            
+            var options = {
+                bbox: [-70, 40, -60, 60]
+            };
+            
+            // Make sensors a FeatureCollection
+            sensors = {"type": "FeatureCollection", "features": sensors};
+            
+            // Get the polygons
+            var voronoiPolygons = turf.voronoi(sensors, options);
+
+            // Draw the polygons on the map
+            L.geoJson(voronoiPolygons, {style: style}).addTo(map);
         }
     };
     httpc.send();
