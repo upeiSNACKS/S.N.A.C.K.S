@@ -50,7 +50,7 @@ $(document).ready(function () {
     var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
 
     // limit zoom level since Charlottetown is not that large
-    //mymap.options.minZoom = 12;
+    mymap.options.minZoom = 12;
 
     // sometimes bounce will break grouping fnctionality - so disable it
     mymap.options.bounceAtZoomLimits = false;
@@ -263,7 +263,11 @@ function ajax(params) {
             map.addLayer(markers);
 
             var options = {
-                bbox: [-70, 40, -60, 60]
+                // Bounding box for all of PEI
+                //bbox: [-64.5, 45.9, -62, 47.1]
+                
+                // Bouding box for only Charlottetown
+                bbox: [-63.2, 46.22, -63.08, 46.32]
             };
 
             // Make sensors a FeatureCollection
