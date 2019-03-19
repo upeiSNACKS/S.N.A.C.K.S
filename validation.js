@@ -1,8 +1,8 @@
+var usedIDs;
 $(document).ready(function() {
     /**
      * This function uses AJAX to populate a JSON array which gets used by our leaflet map
      */
-     var usedIDs;
      ajax("");
     function ajax(params) {
         // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
@@ -19,34 +19,47 @@ $(document).ready(function() {
         };
         httpc.send();
     }
-    var failMessage = "";
     $('#sensorID').on('blur', function() {
         var contents = $('#sensorID').val();
-        var valid = true;
-        for(var i = 0;i<usedIDs.length && valid; i++) {
-            if(contents == usedIDs[i]) {
-                failMessage += "Invalid sensor ID - Already in use\n";
-                valid = false;
-            }
-        }
-    });
 
-    $('#sensor_lat').on('blur', function() {
-        var contents = $('#sensor_lat').val();
-        if(contents < 46.227094 || contents > 46.306999) {
-            failMessage += "Latitude is outside of Charlottetown city bounds\n";
-        }
     });
-    $('#sensor_lon').on('blur', function() {
-        var contents = $('#sensor_lon').val();
-        if(contents < -63.140189 || contents > -63.092608) {
-            failMessage += "Longitude is outside of Charlottetown city bounds\n";
-        }
-    });
-    $('#insertForm').submit(function() {
-        if(failMessage === "") {
-            swal("Error", failMessage, "error");
-        }
-    })
 
 });
+var fail = "";
+function validate(form){
+    fail += validateID(form.sensorID.value)
+    fail += validateLat(form.sensor_lat.value)
+    fail += validateLon(form.sensor_lon.value)
+    if (fail == "") {
+        swal("Success!", "you did it!", "success");
+        return true;
+    } else {
+        swal("Error", fail, "error");
+        fail = "";
+        return false;
+     }
+}
+function validateID(field) {
+    var valid = true;
+    for(var i = 0;i<usedIDs.length && valid; i++) {
+        if(field == usedIDs[i]) {
+            return "Invalid sensor ID - ID already in use!\n"
+            valid = false;
+        }
+    }
+    return "";
+}
+function validateLat(field) {
+    if(field >= 46.2 && field <= 46.3) {
+        return "";
+    } else {
+        return "Latitude is not within Charlottetown bounds\n"
+    }
+}
+function validateLon(field) {
+    if(field >= -63.1 && field <= -63.0) {
+        return "";
+    } else {
+        return "Longitude is not within Charlottetown bounds\n"
+    }
+}
