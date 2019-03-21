@@ -18,6 +18,7 @@ var grapes_large = L.icon({
     iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 });
+
 $(document).ready(function () {
     /*
         Navbar
@@ -96,25 +97,23 @@ $(document).ready(function () {
 
     // creating custom differently sized icons
 
-
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
+    
     setMap(mymap);
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
     setLayer(markers);
     ajax("?start_time=now");
 
-    //attempting resizing of all markers based on zoom levels
+    // attempting resizing of all markers based on zoom levels
     // highest is level 18, when zoomed all the way in
     // lowest is level 0, where you can see entire world repeated multiple times
     // TODO: determine if this is necessary or how to resize on zoom levels
     mymap.on('zoomend', function() {
-        var currentZoom = mymap.getZoom();
-        if (currentZoom > 12) {
+        var currentZoom = mymap.getZoom();        if (currentZoom > 12) {
             //all_sensors.eachLayer(function(layer) {
                 //return layer.setIcon(fontAwesomeIcon);
             //});
@@ -124,24 +123,51 @@ $(document).ready(function () {
             //});
         }
     });
+
+
 });
+
+function getColor(d) {
+    return d > 1000 ? '#800026' :
+    d > 500  ? '#BD0026' :
+    d > 200  ? '#E31A1C' :
+    d > 100  ? '#FC4E2A' :
+    d > 50   ? '#FD8D3C' :
+    d > 20   ? '#FEB24C' :
+    d > 10   ? '#FED976' :
+    '#FFEDA0';
+}
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.density),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
 var globalMap;
 var layer;
+
 function setLayer(l) {
     layer = l;
 }
+
 function getLayer() {
     return layer;
 }
+
 function setMap(map) {
     globalMap = map;
 }
+
 function getMap() {
     return globalMap;
 }
-/*
- * creates the popup you see when a pin is clicked. Ran for each pin.
- */
+
 function constructPopupHTML(feature) {
     var table = document.createElement("table");
 
@@ -169,24 +195,40 @@ function constructPopupHTML(feature) {
     divContainer.appendChild(table);
     return $("#popup_template").html();
 }
-/*
- * Creates the header for the popupHTML (usually the sensor name)
- */
+
 function createHeader(name) {
     var header = document.createElement("h2");
     header.innerHTML = name;
     return header
 }
-/**
- * This function uses AJAX to populate a JSON array which gets used by our leaflet map
+
+function calcAverage(json, type) {
+    var avg = 0, counter = 0;
+    for(var i = 0; i < json.length; i++) {
+        for(var j = 0; j < json[i].properties.readings.length; j++) {
+            if(json[i].properties.readings[j].type = type) {
+                avg += json[i].properties.readings[j].reading;
+                counter++;
+                break;
+            }
+        }
+    }
+    
+    return avg/counter;
+}
+
+/*
+    This function uses AJAX to populate a JSON array which gets used by our leaflet map
  */
 function ajax(params) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     var httpc = new XMLHttpRequest(); // simplified for clarity
     httpc.withCredentials = false;
+    
     if (params.indexOf("?") != 0) {
         params = "?" + params;
     }
+    
     var url = "https://jm6ctx1smj.execute-api.us-east-2.amazonaws.com/beta/DBapiAccess" + params;
     httpc.open("GET", url, true);
     console.log(url);
@@ -195,56 +237,84 @@ function ajax(params) {
     httpc.onreadystatechange = function() { //Call a function when the state changes.
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
             var receivedJSON = JSON.parse(httpc.responseText);
-            //console.log(receivedJSON.length);
             var modifiedJSON = [];
-            for(var i = 0; i<receivedJSON.length; i++) {
+            for(var i = 0; i < receivedJSON.length; i++) {
                 // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
                 if(!checkThere(modifiedJSON, receivedJSON[i])) {
-                    // This is how GEOJSON is supposed to look. The stuff in properties is optional, but helps us.
-                    var newObj = {  "type": "Feature",
-                                    "properties": {
-                                        "name": receivedJSON[i].sensor_id,
-                                        "reading_time" : receivedJSON[i].reading_time,
-                                        // An array of readings, to hold every reading over the time period that we received
-                                        "readings": [
-                                            {"type": receivedJSON[i].sensor_type,
-                                             "subtype": receivedJSON[i].sensor_subtype,
-                                             "reading": receivedJSON[i].reading}
-                                        ]},
-                                    "geometry": {
-                                        "type": "Point",
-                                        "coordinates": [
-                                            receivedJSON[i].sensor_lon,
-                                            receivedJSON[i].sensor_lat
-                                        ]
-                                    }
-                                };
-                    modifiedJSON.push(newObj)
+                    var newObj = {  
+                        "type": "Feature",
+                        "properties": {
+                            "name": receivedJSON[i].sensor_id,
+                            "reading_time" : receivedJSON[i].reading_time,
+                            // An array of readings, to hold every reading over the time period that we received
+                            "readings": [
+                                {
+                                    "type": receivedJSON[i].sensor_type,
+                                    "subtype": receivedJSON[i].sensor_subtype,
+                                    "reading": receivedJSON[i].reading
+                                }
+                            ]
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                receivedJSON[i].sensor_lon,
+                                receivedJSON[i].sensor_lat
+                            ]
+                        }
+                    };
+                    
+                    modifiedJSON.push(newObj);
                 }
             }
-            sensors=modifiedJSON;
+            
+            document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
+            document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
+            document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
+            document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
+            
+            sensors = modifiedJSON;
             var map = getMap();
             var all_sensors = L.geoJSON(sensors, {
-              onEachFeature: function (feature, layer) {
-                layer.setIcon(grapes_medium);
-                layer.bindPopup(
-                  constructPopupHTML(feature)
-                );
-              }
+                onEachFeature: function (feature, layer) {
+                    layer.setIcon(grapes_medium);
+                    layer.bindPopup(
+                        constructPopupHTML(feature)
+                    );
+                }
             });
+            
             var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
             map.removeLayer(getLayer());
             markers.addLayer(all_sensors);
 
             map.addLayer(markers);
+
+            var options = {
+                // Bounding box for all of PEI
+                //bbox: [-64.5, 45.9, -62, 47.1]
+                
+                // Bouding box for only Charlottetown
+                bbox: [-63.2, 46.22, -63.08, 46.32]
+            };
+
+            // Make sensors a FeatureCollection
+            sensors = {"type": "FeatureCollection", "features": sensors};
+
+            // Get the polygons
+            var voronoiPolygons = turf.voronoi(sensors, options);
+
+            // Draw the polygons on the map
+            L.geoJson(voronoiPolygons, {style: style}).addTo(map);
         }
     };
     httpc.send();
 }
+
 /*
- * This function checks our list of GEOJSON objects to see if the sensorID already
- * has an element. If it does we take the reading and put it in the sensorID's object
- */
+    This function checks our list of GEOJSON objects to see if the sensorID already
+    has an element. If it does we take the reading and put it in the sensorID's object
+*/
 function checkThere(list, obj) {
     for(var i = 0; i<list.length; i++) {
         if(obj.sensor_id == list[i].properties.name) {
@@ -257,6 +327,7 @@ function checkThere(list, obj) {
     }
     return false;
 }
+
 /*
     Date picker
     Example code taken from daterangepicker.com
@@ -269,7 +340,7 @@ $(function() {
         applyButtonClasses: 'apply',
         cancelButtonClasses: 'cancel',
         locale: {
-            format: 'M/DD hh:mm A'
+            format: 'DD/MM/YYYY hh:mm A'
         }
     });
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
