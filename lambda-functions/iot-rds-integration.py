@@ -45,12 +45,7 @@ def log_err(errmsg):
     return {"body": errmsg , "headers": {}, "statusCode": 400,
         "isBase64Encoded":"false"}
 
-logger.info("Cold start complete.")
-
 def handler(event,context):
-
-    #logger.info('Data received: ', str(event))
-    #TODO: add the values to the command here
     payload_fields = event['payload_fields']
     subtype = payload_fields['Subtype']
     for field in payload_fields:
