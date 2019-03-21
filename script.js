@@ -202,6 +202,21 @@ function createHeader(name) {
     return header
 }
 
+function calcAverage(json, type) {
+    var avg = 0, counter = 0;
+    for(var i = 0; i < json.length; i++) {
+        for(var j = 0; j < json[i].properties.readings.length; j++) {
+            if(json[i].properties.readings[j].type = type) {
+                avg += json[i].properties.readings[j].reading;
+                counter++;
+                break;
+            }
+        }
+    }
+    
+    return avg/counter;
+}
+
 /*
     This function uses AJAX to populate a JSON array which gets used by our leaflet map
  */
@@ -223,30 +238,40 @@ function ajax(params) {
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
             var receivedJSON = JSON.parse(httpc.responseText);
             var modifiedJSON = [];
-            for(var i = 0; i<receivedJSON.length; i++) {
+            for(var i = 0; i < receivedJSON.length; i++) {
                 // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
                 if(!checkThere(modifiedJSON, receivedJSON[i])) {
-                    var newObj = {  "type": "Feature",
-                                    "properties": {
-                                        "name": receivedJSON[i].sensor_id,
-                                        "reading_time" : receivedJSON[i].reading_time,
-                                        // An array of readings, to hold every reading over the time period that we received
-                                        "readings": [
-                                            {"type": receivedJSON[i].sensor_type,
-                                             "subtype": receivedJSON[i].sensor_subtype,
-                                             "reading": receivedJSON[i].reading}
-                                        ]},
-                                    "geometry": {
-                                        "type": "Point",
-                                        "coordinates": [
-                                            receivedJSON[i].sensor_lon,
-                                            receivedJSON[i].sensor_lat
-                                        ]
-                                    }
-                                };
-                    modifiedJSON.push(newObj)
+                    var newObj = {  
+                        "type": "Feature",
+                        "properties": {
+                            "name": receivedJSON[i].sensor_id,
+                            "reading_time" : receivedJSON[i].reading_time,
+                            // An array of readings, to hold every reading over the time period that we received
+                            "readings": [
+                                {
+                                    "type": receivedJSON[i].sensor_type,
+                                    "subtype": receivedJSON[i].sensor_subtype,
+                                    "reading": receivedJSON[i].reading
+                                }
+                            ]
+                        },
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                receivedJSON[i].sensor_lon,
+                                receivedJSON[i].sensor_lat
+                            ]
+                        }
+                    };
+                    
+                    modifiedJSON.push(newObj);
                 }
             }
+            
+            document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
+            document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
+            document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
+            document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
             
             sensors = modifiedJSON;
             var map = getMap();
