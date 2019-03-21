@@ -97,19 +97,18 @@ $(document).ready(function () {
 
     // creating custom differently sized icons
 
-
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
+    
     setMap(mymap);
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
     setLayer(markers);
     ajax("?start_time=now");
 
-    //attempting resizing of all markers based on zoom levels
+    // attempting resizing of all markers based on zoom levels
     // highest is level 18, when zoomed all the way in
     // lowest is level 0, where you can see entire world repeated multiple times
     // TODO: determine if this is necessary or how to resize on zoom levels
@@ -196,22 +195,25 @@ function constructPopupHTML(feature) {
     divContainer.appendChild(table);
     return $("#popup_template").html();
 }
+
 function createHeader(name) {
     var header = document.createElement("h2");
     header.innerHTML = name;
     return header
 }
 
-/**
- * This function uses AJAX to populate a JSON array which gets used by our leaflet map
+/*
+    This function uses AJAX to populate a JSON array which gets used by our leaflet map
  */
 function ajax(params) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     var httpc = new XMLHttpRequest(); // simplified for clarity
     httpc.withCredentials = false;
+    
     if (params.indexOf("?") != 0) {
         params = "?" + params;
     }
+    
     var url = "https://jm6ctx1smj.execute-api.us-east-2.amazonaws.com/beta/DBapiAccess" + params;
     httpc.open("GET", url, true);
     console.log(url);
@@ -220,7 +222,6 @@ function ajax(params) {
     httpc.onreadystatechange = function() { //Call a function when the state changes.
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
             var receivedJSON = JSON.parse(httpc.responseText);
-            //console.log(receivedJSON.length);
             var modifiedJSON = [];
             for(var i = 0; i<receivedJSON.length; i++) {
                 // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
@@ -246,6 +247,7 @@ function ajax(params) {
                     modifiedJSON.push(newObj)
                 }
             }
+            
             sensors = modifiedJSON;
             var map = getMap();
             var all_sensors = L.geoJSON(sensors, {
@@ -256,6 +258,7 @@ function ajax(params) {
                     );
                 }
             });
+            
             var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
             map.removeLayer(getLayer());
             markers.addLayer(all_sensors);
@@ -282,10 +285,11 @@ function ajax(params) {
     };
     httpc.send();
 }
+
 /*
- * This function checks our list of GEOJSON objects to see if the sensorID already
- * has an element. If it does we take the reading and put it in the sensorID's object
- */
+    This function checks our list of GEOJSON objects to see if the sensorID already
+    has an element. If it does we take the reading and put it in the sensorID's object
+*/
 function checkThere(list, obj) {
     for(var i = 0; i<list.length; i++) {
         if(obj.sensor_id == list[i].properties.name) {
@@ -298,6 +302,7 @@ function checkThere(list, obj) {
     }
     return false;
 }
+
 /*
     Date picker
     Example code taken from daterangepicker.com
@@ -310,7 +315,7 @@ $(function() {
         applyButtonClasses: 'apply',
         cancelButtonClasses: 'cancel',
         locale: {
-            format: 'M/DD hh:mm A'
+            format: 'DD/MM/YYYY hh:mm A'
         }
     });
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
