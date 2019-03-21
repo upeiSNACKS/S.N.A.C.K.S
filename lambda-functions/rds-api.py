@@ -26,6 +26,7 @@ import pymysql
 import logging
 import traceback
 import json
+import re
 from os import environ
 
 endpoint=environ.get('ENDPOINT')
@@ -61,10 +62,19 @@ def check_for_errors(parameters):
         #Check for typing errors
         for k in parameters:
             if not k in accepted_parameters:
-                bad_parameters.append(k)
+                bad_parameters.append('unknown parameter '+k)
 
         #Check for malformed parameters
-
+        if 'start_time' in parameters and not re.match('\D\D-\D\D-\D\D\D\D', parameters['start_time']):
+            pass
+            bad_parameters.append('malformed start_time: '+parameters['start_time']+' should have format DD-MM-YYYY')
+        if 'end_time' in parameters and not re.match('\D\D-\D\D-\D\D\D\D', parameters['end_time']):
+            pass
+            bad_parameters.append('malformed end_time: '+parameters['end_time']+' should have format DD-MM-YYYY')
+        if 'lat' in parameters and (int(parameters['lat']) > 90 or int(parameters['lat']) < -90):
+            bad_parameters.append('malformed lat: '+str(int(parameters['lat']))+' should be within -90 and 90')
+        if 'lon' in parameters and (int(parameters['lon']) > 180 or int(parameters['lat']) < -180):
+            bad_parameters.append('malformed lon: '+str(int(parameters['lon']))+' should be within -180 and 180')
     return bad_parameters
 
 def handler(event,context):
