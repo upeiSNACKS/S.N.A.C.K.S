@@ -24,7 +24,7 @@ a:focus {
 }
 
 .navbar {
-    position: fixed !important;
+    position: sticky !important;
     top: 0;
     height: 10vh;
     width: 100%;
