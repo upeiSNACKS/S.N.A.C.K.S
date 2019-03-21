@@ -29,7 +29,7 @@ from os import environ
 
 endpoint=environ.get('ENDPOINT')
 port=environ.get('PORT')
-dbuser=environ.get('DBUSER_OUT')
+dbuser=environ.get('DBTTNUSER_IN')
 password=environ.get('DBPASSWORD_IN')
 database=environ.get('DATABASE')
 
@@ -45,41 +45,46 @@ def log_err(errmsg):
     return {"body": errmsg , "headers": {}, "statusCode": 400,
         "isBase64Encoded":"false"}
 
+logger.info("Cold start complete.")
+
 def handler(event,context):
 
+    #logger.info('Data received: ', str(event))
     #TODO: add the values to the command here
     payload_fields = event['payload_fields']
+    subtype = payload_fields['Subtype']
     for field in payload_fields:
-        command = 'INSERT INTO Readings (sensor_id, sensor_type, sensor_subtype, reading_time, reading) VALUES ('
-        command += '\''+event['hardware_serial']+'\', '
-        command += '\''+field.capitalize()+'\', ' #TODO: add sql statement to query other table
-        command += '\'Indoors\', ' #TODO: add sql statement to query other table
-        time = event['metadata']['time']
-        time = time.replace('T', ' ')
-        time = time.split('.')[0]
-        command += '\'' + time +'\', '
-        command += '\'' + str(payload_fields[field]) + '\')'
-
-        try:
-            cnx = make_connection()
-            cursor=cnx.cursor()
+        if field != 'Subtype':
+            command = 'INSERT INTO Readings (sensor_id, sensor_type, sensor_subtype, reading_time, reading) VALUES ('
+            command += '\''+event['dev_id']+'\', '
+            command += '\''+field.capitalize()+'\', ' #TODO: add sql statement to query other table
+            command += '\''+subtype.capitalize()+'\', ' #TODO: add sql statement to query other table
+            time = event['metadata']['time']
+            time = time.replace('T', ' ')
+            time = time.split('.')[0]
+            command += '\'' + time +'\', '
+            command += '\'' + str(payload_fields[field]) + '\')'
 
             try:
-                cursor.execute(command)
+                cnx = make_connection()
+                cursor=cnx.cursor()
+
+                try:
+                    cursor.execute(command)
+                except:
+                    logger.error("ERROR: Cannot execute cursor.\n{}".format(
+                        traceback.format_exc()) )
+
             except:
-                logger.error("ERROR: Cannot execute cursor.\n{}".format(
-                    traceback.format_exc()) )
-
-        except:
-            logger.error("ERROR: Cannot connect to database from handler.\n{}".format(
-                traceback.format_exc()))
+                logger.error("ERROR: Cannot connect to database from handler.\n{}".format(
+                    traceback.format_exc()))
 
 
-        finally:
-            try:
-                cnx.close()
-            except:
-                pass
+            finally:
+                try:
+                    cnx.close()
+                except:
+                    pass
 
 if __name__== "__main__":
     handler(None,None)
