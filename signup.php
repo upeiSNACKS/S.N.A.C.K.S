@@ -41,7 +41,8 @@
     if(!$result) echo "INSERT INTO failed: $types_q<br>" . $connection->error . "<br><br>";
     $result = $connection->query("SELECT LAST_INSERT_ID()");
     if(!$result) echo "SELECT  failed: $types_q<br>" . $connection->error . "<br><br>";
-    $insertID = $result->fetch_array(MYSQLI_NUM)[0];
+    $insertID = $result->fetch_array(MYSQLI_NUM)[0], PASSWORD_DEFAULT;
+
     echo "$insertID <br><br>";
 
     // Instantiation and passing `true` enables exceptions
@@ -55,25 +56,39 @@
     $mail->Subject = $subject;
     $mail->Body = <<<__END
     Hi!
-        Looks like someone submitted a form for becoming a host of a sensor in SNACKS!
-        <h4> Person: </h4>
-        <b>Name</b>: $lname, $fname
-        <b>Email</b>: $email
-        <b>Address</b>: $address
-
-        <h4> Sensor: </h4>
-        <b>Sensor ID</b>: $sensor_id
-        <h5> location </h5>
-        <b>Latitude</b>: $sensor_lat
-        <b>Longitude</b>: $sensor_lon
-
-        <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$approve">
-            <input type="submit" value="Approve" />
-        </form>
-        <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$deny">
-            <input type="submit" value="Deny" />
-        </form>
-
+        <p>Looks like someone submitted a form for becoming a host of a sensor in SNACKS!</p>
+        <table>
+            <tr><th>Person</th></tr>
+            <tr>
+                <td><b>Name</b></td><td>$lname, $fname</td>
+            </tr>
+            <tr>
+                <td><b>Email</b></td><td>$email</td>
+            </tr>
+            <tr>
+                <td><b>Address</b></td><td>$address</td>
+            </tr>
+            <tr>
+                <th>Sensor</th>
+            </tr>
+            <tr>
+                <td><b>Sensor ID</b></td><td>$sensor_id</td>
+            </tr>
+            <tr>
+                <td><b>Latitude</b></td><td>$sensor_lat</td>
+            </tr>
+            <tr>
+                <td><b>Longitude</b></td><td>$sensor_lon</td>
+            </tr>
+        </table>
+        <div class="btn-group" role="group">
+            <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$approve">
+                <input type="submit" value="Approve" />
+            </form>
+            <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$deny">
+                <input type="submit" value="Deny" />
+            </form>
+        </div>
 __END;
     if(!$mail->send()) {
       echo 'Message was not sent.';
