@@ -1,10 +1,29 @@
 <?php
 
     use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
 
     // Load Composer's autoloader
     require 'vendor/autoload.php';
+    /*
+     * emailInfo contains values:
+     * $to: the email of the person it's going to
+     * $toName: the name of the person it's going to
+     * $from: email that it's coming from
+     * $fromName: name of the coming from
+     * $subject: email subject
+     * $approveString: A string to signify approval
+     * $denyString: A string to signify disapproval
+     * $approveHash: Hash of approval string
+     * $denyString: Hash of deny string
+     */
+    require_once 'emailInfo.php';
+    /*
+     * loginPending contains values:
+     * $db_database - name of database
+     * $db_hostname - where the database is located (A url for instance)
+     * $db_password - users password
+     * $db_username - username for db
+     */
     require_once 'loginPending.php';
     echo "Successfully submitted form. Waiting for approval from an Administrator. Thanks :-) ";
 
@@ -25,38 +44,42 @@
     $insertID = $result->fetch_array(MYSQLI_NUM)[0];
     echo "$insertID <br><br>";
 
-    try {
-    //Server settings
-    $mail->SMTPDebug = 2;                                       // Enable verbose debug output
-    $mail->isSMTP();                                            // Set mailer to use SMTP
-    $mail->Host       = 'mail.google.com';  // Specify main and backup SMTP servers
-    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    $mail->Username   = 'rparsenault@upei.ca';                     // SMTP username
-    $mail->Password   = 'chester12';                               // SMTP password
-    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
-    $mail->Port       = 587;                                    // TCP port to connect to
+    // Instantiation and passing `true` enables exceptions
+    $mail = new PHPMailer(true);
 
-    //Recipients
-    $mail->setFrom('from@example.com', 'Mailer');
-    $mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient
-    $mail->addAddress('ellen@example.com');               // Name is optional
-    $mail->addReplyTo('info@example.com', 'Information');
-    $mail->addCC('cc@example.com');
-    $mail->addBCC('bcc@example.com');
+    $mail->setFrom($from, $fromName);
+    $mail->addAddress($to, $toName);
+    $mail->isHTML(true);
+    // Link to snacks.* for approve:
+    //     send along the $insertID, and a string meaning approval.
+    $mail->Subject = $subject;
+    $mail->Body = <<<__END
+    Hi!
+        Looks like someone submitted a form for becoming a host of a sensor in SNACKS!
+        <h4> Person: </h4>
+        <b>Name</b>: $lname, $fname
+        <b>Email</b>: $email
+        <b>Address</b>: $address
 
-    // Attachments
-    $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+        <h4> Sensor: </h4>
+        <b>Sensor ID</b>: $sensor_id
+        <h5> location </h5>
+        <b>Latitude</b>: $sensor_lat
+        <b>Longitude</b>: $sensor_lon
 
-    // Content
-    $mail->isHTML(true);                                  // Set email format to HTML
-    $mail->Subject = 'Here is the subject';
-    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+        <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$approve">
+            <input type="submit" value="Approve" />
+        </form>
+        <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$deny">
+            <input type="submit" value="Deny" />
+        </form>
 
-    $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
+__END
+    if(!$mail->send()) {
+      echo 'Message was not sent.';
+      echo 'Mailer error: ' . $mail->ErrorInfo;
+    } else {
+      echo 'Message has been sent.';
+    }
+
  ?>
