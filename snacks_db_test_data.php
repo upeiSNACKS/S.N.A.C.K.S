@@ -52,7 +52,7 @@
      * SENSOR_ID GETTING
      */
     echo "getting sensor ID's -------------------------------------------------<br>";
-    $sensors_q = "SELECT sensor_id FROM Sensors";
+    $sensors_q = "SELECT sensor_id FROM Sensors where sensor_id not like '%uno&'";
     $result = $connection->query($sensors_q);
     if(!$result) echo "SELECT failed: $sensors_q<br>" . $connection->error . "<br><br>";
     $rows = $result->num_rows;
@@ -79,7 +79,7 @@
      }
      // insert readings
      echo "inserting readings~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ <br>";
-     for($j = 0; $j<100; $j++) {
+     for($j = 0; $j<5; $j++) {
          $type_chosen = rand() % $types_count;
          $type = $types[$type_chosen];
          $subtype = $subtypes[$type_chosen];
@@ -99,7 +99,9 @@
     function generateRandomDate() {
         $dateformat = '2019-01-31 18:19:31';
         $year = rand(2010, 2018);
+        $year = 2019;
         $month = rand(01, 12);
+        $month = 1;
         switch ($month) {
             case 1:case 3:case 5:case 7:case 8:case 10:case 12:
                 $day = rand(1, 31);
@@ -111,6 +113,7 @@
             default:
                 $day = 1;
         }
+        $day = 15;
         $hour = rand(0, 23);
 
 		if($month  < 10) { $month  = "0" . $month;}
