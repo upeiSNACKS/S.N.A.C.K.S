@@ -65,12 +65,12 @@ def check_for_errors(parameters):
                 bad_parameters.append('unknown parameter '+k)
 
         #Check for malformed parameters
-        if 'start_time' in parameters and not re.match('\D\D-\D\D-\D\D\D\D', parameters['start_time']):
+        if 'start_time' in parameters and not re.match('(\d\d\d\d-\d\d-\d\d \d\d:\d\d|(:\d\d))|(now)', parameters['start_time']):
             pass
-            bad_parameters.append('malformed start_time: '+parameters['start_time']+' should have format DD-MM-YYYY')
-        if 'end_time' in parameters and not re.match('\D\D-\D\D-\D\D\D\D', parameters['end_time']):
+            bad_parameters.append('malformed start_time: '+parameters['start_time']+' should have format YYYY-MM-DD HH:MM:SS')
+        if 'end_time' in parameters and not re.match('\d\d\d\d-\d\d-\d\d \d\d:\d\d|(:\d\d)', parameters['end_time']):
             pass
-            bad_parameters.append('malformed end_time: '+parameters['end_time']+' should have format DD-MM-YYYY')
+            bad_parameters.append('malformed end_time: '+parameters['end_time']+' should have format YYYY-MM-DD HH:MM:SS')
         if 'lat' in parameters and (int(parameters['lat']) > 90 or int(parameters['lat']) < -90):
             bad_parameters.append('malformed lat: '+str(int(parameters['lat']))+' should be within -90 and 90')
         if 'lon' in parameters and (int(parameters['lon']) > 180 or int(parameters['lat']) < -180):
@@ -82,6 +82,7 @@ def handler(event,context):
         "statusCode" : 200,
         "headers" : {
             "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Headers" : "*",
             "the-Game" : "you just lost it"
         },
         "body" : None,
@@ -107,10 +108,9 @@ def handler(event,context):
             if parameters['start_time'] == 'now':
                 command += 'reading_time >= all (select date_format(reading_time, \'%Y-%m-%d %H\') from Readings) AND '
             else:
-                command += 'reading_time > \'' + parameters['start_time'] + '\' AND '
+                command += 'reading_time > \'' + str(parameters['start_time']) + '\' AND '
         if 'end_time' in parameters:
-            if'start_time' not in parameters:
-                command += 'reading_time < \'' + parameters['end_time'] + '\' AND '
+            command += 'reading_time < \'' + str(parameters['end_time']) + '\' AND '
         if 'type' in parameters:
             pass
             command += 'sensor_type = \'' + parameters['type'] + '\' AND '
@@ -138,9 +138,6 @@ def handler(event,context):
         '''
         if 'max_readings' in parameters:
             max_readings = int(parameters['max_readings'])
-        else:
-            pass
-            command = command[:-5] + ' ORDER BY reading_time DESC;'
     command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
     #else:
     #    '''
