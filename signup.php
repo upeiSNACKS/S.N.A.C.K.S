@@ -74,7 +74,7 @@
             <input type="submit" value="Deny" />
         </form>
 
-__END
+__END;
     if(!$mail->send()) {
       echo 'Message was not sent.';
       echo 'Mailer error: ' . $mail->ErrorInfo;

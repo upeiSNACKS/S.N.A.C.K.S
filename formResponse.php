@@ -11,6 +11,12 @@
     }
 
     if(password_verify($approval, "IAPPROVETHISINSERT")) {
-        
+        // get the info based on the provided ID
+        // insert owner to DB.
+        //    if fails, that's fine [owner already in db]
+        // insert sensor into DB.
+        //    should not fail
+        //    email person to let them know it's now active?
+        //        would go to spam box....
     }
  ?>
