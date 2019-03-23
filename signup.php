@@ -25,7 +25,6 @@
      * $db_username - username for db
      */
     require_once 'loginPending.php';
-    echo "Successfully submitted form. Waiting for approval from an Administrator. Thanks :-) ";
 
     $connection = new mysqli($db_hostname, $db_username, $db_password, $db_database);
     if($connection->connect_error) die($connection->connect_error);
@@ -41,10 +40,7 @@
     if(!$result) echo "INSERT INTO failed: $types_q<br>" . $connection->error . "<br><br>";
     $result = $connection->query("SELECT LAST_INSERT_ID()");
     if(!$result) echo "SELECT  failed: $types_q<br>" . $connection->error . "<br><br>";
-    $insertID = $result->fetch_array(MYSQLI_NUM)[0], PASSWORD_DEFAULT;
-
-    echo "$insertID <br><br>";
-
+    $insertID = $result->fetch_array(MYSQLI_NUM)[0];
     // Instantiation and passing `true` enables exceptions
     $mail = new PHPMailer(true);
 
@@ -82,10 +78,10 @@
             </tr>
         </table>
         <div class="btn-group" role="group">
-            <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$approve">
+            <form action="snackswebsite-env.pvpbuh8a6r.us-east-2.elasticbeanstalk.com/formResponse.php?id=$insertID&approved=$approve">
                 <input type="submit" value="Approve" />
             </form>
-            <form action="snacks.charlottetown.ca/formResponse.php?id=$insertID&approved=$deny">
+            <form action="snackswebsite-env.pvpbuh8a6r.us-east-2.elasticbeanstalk.com/formResponse.php?id=$insertID&approved=$deny">
                 <input type="submit" value="Deny" />
             </form>
         </div>
@@ -94,7 +90,7 @@ __END;
       echo 'Message was not sent.';
       echo 'Mailer error: ' . $mail->ErrorInfo;
     } else {
-      echo 'Message has been sent.';
+        echo "Successfully submitted form. Waiting for approval from an Administrator. Thanks :-) ";
     }
 
  ?>

@@ -104,7 +104,8 @@ $(document).ready(function () {
 
     setMap(mymap);
     // disable clustering once zoomed in close enough
-    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+    //var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+    var markers = L.markerClusterGroup();
     setLayer(markers);
     ajax("?start_time=now");
 
