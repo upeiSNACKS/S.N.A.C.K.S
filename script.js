@@ -217,7 +217,8 @@ function calcAverage(json, type) {
         }
     }
     if(counter > 0) {
-        return (avg/counter).toFixed(2);
+        // Round to two decimal places only if needed
+        return Math.round(avg/counter * 100) / 100;
     }
     else {
         return "No values"
