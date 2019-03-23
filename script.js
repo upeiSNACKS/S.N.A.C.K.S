@@ -181,7 +181,6 @@ function constructPopupHTML(feature) {
     tr.appendChild(th);
 
     for (var i = 0; i < feature.properties.readings.length; i++) {
-        //console.log(feature.properties.readings[i]);
         tr = table.insertRow(-1);
         var tabCell = tr.insertCell(-1);
         tabCell.innerHTML = feature.properties.readings[i].type + ", " + feature.properties.readings[i].subtype;
@@ -202,19 +201,93 @@ function createHeader(name) {
     return header
 }
 
+/*
+    Calculates the average value of a metric from JSON and returns it
+    Used for the cards on the main page
+*/
 function calcAverage(json, type) {
     var avg = 0, counter = 0;
     for(var i = 0; i < json.length; i++) {
         for(var j = 0; j < json[i].properties.readings.length; j++) {
-            if(json[i].properties.readings[j].type = type) {
-                avg += json[i].properties.readings[j].reading;
+            if(json[i].properties.readings[j].type == type) {
+                avg += parseInt(json[i].properties.readings[j].reading);
                 counter++;
                 break;
             }
         }
     }
+    if(counter > 0) {
+        // Round to two decimal places only if needed
+        return Math.round(avg/counter * 100) / 100;
+    }
+    else {
+        return "No values"
+    }
+}
 
-    return avg/counter;
+/*
+    Calculates the max value of a metric from JSON and returns it
+    Used for the cards on the main page
+*/
+function calcMax(json, type) {
+    // Used to make sure there are values in the JSON
+    var values = 0;
+    for(var j = 0; j < json[0].properties.readings.length; j++) {
+        if(json[0].properties.readings[j].type == type) {
+            var max = json[0].properties.readings[j].reading;
+            values = 1;
+            break;
+        }
+    }
+
+    if(values = 0) {
+        return "No values";
+    }
+
+    for(var i = 0; i < json.length; i++) {
+        for(var j = 0; j < json[i].properties.readings.length; j++) {
+            if(json[i].properties.readings[j].type == type) {
+                if(max < parseInt(json[i].properties.readings[j].reading)) {
+                    max = json[i].properties.readings[j].reading;
+                }
+            }
+        }
+    }
+
+    return max;
+}
+
+/*
+    Calculates the min value of a metric from JSON and returns it
+    Used for the cards on the main page
+*/
+function calcMin(json, type) {
+    // Used to make sure there are values in the JSON
+    var values = 0;
+    for(var j = 0; j < json[0].properties.readings.length; j++) {
+        if(json[0].properties.readings[j].type == type) {
+            var min = json[0].properties.readings[j].reading;
+            values = 1;
+            break;
+        }
+    }
+
+    if(values = 0) {
+        return "No values";
+    }
+
+    for(var i = 1; i < json.length; i++) {
+        for(var j = 0; j < json[i].properties.readings.length; j++) {
+            if(json[i].properties.readings[j].type == type) {
+                if(min > parseInt(json[i].properties.readings[j].reading)) {
+                    min = json[i].properties.readings[j].reading;
+                }
+            }
+        }
+    }
+
+
+    return min;
 }
 
 /*
@@ -231,7 +304,6 @@ function ajax(params) {
 
     var url = "https://api.snacks.charlottetown.ca/v1/data" + params;
     httpc.open("GET", url, true);
-    console.log(url);
     httpc.setRequestHeader("Content-Type", "application/json");
 
     httpc.onreadystatechange = function() { //Call a function when the state changes.
@@ -271,7 +343,11 @@ function ajax(params) {
             document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
             document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
             document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
+            document.getElementById("temp_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Temperature") + "&deg;C";
+            document.getElementById("temp_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Temperature") + "&deg;C";
             document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
+            document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
+            document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
 
             sensors = modifiedJSON;
             var map = getMap();
