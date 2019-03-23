@@ -76,35 +76,49 @@
         </p>
 
         <p>
-        The backbone of this project is <a href="https://www.thethingsnetwork.org/docs/lorawan/">LoRaWAN</a> technology, a wireless communication standard that allows for long distance transmission of small packets of data.
-        In particular, we are using <a href="https://www.thethingsnetwork.org/">The Things Network</a> to move data from Arduino devices to our database.
-        We have also utilized <a href="https://aws.amazon.com/">AWS</a> services for various parts of the system. All of our code is open source and
-        available on <a href="https://github.com/upeiSNACKS/snacks">GitHub.</a>
-        </p>
+          The backbone of this project is <a href="https://www.thethingsnetwork.org/docs/lorawan/">LoRaWAN</a> technology, a wireless communication standard that allows for long distance transmission of small packets of data.
+          In particular, we are using <a href="https://www.thethingsnetwork.org/">The Things Network</a> to move data from Arduino devices to our database.
+          We have also utilized Amazon Web Services <a href="https://aws.amazon.com/">(AWS)</a> services for various parts of the system. All of our code is open source and
+          available on <a href="https://github.com/upeiSNACKS/snacks">GitHub</a>, licensed under the <a href="https://www.gnu.org/licenses/">GNU GPL.</a>
 
-        <p>
-        The code on GitHub is licensed on
         </p>
 
         <div class="line"></div>
 
         <h2>Future Direction</h2>
-        <p>There are a number of sensors that could be integrated with our system. At the moment, we have <a href="prototype.html">prototype devices</a> running on AA batteries that gather temperature and humidity data once every hour.
 
-        <p>One potential use case for a system like this is to identify "micro-climates" within a city.
-        It can perhaps be misleading to assume that the temperature read at the Charlottetown airport is the universal truth for the temperature of the whole city.
-        Could areas near a pond be cooler or warmer at different times of the year?
-        Does construction affect the temperature of a previously forested area?
-        Are there some other facto
+        <p>
+          There are a number of sensor types that can be integrated with our system. At the moment, we have <a href="prototype.html">prototype devices</a>
+          running on AA batteries that gather temperature and humidity data once every hour. However, this system is not limited to temperature and humidity sensing.
+          Since it only relies on LoRaWAN communication, any sensor that can be connected to an Arduino device could be integrated into this system with minimal effort.
+          For example, there exist cheap Arduino sensors that can measure light levels, there are several well-documented Arduino projects online that measure rainfall,
+          and there are also sensors available that sense air quality. These sensors all vary in cost and usefulness, but they can all be added into this system and
+          report data concurrently.
         </p>
 
-        <p>Hopefully, the most interesting insights from data gathered in this way will not come from questions that we come up with beforehand,
-        but from questions that are asked by citizens in the future, when there is historical data to work with.</p>
+        <p>
+          One potential use case for temperature measurement in a system like this is to identify "micro-climates" within a city.
+          It can perhaps be misleading to assume that the temperature as measured at the <a href="https://weather.gc.ca/past_conditions/index_e.html?station=yyg">Charlottetown airport</a>
+          is the same temperature as the whole city.
+          Could areas near a pond be cooler or warmer at different times of the year?
+          Does construction of a parking lot or major building affect the temperature of a previously forested area?
+          What is the long term effect of construction projects on localized temperature?
+        </p>
+
+        <p>
+          Hopefully, the most interesting insights from data gathered in this way will come from questions that cannot be articulated right now. The benefit
+          of a citizen science project is that in the future, when there is a large amount of data available to inspect, an interested citizen may come up with their
+          own question that reveals some unexpected insight about the City of Charlottetown.
+        </p>
 
         <div class="line"></div>
 
         <h2>About Us</h2>
-        <p>Development of the project has been completed by computer science students from the University of Prince Edward Island, Peter Rukavina, and several interested citizens, in collaboration with the City of Charlottetown.</p>
+
+        <p>
+          Development of the project has been completed by computer science students from the <a href="http://www.upei.ca/">University of Prince Edward Island,</a>
+          <a href="https://ruk.ca/">Peter Rukavina,</a> and several interested citizens, in collaboration with the <a href="https://www.charlottetown.ca/">City of Charlottetown.</a>
+        </p>
         <div class="line"></div>
     </div>
 
