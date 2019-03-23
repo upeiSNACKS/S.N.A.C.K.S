@@ -104,8 +104,7 @@ $(document).ready(function () {
 
     setMap(mymap);
     // disable clustering once zoomed in close enough
-    //var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
-    var markers = L.markerClusterGroup();
+    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1});
     setLayer(markers);
     ajax("?start_time=now");
 
@@ -230,7 +229,7 @@ function ajax(params) {
         params = "?" + params;
     }
 
-    var url = "https://jm6ctx1smj.execute-api.us-east-2.amazonaws.com/beta/DBapiAccess" + params;
+    var url = "https://api.snacks.charlottetown.ca/v1/data" + params;
     httpc.open("GET", url, true);
     console.log(url);
     httpc.setRequestHeader("Content-Type", "application/json");
@@ -285,10 +284,10 @@ function ajax(params) {
                 }
             });
 
-            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1 });
             map.removeLayer(getLayer());
             markers.addLayer(all_sensors);
-
+            setLayer(markers);
             map.addLayer(markers);
 
             var options = {

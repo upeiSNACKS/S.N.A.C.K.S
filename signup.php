@@ -53,7 +53,7 @@
     $mail->Body = <<<__END
     Hi!
         <p>Looks like someone submitted a form for becoming a host of a sensor in SNACKS!</p>
-        <table>
+        <table style="margin-left:10px">
             <tr><th>Person</th></tr>
             <tr>
                 <td><b>Name</b></td><td>$lname, $fname</td>
@@ -77,14 +77,15 @@
                 <td><b>Longitude</b></td><td>$sensor_lon</td>
             </tr>
         </table>
+        <p> If you approve, click the button below and it will be automatically added to the system. If you do not approve, please respond to <b>$email</b> and explain why not.
         <div class="btn-group" role="group">
-            <form action="snackswebsite-env.pvpbuh8a6r.us-east-2.elasticbeanstalk.com/formResponse.php?id=$insertID&approved=$approve">
-                <input type="submit" value="Approve" />
-            </form>
-            <form action="snackswebsite-env.pvpbuh8a6r.us-east-2.elasticbeanstalk.com/formResponse.php?id=$insertID&approved=$deny">
-                <input type="submit" value="Deny" />
+            <form action="snackswebsite-env.pvpbuh8a6r.us-east-2.elasticbeanstalk.com/formResponse.php" method="get">
+                <input type=hidden name="id" value="$insertID">
+                <input type=hidden name="approved" value="$approve">
+                <input type="submit" value="Approve"/>
             </form>
         </div>
+        <p>You will also have to add this sensor to the Things Network as well before it becomes active.</p>
 __END;
     if(!$mail->send()) {
       echo 'Message was not sent.';
