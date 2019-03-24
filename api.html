@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>SNACKS</title>
+
+    <!-- Favicon setup for multiple devices -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png">
+    <link rel="manifest" href="./favicon/site.webmanifest">
+    <link rel="mask-icon" href="./favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" type="text/css" href="styles.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/solid.css" integrity="sha384-n4xPrkfCJ3FzmPwM/Nf1QQu7Qx6oDcsbMp+qPOxrJ5w0Tq19ZWd9ylcMWkzKEpwP" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/fontawesome.css" integrity="sha384-Sbwc59I1SOoVoCGgBCwAe/M1j5a9cHixHv/7x9vOxORnT73jUaxyK0paobkk3JSt" crossorigin="anonymous">
 </head>
 <body>
     <!-- Bootstrap stuff -->
@@ -48,7 +58,7 @@
         </ul>
     </nav>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
         <div class="container-fluid">
             <button type="button" id="sidebarCollapse" class="btn btn-info" accesskey="q">
                 <i class="fas fa-align-left"></i>
@@ -56,35 +66,151 @@
             </button>
 
             <button type="button" id="help" class="btn btn-info" accesskey="h">
-                <i class="fas question"></i>
+                <i class="fas fa-question"></i>
                 <span>Help</span>
             </button>
         </div>
     </nav>
 
     <div id="content">
-        <br><br>
-        <h2>Get Raw Data</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <h2>Using the API</h2>
+        <p>So you want to use our data, eh? This page is meant to show how the API works. If you've already worked with APIs before, we won't waste your time. Here's the URL:</p>
+        <p> API URL HERE </p>
+        <p>The API accepts the following parameters (all of them are optional). On the 'Your Value' column, you can enter a value, and we'll build a URL for you.</p>
+        <table>
+            <tr>
+                <td>Parameter</td>
+                <td>Expected Type</td>
+                <td>Description</td>
+                <td>Your Value</td>
+            </tr>
+            <tr>
+                <td>sensor_id</td>
+                <td>String</td>
+                <td>The name given to a sensor. Ex: MyCoolSensor-123</td>
+                <td><input id="sensor_id"/></td>
+            </tr>
+            <tr>
+                <td>type</td>
+                <td>String</td>
+                <td>The quantity being measured. Ex: Temperature</td>
+                <td><input id="type"/></td>
+            </tr>
+            <tr>
+                <td>subtype</td>
+                <td>String</td>
+                <td>A specification of the quantity being measured. Ex: Indoors</td>
+                <td><input id="subtype"/></td>
+            </tr>
+            <tr>
+                <td>start_time</td>
+                <td>String</td>
+                <td>Return measurements only after this time. Sending 'now' instead of a date, will return the latest measurements only. Expects format DD-MM-YYYY HH:MM:SS or 'now'</td>
+                <td><input id="start_time"/></td>
+            </tr>
+            <tr>
+                <td>end_time</td>
+                <td>String</td>
+                <td>Return measurements only before this time. Expects format DD-MM-YYYY HH:MM:SS</td>
+                <td><input id="end_time"/></td>
+            </tr>
+            <tr>
+                <td>max_readings</td>
+                <td>Int</td>
+                <td>Return the specified number of measurements</td>
+                <td><input id="max_readings"/></td>
+            </tr>
+            <tr>
+                <td>radius</td>
+                <td>Double</td>
+                <td>Returns measurements within the radius specified, centered at lat and lon. Does nothing if lat and lon are not specified. Sets to 10km if lat and lon are specified, but range is not specified</td>
+                <td><input id="radius"/></td>
+            </tr>
+            <tr>
+                <td>lat</td>
+                <td>Double</td>
+                <td>Sets the latitude to filter measurements (-90 to 90). Requires lon and range to work</td>
+                <td><input id="lat"/></td>
+            </tr>
+            <tr>
+                <td>lon</td>
+                <td>Double</td>
+                <td>Sets the longitude to filter measurements (-180 to 180). Requires lat and range to work</td>
+                <td><input id="lon"/></td>
+            </tr>
+        </table>
+        
+        <div class="line"></div>
+        
+        <p>Here's a URL builder so you can see what the URL will look like with all the parameters you want. Just fill in the boxes, and we'll build a URL.</p>
+        <button onclick="build_url()" type="button" id="build" class="btn btn-info" accesskey="b">
+            <i class="fas fa-hammer"></i>
+            <span>Build</span>
+        </button>
+        <p id="built_url"> </p>
 
         <div class="line"></div>
-
-        <h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <div class="line"></div>
-
-        <h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <div class="line"></div>
-
-        <h3>Lorem Ipsum Dolor</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>The API will return an array of standard JSON objects. Here's an example:</p>
+        <pre id="json">
+          <p>
+            [
+              {
+                "sensor_id": "identification tag of the sensor (ex: 3754-ZqyII6DjyV-32467)",
+                "sensor_type": "measurement type (ex: Temperature)",
+                "sensor_subtype": "measurement subtype (ex: Indoors)",
+                "reading_time": "measurement date and time (ex: 2019-06-01 05:45:18)",
+                "reading": "value measured (ex: 5)",
+                "sensor_lat": "latitude of the sensor (ex: 46.2695)[OPTIONAL]",
+                "sensor_lon": "longitude of the sensor (ex: -63.1378)[OPTIONAL]"
+              }
+            ]
+          </p>
+        </pre>
     </div>
 
 
     <div class="overlay"></div>
+  <script type="text/javascript">
+    function build_url(){
+      url = "http://url/?"
+      var sensor_id = document.getElementById("sensor_id").value;
+      var type = document.getElementById("type").value;
+      var subtype = document.getElementById("subtype").value;
+      var end_time = document.getElementById("end_time").value;
+      var start_time = document.getElementById("start_time").value;
+      var max_readings = document.getElementById("max_readings").value;
+      var lat = document.getElementById("lat").value;
+      var lon = document.getElementById("lon").value;
+      var radius = document.getElementById("radius").value;
+      if (sensor_id){
+        url += "sensor_id="+sensor_id+"&";
+      }
+      if (type){
+        url += "type="+type+"&";
+      }
+      if (subtype){
+        url += "subtype="+subtype+"&";
+      }
+      if (start_time){
+        url += "start_time="+start_time+"&";
+      }
+      if (end_time){
+        url += "end_time="+end_time+"&";
+      }
+      if (max_readings){
+        url += "max_readings="+max_readings+"&";
+      }
+      if (lat && lon){
+        url += "lat="+lat+"&";
+      }
+      if (lat && lon){
+        url += "lon="+lon+"&";
+      }
+      if (lat && lon && radius){
+        url += "radius="+radius+"&";
+      }
+      document.getElementById("built_url").innerHTML = url.slice(0,-1);
+    }
+  </script>
 </body>
 </html>
