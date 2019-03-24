@@ -167,7 +167,12 @@ a.article:hover {
     color: #333333;
 }
 
-#content.h2 {
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6 {
     color: #024877;
 }
 
@@ -256,4 +261,12 @@ a.article:hover {
 
 .card-text {
     line-height: 1;    
+}
+
+/* ---------------------------------------------------
+    MODAL STYLE
+----------------------------------------------------- */
+
+.modal-header, .modal-footer {
+    background: #036eb7;
 }
