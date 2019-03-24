@@ -1,7 +1,6 @@
 <!--
-    Home page for SNACKS
-    This page contains the visualization
-    Created by: Alec Metcalfe
+    About Page - information about our team, the project, and future applications the project may have
+    Created by: Alec Metcalfe, Jeremy Thompson
 -->
 
 <!DOCTYPE html>
@@ -17,7 +16,6 @@
     <link rel="mask-icon" href="./favicon/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-
     <link rel="stylesheet" type="text/css" href="styles.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,38 +32,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
-    <!-- Include Date Picker -->
-    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
-    <!-- Include Leaflet code -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-   crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-   integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-   crossorigin=""></script>
-
-    <!-- Leaflet Marker Cluster -->
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-
-    <!-- Turf.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
-
     <script src="sidebar-script.js" type="text/javascript"></script>
-
-    <!-- Template HTML Div for marker popup -->
-    <!-- TODO: based on type of data recieved, may have to construct additional tr -->
-
-    <div class="hide" id="popup_template" style="display:none">
-        <h2 id="title"></h2>
-        <table id="popup_table"></table>
-    </div>
-
-    <script src="script.js" type="text/javascript"></script>
 
     <nav id="sidebar">
         <div id="dismiss">
@@ -77,14 +44,11 @@
         </div>
 
         <ul class="list-unstyled components">
-            <li class="active">
+            <li>
                 <a href="index.html">Home</a>
             </li>
             <li>
                 <a href="api.html">Get Raw Data</a>
-            </li>
-            <li>
-                <a href="signup.html">Sign up</a>
             </li>
             <li>
                 <a href="contact.html">Contact</a>
@@ -92,7 +56,7 @@
             <li>
                 <a href="about.html">About</a>
             </li>
-            <li>
+            <li class="active">
                 <a href="prototype.html">Prototype Device</a>
             </li>
         </ul>
@@ -112,53 +76,6 @@
         </div>
     </nav>
 
-    <div id="content">
-        <h2>Home</h2>
-
-        <div class="row">
-            <div class="col-sm-6" id="card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Temperature in Charlottetown</h4>
-                        <p class="card-text" id="temp_avg"></p>
-                        <p class="card-text" id="temp_max"></p>
-                        <p class="card-text" id="temp_min"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6" id="card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Humidity in Charlottetown</h4>
-                        <p class="card-text" id="hum_avg"></p>
-                        <p class="card-text" id="hum_max"></p>
-                        <p class="card-text" id="hum_min"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6" id="card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Numbers of Sensors</h4>
-                        <p class="card-text" id="num_sensors"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6" id="card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Last Reading During Time Range</h4>
-                        <p class="card-text" id="last_reading"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="line"></div>
-    </div>
-
     <!-- Modal -->
     <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -173,7 +90,7 @@
                     <h4>What is this website?</h4>
                     <p>This website is SNACKS(Sensor Network Around Charlottetown's Key Surrondings). Here you can view data such as temperature and humidity from sensors all around Charlottetown</p>
                     <p>Check out the <a href="about.html">about page</a> to learn more.</p>
-
+                    
                     <div class="line"></div>
 
                     <h4>How do I read the data?</h4>
@@ -181,10 +98,10 @@
                     <p>To get raw data check out the <a href="api.html">API page</a>.</p>
 
                     <div class="line"></div>
-
+                    
                     <h4>How can I participate?</h4>
                     <p>Checout the <a href="signup.html">signup page</a> for details.</p>
-
+                    
                     <div class="line"></div>
 
                     <h4>Hotkeys</h4>
@@ -201,8 +118,42 @@
         </div>
     </div>
 
-    <div id="mapid"></div> <!--leaflet map wrapper div -->
+    <div id="content">
+        <br><br>
 
-    <div class="overlay"></div> <!-- makes the screen dark when the sidebar is open -->
+        <h2>Prototype Overview</h2>
+        <p>
+          We are currently using a <a href="https://www.thethingsnetwork.org/docs/devices/uno/">Things Uno</a> device connected to a <a href="https://www.adafruit.com/product/385">DHT22</a>
+          sensor to gather temperature and humidity. The Things Uno was chosen for its simplicity and documentation. The DHT22 was chosen as an initial sensor because of its ease of use,
+          reliability, and because temperature and humidity are easily understood measurements.
+        </p>
+
+        <p>
+          The current power source for the prototype devices is a AA battery pack. Despite our best efforts of reducing power draw, we only managed to achieve data transmission for
+          two weeks from alkaline AA batteries. However, on future devices, there will likely be a more power efficient Arduino device used, which would increase the battery life
+          of the device significantly.
+        </p>
+
+        <div class="line"></div>
+
+        <div class="row justify-content-center">
+          <div class="col-md-4">
+            <img src="prototype-device-min.jpg" class="img-fluid">
+            <p>The prototype device</p>
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="row justify-content-center">
+          <div class="col-md-4 align-self-center">
+            <img src="arduino-diagram-with-lcd.png" class="img-fluid">
+            <p>The prototype device connections</p>
+          </div>
+        </div>
+
+    </div>
+
+    <div class="overlay"></div>
 </body>
 </html>

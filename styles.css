@@ -48,7 +48,7 @@ a,
 a:hover,
 a:focus {
     color: inherit;
-    text-decoration: none;    
+    text-decoration: none;
     transition: all 0.3s;
 }
 
@@ -176,7 +176,7 @@ a.article:hover {
 }
 
 .btn-info {
-    background: #056CB7 !important;   
+    background: #056CB7 !important;
 }
 
 .btn-info:hover {
@@ -196,7 +196,12 @@ a.article:hover {
     color: #333333;
 }
 
-#content.h2 {
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6 {
     color: #024877;
 }
 
@@ -285,4 +290,12 @@ a.article:hover {
 
 .card-text {
     line-height: 1;
+}
+
+/* ---------------------------------------------------
+    MODAL STYLE
+----------------------------------------------------- */
+
+.modal-header, .modal-footer {
+    background: #036eb7;
 }
