@@ -51,6 +51,26 @@ $(document).ready(function () {
         },
 
     });
+    
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (mymap) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+            labels = [];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
+
+        return div;
+    };
+
+    legend.addTo(mymap);
 
     mymap.addControl(new timeControl());
 
@@ -100,7 +120,23 @@ $(document).ready(function () {
         }
     });
 
+    var info = L.control();
 
+    info.onAdd = function (mymap) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update();
+        return this._div;
+    };
+
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+        this._div.innerHTML = '<h4>Sensor Data</h4>' +  (props ?
+                                                            '<b>' + props.name + '</b><br />' + props.density + '&deg;C'
+                                                            : 'Hover over a region to see it\'s data');
+    };
+
+    setInfo(info);
+    info.addTo(mymap);
 });
 
 function getColor(d) {
@@ -115,6 +151,7 @@ function getColor(d) {
 }
 
 function style(feature) {
+    console.log(feature);
     return {
         fillColor: getColor(feature.properties.density),
         weight: 2,
@@ -125,23 +162,59 @@ function style(feature) {
     };
 }
 
-var globalMap;
-var layer;
+function highlightFeature(e) {
+    var layer = e.target;
 
-function setLayer(l) {
-    layer = l;
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+    
+    globalInfo.update(layer.feature.properties);
 }
 
-function getLayer() {
-    return layer;
+function resetHighlight(e) {
+    globalGeoJSON.resetStyle(e.target);
+    globalInfo.update();
+}
+
+function zoomToFeature(e) {
+    globalMap.fitBounds(e.target.getBounds());
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
+var globalMap;
+var globalLayer;
+var globalGeoJSON;
+var globalInfo;
+
+function setLayer(l) {
+    globalLayer = l;
 }
 
 function setMap(map) {
     globalMap = map;
 }
 
-function getMap() {
-    return globalMap;
+function setGeoJSON(geojson) {
+    globalGeoJSON = geojson;
+}
+
+function setInfo(info) {
+    globalInfo = info;
 }
 
 function constructPopupHTML(feature) {
@@ -326,7 +399,7 @@ function ajax(params) {
             document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
             
             sensors = modifiedJSON;
-            var map = getMap();
+            var map = globalMap;
             var all_sensors = L.geoJSON(sensors, {
                 onEachFeature: function (feature, layer) {
                     layer.setIcon(grapes_medium);
@@ -337,7 +410,7 @@ function ajax(params) {
             });
             
             var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
-            map.removeLayer(getLayer());
+            map.removeLayer(globalLayer);
             markers.addLayer(all_sensors);
 
             map.addLayer(markers);
@@ -357,7 +430,8 @@ function ajax(params) {
             var voronoiPolygons = turf.voronoi(sensors, options);
 
             // Draw the polygons on the map
-            L.geoJson(voronoiPolygons, {style: style}).addTo(map);
+            var geojson = L.geoJson(voronoiPolygons, {style: style, onEachFeature: onEachFeature}).addTo(map);
+            setGeoJSON(geojson);
         }
     };
     httpc.send();
