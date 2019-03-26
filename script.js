@@ -98,10 +98,10 @@ $(document).ready(function () {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
     
-    setMap(mymap);
+    globalMap = mymap;
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
-    setLayer(markers);
+    globalLayer = markers;
     ajax("?start_time=now");
 
     // attempting resizing of all markers based on zoom levels
@@ -135,7 +135,7 @@ $(document).ready(function () {
                                                             : 'Hover over a region to see it\'s data');
     };
 
-    setInfo(info);
+    globalInfo = info;
     info.addTo(mymap);
 });
 
@@ -151,7 +151,7 @@ function getColor(d) {
 }
 
 function style(feature) {
-    console.log(feature);
+    //console.log(feature);
     return {
         fillColor: getColor(feature.properties.density),
         weight: 2,
@@ -200,22 +200,6 @@ var globalMap;
 var globalLayer;
 var globalGeoJSON;
 var globalInfo;
-
-function setLayer(l) {
-    globalLayer = l;
-}
-
-function setMap(map) {
-    globalMap = map;
-}
-
-function setGeoJSON(geojson) {
-    globalGeoJSON = geojson;
-}
-
-function setInfo(info) {
-    globalInfo = info;
-}
 
 function constructPopupHTML(feature) {
     var table = document.createElement("table");
@@ -402,7 +386,7 @@ function ajax(params) {
             var map = globalMap;
             var all_sensors = L.geoJSON(sensors, {
                 onEachFeature: function (feature, layer) {
-                    layer.setIcon(grapes_medium);
+                    layer.setIcon(grapes_small);
                     layer.bindPopup(
                         constructPopupHTML(feature)
                     );
@@ -428,10 +412,10 @@ function ajax(params) {
 
             // Get the polygons
             var voronoiPolygons = turf.voronoi(sensors, options);
-
+            console.log(voronoiPolygons);
             // Draw the polygons on the map
             var geojson = L.geoJson(voronoiPolygons, {style: style, onEachFeature: onEachFeature}).addTo(map);
-            setGeoJSON(geojson);
+            globalGeoJSON = geojson;
         }
     };
     httpc.send();
