@@ -50,15 +50,19 @@ function validateID(field) {
     }
     return "";
 }
+// https://ruk.ca/content/prince-edward-island-gis-numbers
+// Thanks peter!
+// lonmin,latmin: -64.4534,45.9353
+// lonmax,latmax -61.9494,47.0668
 function validateLat(field) {
-    if(field >= 46.2 && field <= 46.3) {
+    if(field >= 45.9353 && field <= 47.0668) {
         return "";
     } else {
         return "Latitude is not within Charlottetown bounds\n"
     }
 }
 function validateLon(field) {
-    if(field >= -63.1 && field <= -63.0) {
+    if(field >= -64.4534 && field <= -61.9494) {
         return "";
     } else {
         return "Longitude is not within Charlottetown bounds\n"
