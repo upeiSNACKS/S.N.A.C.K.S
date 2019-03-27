@@ -27,11 +27,12 @@ $(document).ready(function() {
 });
 var fail = "";
 function validate(form){
-    fail += validateID(form.sensorID.value)
-    fail += validateLat(form.sensor_lat.value)
-    fail += validateLon(form.sensor_lon.value)
+    fail += validateID(form.elements.namedItem("sensorID").value)
+    fail += validateLat(form.elements.namedItem("lat").value)
+    fail += validateLon(form.elements.namedItem("lon").value)
     if (fail == "") {
-        swal("Success!", "you did it!", "success");
+        console.log("FO0RM");
+        swal("Success!", "you did nothing!", "success");
         return true;
     } else {
         swal("Error", fail, "error");
