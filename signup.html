@@ -69,13 +69,13 @@
         <h3>Sensor Application Form</h3>
         <p>Fill out this form to put in an application to receive a sensor.</p>
         <div class="col-4 col-md-7" align="right">
-            <table align="center">
+            <table class="signuptable">
                 <tbody>
                     <tr>
-                        <td><!--action="/signup.php"-->
-                            <form id='insertForm' method = "POST"  class="well form-horizontal"  onsubmit="return validate(this)">
+                        <td>
+                            <form id='insertForm' method = "POST"  class="well form-horizontal"  onsubmit="return submit(this)">
                                 <fieldset>
-                                    <h4 align="left">Personnel Information</h4>
+                                    <h4 align="left">Your Information</h4>
                                     <div class="form-group row">
                                         <label for="fname" class="col-4 col-form-label">First Name</label>
                                         <div class="col-8">
@@ -111,7 +111,7 @@
 
 
                                     <h5 align="left">    Sensor Location</h5>
-                                    <h8 align="left"> If you don't know your Latitude and Longitude, please go <a href="https://www.latlong.net" target="_blank">here</a> and find where your sensor will be, then put the corresponding latitude and longitude in the boxes below</h8>
+                                    <p class="text-center"> If you don't know your Latitude and Longitude, please go <a href="https://www.latlong.net" target="_blank">here</a> and find where your sensor will be, then put the corresponding latitude and longitude in the boxes below</p>
                                     <div class="form-group row">
                                         <label for="lat" class="col-4 col-form-label">Sensor Latitude</label>
                                         <div class="col-8">
