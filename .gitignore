@@ -1,7 +1,10 @@
 login.php
 loginAPI.php
+loginPending.php
 node_modules
 fake_sensors.json
 package.json
 package-lock.json
 test.html
+emailInfo.php
+snacks_*.zip

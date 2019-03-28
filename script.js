@@ -77,10 +77,10 @@ $(document).ready(function () {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
-    
+
     setMap(mymap);
     // disable clustering once zoomed in close enough
-    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1});
     setLayer(markers);
     ajax("?start_time=now");
 
@@ -229,7 +229,7 @@ function calcMax(json, type) {
             }
         }
     }
-    
+
     return max;
 }
 
@@ -261,7 +261,7 @@ function calcMin(json, type) {
             }
         }
     }
-    
+
 
     return min;
 }
@@ -273,12 +273,12 @@ function ajax(params) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     var httpc = new XMLHttpRequest(); // simplified for clarity
     httpc.withCredentials = false;
-    
+
     if (params.indexOf("?") != 0) {
         params = "?" + params;
     }
-    
-    var url = "https://jm6ctx1smj.execute-api.us-east-2.amazonaws.com/beta/DBapiAccess" + params;
+
+    var url = "https://api.snacks.charlottetown.ca/v1/data" + params;
     httpc.open("GET", url, true);
     httpc.setRequestHeader("Content-Type", "application/json");
 
@@ -289,7 +289,7 @@ function ajax(params) {
             for(var i = 0; i < receivedJSON.length; i++) {
                 // If we don't have this SensorID already in our GEOJSON, we create a new GEOJSON object for it
                 if(!checkThere(modifiedJSON, receivedJSON[i])) {
-                    var newObj = {  
+                    var newObj = {
                         "type": "Feature",
                         "properties": {
                             "name": receivedJSON[i].sensor_id,
@@ -311,11 +311,11 @@ function ajax(params) {
                             ]
                         }
                     };
-                    
+
                     modifiedJSON.push(newObj);
                 }
             }
-            
+
             document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
             document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
             document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
@@ -324,7 +324,7 @@ function ajax(params) {
             document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
             document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
             document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
-            
+
             sensors = modifiedJSON;
             var map = getMap();
             var all_sensors = L.geoJSON(sensors, {
@@ -335,17 +335,17 @@ function ajax(params) {
                     );
                 }
             });
-            
-            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+
+            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1 });
             map.removeLayer(getLayer());
             markers.addLayer(all_sensors);
-
+            setLayer(markers);
             map.addLayer(markers);
 
             var options = {
                 // Bounding box for all of PEI
                 //bbox: [-64.5, 45.9, -62, 47.1]
-                
+
                 // Bouding box for only Charlottetown
                 bbox: [-63.2, 46.22, -63.08, 46.32]
             };

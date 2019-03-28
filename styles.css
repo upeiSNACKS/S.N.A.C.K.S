@@ -2,6 +2,42 @@
     This stylesheet was taken and modified from Bootstrapious
 */
 
+.swal-modal {
+  background-color: #014876;
+  border: 3px solid white;
+}
+
+.swal-title {
+  font-size: 24px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+  color: #FFFEFA
+}
+
+.swal-button {
+  padding: 7px 19px;
+  border-radius: 2px;
+  background-color: #056CB7;
+  font-size: 14px;
+  border: 1px solid #3e549a;
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+}
+.checkboxpanel {
+    padding: 25px;
+    background-color: #E0E0E0;
+    border-radius: 10px;
+}
+
+.swal-text {
+  padding: 14px;
+  display: block;
+  margin: 22px;
+  font-size: 18px;
+  text-align: center;
+  color: #FFFEFA;
+}
+h8 {
+    align: left !important;
+}
 body {
     font-family: 'Poppins', sans-serif;
     background: #fff;
@@ -14,12 +50,17 @@ p {
     line-height: 1.7em;
     color: #333333;
 }
-
+table {
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    border: 0px;
+    align-self: center;
+}
 a,
 a:hover,
 a:focus {
     color: inherit;
-    text-decoration: none;    
+    text-decoration: none;
     transition: all 0.3s;
 }
 
@@ -147,7 +188,7 @@ a.article:hover {
 }
 
 .btn-info {
-    background: #056CB7 !important;   
+    background: #056CB7 !important;
 }
 
 .btn-info:hover {
@@ -260,7 +301,7 @@ a.article:hover {
 }
 
 .card-text {
-    line-height: 1;    
+    line-height: 1;
 }
 
 /* ---------------------------------------------------
