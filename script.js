@@ -399,7 +399,7 @@ function ajax(params) {
             map.removeLayer(globalLayer);
           
             markers.addLayer(all_sensors);
-            setLayer(markers);
+            globalLayer = markers;
             map.addLayer(markers);
 
             var options = {
