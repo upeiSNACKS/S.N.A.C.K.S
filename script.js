@@ -130,9 +130,10 @@ $(document).ready(function () {
 
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
-        this._div.innerHTML = '<h4>Sensor Data</h4>' +  (props ?
-                                                            '<b>' + props.name + '</b><br />' + props.density + '&deg;C'
-                                                            : 'Hover over a region to see it\'s data');
+        this._div.innerHTML = '<h4>Sensor Data</h4>' +  
+            (props ?
+                '<b>' + props.name + '</b><br />' + props.density + '&deg;C'
+                : 'Hover over a region to see it\'s data');
     };
 
     globalInfo = info;
