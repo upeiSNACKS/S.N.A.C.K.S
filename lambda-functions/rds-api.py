@@ -26,6 +26,7 @@ import pymysql
 import logging
 import traceback
 import json
+import re
 from os import environ
 
 endpoint=environ.get('ENDPOINT')
@@ -46,21 +47,58 @@ def log_err(errmsg):
     return {"body": errmsg , "headers": {}, "statusCode": 400,
         "isBase64Encoded":"false"}
 
-logger.info("Cold start complete.")
+def check_for_errors(parameters):
+    accepted_parameters = ['sensor_id',
+                            'start_time',
+                            'end_time',
+                            'type',
+                            'subtype',
+                            'lat',
+                            'lon',
+                            'radius',
+                            'max_readings']
+    bad_parameters = []
+    if parameters is not None:
+        #Check for typing errors
+        for k in parameters:
+            if not k in accepted_parameters:
+                bad_parameters.append('unknown parameter '+k)
+
+        #Check for malformed parameters
+        if 'start_time' in parameters and not re.match('(\d\d\d\d-\d\d-\d\d \d\d:\d\d|(:\d\d))|(now)', parameters['start_time']):
+            pass
+            bad_parameters.append('malformed start_time: '+parameters['start_time']+' should have format YYYY-MM-DD HH:MM:SS')
+        if 'end_time' in parameters and not re.match('\d\d\d\d-\d\d-\d\d \d\d:\d\d|(:\d\d)', parameters['end_time']):
+            pass
+            bad_parameters.append('malformed end_time: '+parameters['end_time']+' should have format YYYY-MM-DD HH:MM:SS')
+        if 'lat' in parameters and (int(parameters['lat']) > 90 or int(parameters['lat']) < -90):
+            bad_parameters.append('malformed lat: '+str(int(parameters['lat']))+' should be within -90 and 90')
+        if 'lon' in parameters and (int(parameters['lon']) > 180 or int(parameters['lat']) < -180):
+            bad_parameters.append('malformed lon: '+str(int(parameters['lon']))+' should be within -180 and 180')
+    return bad_parameters
 
 def handler(event,context):
-    #print('parameters: ', event['queryStringParameters'])
+    response = {
+        "statusCode" : 200,
+        "headers" : {
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Headers" : "*",
+            "the-Game" : "you just lost it"
+        },
+        "body" : None,
+        "isBase64Encoded" : "false"
+    }
+    max_readings = 500
     command = 'SELECT Readings.*, Sensors.sensor_lat, sensor_lon FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND '
-    '''
-    TODO: sort by date
-    TODO: range selection (everything if none)
-    [DONE] TODO: time selection (everything if none)
-    [DONE] TODO: sensor selection (all sensors if none)
-    [DONE] TODO: max measurements (10 if none)
-    [DONE] TODO: measurement type (list options, all if none)
-    '''
     parameters = event['queryStringParameters']
-    print(parameters)
+
+    errors_found = check_for_errors(parameters)
+    if len(errors_found) > 0:
+        pass
+        response['body'] = json.dumps({'invalid parameter': errors_found})
+        response['statusCode'] = 400
+        return response
+
     if parameters is not None:
         pass
         if 'sensor_id' in parameters:
@@ -69,11 +107,10 @@ def handler(event,context):
         if 'start_time' in parameters:
             if parameters['start_time'] == 'now':
                 command += 'reading_time >= all (select date_format(reading_time, \'%Y-%m-%d %H\') from Readings) AND '
-            else: 
-                command += 'reading_time > \'' + parameters['start_time'] + '\' AND '
+            else:
+                command += 'reading_time > \'' + str(parameters['start_time']) + '\' AND '
         if 'end_time' in parameters:
-            if'start_time' not in parameters:
-                command += 'reading_time < \'' + parameters['end_time'] + '\' AND '
+            command += 'reading_time < \'' + str(parameters['end_time']) + '\' AND '
         if 'type' in parameters:
             pass
             command += 'sensor_type = \'' + parameters['type'] + '\' AND '
@@ -94,22 +131,21 @@ def handler(event,context):
             else:
                 #set the range of accepted sensors to 10km
                 command += str(float(10 / radius_to_degrees)) + ' AND '
-            
+
         '''
         Now that we have a query statement, we need to get rid of the last AND,
         and limit the query to the default max.
         '''
         if 'max_readings' in parameters:
             max_readings = int(parameters['max_readings'])
-            command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
-        else: 
-            command = command[:-5] + ' ORDER BY reading_time DESC;'
-    else:
-        command = command[:-5] + ' ORDER BY reading_time DESC;' #FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND 
+    command = command[:-5] + ' ORDER BY reading_time DESC LIMIT ' + str(max_readings) + ';'
+    #else:
+    #    '''
+    #    In case no parameters were picked, we come here
+    #    '''
+    #    #command = command[:-5] + ' ORDER BY reading_time DESC;' #FROM Readings, Sensors WHERE Readings.sensor_id = Sensors.sensor_id AND
 
 
-    
-    print(command)
     data = None
     try:
         cnx = make_connection()
@@ -142,15 +178,7 @@ def handler(event,context):
     for d in data:
         for k in d:
             d[k] = str(d[k])
-    response = {
-        "statusCode" : 200,
-        "headers" : {
-            "header1" : "its working yall!"},
-            "Access-Control-Allow-Origin" : "*"
-        },
-        "body" : json.dumps(data),
-        "isBase64Encoded" : "false"
-    }
+    response['body'] = json.dumps(data)
     return response
 
 if __name__== "__main__":
