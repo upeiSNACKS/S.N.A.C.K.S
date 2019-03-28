@@ -96,7 +96,7 @@ a:focus {
     top: 0;
     left: -250px;
     height: 100vh;
-    z-index: 999;
+    z-index: 1200;
     background: #036eb7;
     color: #fff;
     transition: all 0.3s;
@@ -132,7 +132,7 @@ a:focus {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 998;
+    z-index: 1100;
     opacity: 0;
     transition: all 0.5s ease-in-out;
     top: 0;

@@ -395,7 +395,7 @@ function ajax(params) {
                 }
             });
             
-            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1 });
             map.removeLayer(globalLayer);
           
             markers.addLayer(all_sensors);
