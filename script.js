@@ -57,14 +57,14 @@ $(document).ready(function () {
     legend.onAdd = function (mymap) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+            grades = ["-40", "-30", "-20", "-10", "0", "10", "20", "30", "40"],
             labels = [];
 
-        // loop through our density intervals and generate a label with a colored square for each interval
+        // loop through our temperature intervals and generate a label with a colored square for each interval
         for (var i = 0; i < grades.length; i++) {
             div.innerHTML +=
-                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                '<i style="background:' + getColor(parseInt(grades[i]) + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? ' &ndash; ' + grades[i + 1] + '<br>' : '+');
         }
 
         return div;
@@ -131,7 +131,7 @@ $(document).ready(function () {
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
         this._div.innerHTML = '<h4>Sensor Data</h4>' +  (props ?
-                                                            '<b>' + props.name + '</b><br />' + props.density + '&deg;C'
+                                                            '<b>' + props.name + '</b><br />' + props.readings[1].reading + '&deg;C'
                                                             : 'Hover over a region to see it\'s data');
     };
 
@@ -140,25 +140,27 @@ $(document).ready(function () {
 });
 
 function getColor(d) {
-    return d > 1000 ? '#800026' :
-    d > 500  ? '#BD0026' :
-    d > 200  ? '#E31A1C' :
-    d > 100  ? '#FC4E2A' :
-    d > 50   ? '#FD8D3C' :
-    d > 20   ? '#FEB24C' :
-    d > 10   ? '#FED976' :
-    '#FFEDA0';
+    d = parseInt(d);
+    return d > 40 ? '#d73027' :
+    d > 30 ? '#fdae61' :
+    d > 20 ? '#fdae61' :
+    d > 10 ? '#fee090' :
+    d > 0 ? '#ffffbf' :
+    d > -10 ? '#e0f3f8' :
+    d > -20 ? '#abd9e9' :
+    d > -30 ? '#74add1' :
+    d > -40 ? '#4575b4' :
+    '#313695';
 }
 
 function style(feature) {
-    //console.log(feature);
     return {
-        fillColor: getColor(feature.properties.density),
+        fillColor: getColor(feature.properties.readings[1].reading),
         weight: 2,
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.7
+        fillOpacity: 0.5
     };
 }
 
@@ -169,7 +171,7 @@ function highlightFeature(e) {
         weight: 5,
         color: '#666',
         dashArray: '',
-        fillOpacity: 0.7
+        fillOpacity: 0.3
     });
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -412,10 +414,13 @@ function ajax(params) {
 
             // Get the polygons
             var voronoiPolygons = turf.voronoi(sensors, options);
-            console.log(voronoiPolygons);
+            
+            for(var i = 0; i < sensors.features.length; i++) {
+                sensors.features[i].geometry = voronoiPolygons.features[i].geometry;
+            }
+            
             // Draw the polygons on the map
-            var geojson = L.geoJson(voronoiPolygons, {style: style, onEachFeature: onEachFeature}).addTo(map);
-            globalGeoJSON = geojson;
+            globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature}).addTo(map);
         }
     };
     httpc.send();
