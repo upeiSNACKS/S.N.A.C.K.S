@@ -51,6 +51,26 @@ $(document).ready(function () {
         },
 
     });
+    
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (mymap) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = ["-40", "-30", "-20", "-10", "0", "10", "20", "30", "40"],
+            labels = [];
+
+        // loop through our temperature intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(parseInt(grades[i]) + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? ' &ndash; ' + grades[i + 1] + '<br>' : '+');
+        }
+
+        return div;
+    };
+
+    legend.addTo(mymap);
 
     mymap.addControl(new timeControl());
 
@@ -77,11 +97,11 @@ $(document).ready(function () {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
-
-    setMap(mymap);
+    
+    globalMap = mymap;
     // disable clustering once zoomed in close enough
-    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1});
-    setLayer(markers);
+    var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+    globalLayer = markers;
     ajax("?start_time=now");
 
     // attempting resizing of all markers based on zoom levels
@@ -100,49 +120,88 @@ $(document).ready(function () {
         }
     });
 
+    var info = L.control();
 
+    info.onAdd = function (mymap) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update();
+        return this._div;
+    };
+
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+    this._div.innerHTML = '<h4>Sensor Data</h4>' +  (props ?
+                                                     '<b>' + props.name + '</b><br />' + props.readings[1].reading + '&deg;C'
+                                                     : 'Hover over a region to see it\'s data');
+    };
+
+    globalInfo = info;
+    info.addTo(mymap);
 });
 
 function getColor(d) {
-    return d > 1000 ? '#800026' :
-    d > 500  ? '#BD0026' :
-    d > 200  ? '#E31A1C' :
-    d > 100  ? '#FC4E2A' :
-    d > 50   ? '#FD8D3C' :
-    d > 20   ? '#FEB24C' :
-    d > 10   ? '#FED976' :
-    '#FFEDA0';
+    d = parseInt(d);
+    return d > 40 ? '#d73027' :
+    d > 30 ? '#fdae61' :
+    d > 20 ? '#fdae61' :
+    d > 10 ? '#fee090' :
+    d > 0 ? '#ffffbf' :
+    d > -10 ? '#e0f3f8' :
+    d > -20 ? '#abd9e9' :
+    d > -30 ? '#74add1' :
+    d > -40 ? '#4575b4' :
+    '#313695';
 }
 
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.density),
+        fillColor: getColor(feature.properties.readings[1].reading),
         weight: 2,
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.7
+        fillOpacity: 0.5
     };
 }
 
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.3
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+    
+    globalInfo.update(layer.feature.properties);
+}
+
+function resetHighlight(e) {
+    globalGeoJSON.resetStyle(e.target);
+    globalInfo.update();
+}
+
+function zoomToFeature(e) {
+    globalMap.fitBounds(e.target.getBounds());
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
 var globalMap;
-var layer;
-
-function setLayer(l) {
-    layer = l;
-}
-
-function getLayer() {
-    return layer;
-}
-
-function setMap(map) {
-    globalMap = map;
-}
-
-function getMap() {
-    return globalMap;
-}
+var globalLayer;
+var globalGeoJSON;
+var globalInfo;
 
 function constructPopupHTML(feature) {
     var table = document.createElement("table");
@@ -326,18 +385,19 @@ function ajax(params) {
             document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
 
             sensors = modifiedJSON;
-            var map = getMap();
+            var map = globalMap;
             var all_sensors = L.geoJSON(sensors, {
                 onEachFeature: function (feature, layer) {
-                    layer.setIcon(grapes_medium);
+                    layer.setIcon(grapes_small);
                     layer.bindPopup(
                         constructPopupHTML(feature)
                     );
                 }
             });
-
-            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1 });
-            map.removeLayer(getLayer());
+            
+            var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
+            map.removeLayer(globalLayer);
+          
             markers.addLayer(all_sensors);
             setLayer(markers);
             map.addLayer(markers);
@@ -355,9 +415,13 @@ function ajax(params) {
 
             // Get the polygons
             var voronoiPolygons = turf.voronoi(sensors, options);
-
+            
+            for(var i = 0; i < sensors.features.length; i++) {
+                sensors.features[i].geometry = voronoiPolygons.features[i].geometry;
+            }
+            
             // Draw the polygons on the map
-            L.geoJson(voronoiPolygons, {style: style}).addTo(map);
+            globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature}).addTo(map);
         }
     };
     httpc.send();
