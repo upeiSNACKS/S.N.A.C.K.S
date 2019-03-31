@@ -1,3 +1,38 @@
+/*
+
+JavaScript functions and data we use for the map, and for general design elements
+on the website.
+
+SNACKS - A LoRaWAN based sensor network designed to monitor environmental
+data around the City of Charlottetown, PE, Canada.
+
+Copyright (C) 2019 Jeremy Thompson, R.J. Arsenault, Alec Metcalfe, Eduardo Egger
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+The best way to contact a developer is by email or via a pull request
+on the GitHub page:
+
+https://github.com/upeiSNACKS/snacks
+
+jhthompson@upei.ca
+rparsenault@upei.ca
+almetcalfe@upei.ca
+eegger@upei.ca
+
+*/
+
 var grapes_small = L.icon({
     iconUrl: 'map-icon.png',
     iconSize:     [20, 20], // size of the icon
@@ -51,7 +86,7 @@ $(document).ready(function () {
         },
 
     });
-    
+
     var legend = L.control({position: 'bottomright'});
 
     legend.onAdd = function (mymap) {
@@ -97,7 +132,7 @@ $(document).ready(function () {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
-    
+
     globalMap = mymap;
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
@@ -177,7 +212,7 @@ function highlightFeature(e) {
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         layer.bringToFront();
     }
-    
+
     globalInfo.update(layer.feature.properties);
 }
 
@@ -394,10 +429,10 @@ function ajax(params) {
                     );
                 }
             });
-            
+
             var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1 });
             map.removeLayer(globalLayer);
-          
+
             markers.addLayer(all_sensors);
             globalLayer = markers;
             map.addLayer(markers);
@@ -415,11 +450,11 @@ function ajax(params) {
 
             // Get the polygons
             var voronoiPolygons = turf.voronoi(sensors, options);
-            
+
             for(var i = 0; i < sensors.features.length; i++) {
                 sensors.features[i].geometry = voronoiPolygons.features[i].geometry;
             }
-            
+
             // Draw the polygons on the map
             globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature}).addTo(map);
         }
