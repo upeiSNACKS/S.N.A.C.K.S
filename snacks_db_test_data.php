@@ -22,6 +22,7 @@
     /*
      * OWNERS GETTING
      */
+     /*
     $owners_q = "SELECT email FROM Owners";
     $result = $connection->query($owners_q);
     if(!$result) echo "SELECT failed: $owners_q<br>" . $connection->error . "<br><br>";
@@ -46,12 +47,12 @@
         $result = $connection->query($sensor_in);
         if(!$result) echo "INSERT INTO failed: $sensor_in<br>" . $connection->error . "<br><br>";
         else echo "Successfully inserted $id, $email, $lat, $lon<br>";
-    }
+    } */
     /*
      * SENSOR_ID GETTING
      */
     echo "getting sensor ID's -------------------------------------------------<br>";
-    $sensors_q = "SELECT sensor_id FROM Sensors";
+    $sensors_q = "SELECT sensor_id FROM Sensors where sensor_id not like '%uno&'";
     $result = $connection->query($sensors_q);
     if(!$result) echo "SELECT failed: $sensors_q<br>" . $connection->error . "<br><br>";
     $rows = $result->num_rows;
@@ -60,7 +61,6 @@
          $result->data_seek($j);
          $row = $result->fetch_array(MYSQLI_NUM);
          $sensors[$j] = $row[0];
-         echo "$row[0]<br>";
     }
      /*
       * TYPE GETTING
@@ -79,14 +79,15 @@
      }
      // insert readings
      echo "inserting readings~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ <br>";
-     for($j = 0; $j<100; $j++) {
+     for($j = 0; $j<5; $j++) {
          $type_chosen = rand() % $types_count;
          $type = $types[$type_chosen];
          $subtype = $subtypes[$type_chosen];
-         $time = generateRandomDate();
+         $date = generateRandomDate();
          for($i = 0; $i < $sensor_count; $i++) {
              $id = $sensors[$i];
              $reading = rand(-30, 30);
+             $time = $date . generateRandomMinute();
              $reading_in = "INSERT INTO Readings set sensor_id='$id', sensor_type='$type', sensor_subtype='$subtype', reading_time='$time', reading='$reading'";
              $result = $connection->query($reading_in);
              if(!$result) echo "INSERT INTO failed: $reading_in<br>" . $connection->error . "<br><br>";
@@ -97,8 +98,10 @@
     $connection->close();
     function generateRandomDate() {
         $dateformat = '2019-01-31 18:19:31';
-        $year = rand(2015, 2019);
+        $year = rand(2010, 2018);
+        $year = 2019;
         $month = rand(01, 12);
+        $month = 1;
         switch ($month) {
             case 1:case 3:case 5:case 7:case 8:case 10:case 12:
                 $day = rand(1, 31);
@@ -110,15 +113,21 @@
             default:
                 $day = 1;
         }
+        $day = 15;
         $hour = rand(0, 23);
-        $minute = rand(0, 59);
-        $sec = rand(0, 59);
+
 		if($month  < 10) { $month  = "0" . $month;}
 		if($day    < 10) { $day    = "0" . $day;}
 		if($hour   < 10) { $hour   = "0" . $hour;}
-		if($minute < 10) { $minute = "0" . $minute;}
+
+        return $year . '-' . $month . '-' . $day . ' ' . $hour . ':';
+    }
+    function generateRandomMinute() {
+        $minute = rand(0, 59);
+        $sec = rand(0, 59);
+        if($minute < 10) { $minute = "0" . $minute;}
 		if($sec    < 10) { $sec    = "0" . $sec;}
-        return $year . '-' . $month . '-' . $day . ' ' . $hour . ':' . $minute . ':' . $sec;
+        return $minute . ':' . $sec;
     }
     function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
