@@ -131,7 +131,7 @@ $(document).ready(function () {
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
     this._div.innerHTML = '<h4>Sensor Data</h4>' +  (props ?
-                                                     '<b>' + props.name + '</b><br />' + props.readings[1].reading + '&deg;C'
+                                                     '<b>' + props.name + '</b><br />' + props.readings[0].reading + '&deg;C'
                                                      : 'Hover over a region to see it\'s data');
     };
 
@@ -155,7 +155,7 @@ function getColor(d) {
 
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.readings[1].reading),
+        fillColor: getColor(feature.properties.readings[0].reading),
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -383,9 +383,10 @@ function ajax(params) {
             document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
             document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
             document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
-
+            
             sensors = modifiedJSON;
             var map = globalMap;
+            
             var all_sensors = L.geoJSON(sensors, {
                 onEachFeature: function (feature, layer) {
                     layer.setIcon(grapes_small);
@@ -397,7 +398,7 @@ function ajax(params) {
             
             var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1 });
             map.removeLayer(globalLayer);
-          
+            
             markers.addLayer(all_sensors);
             globalLayer = markers;
             map.addLayer(markers);
@@ -420,8 +421,13 @@ function ajax(params) {
                 sensors.features[i].geometry = voronoiPolygons.features[i].geometry;
             }
             
+            if(globalGeoJSON != null) {
+                map.removeLayer(globalGeoJSON);
+            }
+            
             // Draw the polygons on the map
-            globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature}).addTo(map);
+            globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature});
+            map.addLayer(globalGeoJSON);
         }
     };
     httpc.send();
