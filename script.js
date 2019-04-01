@@ -196,6 +196,9 @@ function onEachFeature(feature, layer) {
         mouseout: resetHighlight,
         click: zoomToFeature
     });
+    layer.bindPopup(
+        constructPopupHTML(feature)
+    );
 }
 
 var globalMap;
