@@ -336,10 +336,11 @@ a.article:hover {
 ----------------------------------------------------- */
 
 .legend {
-    width: 100px;
+    width: 150px;
     line-height: 18px;
     color: #555;
 }
+
 .legend i {
     width: 18px;
     height: 18px;
