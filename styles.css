@@ -1,10 +1,76 @@
 /*
-    This stylesheet was taken and modified from Bootstrapious
+
+This stylesheet was taken and modified from Bootstrapious
+
+SNACKS - A LoRaWAN based sensor network designed to monitor environmental
+data around the City of Charlottetown, PE, Canada.
+
+Copyright (C) 2019 Jeremy Thompson, R.J. Arsenault, Alec Metcalfe, Eduardo Egger
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+The best way to contact a developer is by email or via a pull request
+on the GitHub page:
+
+https://github.com/upeiSNACKS/snacks
+
+jhthompson@upei.ca
+rparsenault@upei.ca
+almetcalfe@upei.ca
+eegger@upei.ca
+
 */
 
+.swal-modal {
+  background-color: #014876;
+  border: 3px solid white;
+}
+
+.swal-title {
+  font-size: 24px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+  color: #FFFEFA
+}
+
+.swal-button {
+  padding: 7px 19px;
+  border-radius: 2px;
+  background-color: #056CB7;
+  font-size: 14px;
+  border: 1px solid #3e549a;
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+}
+.checkboxpanel {
+    padding: 25px;
+    background-color: #E0E0E0;
+    border-radius: 10px;
+}
+
+.swal-text {
+  padding: 14px;
+  display: block;
+  margin: 22px;
+  font-size: 18px;
+  text-align: center;
+  color: #FFFEFA;
+}
+h8 {
+    align: left !important;
+}
 body {
     font-family: 'Poppins', sans-serif;
-    background: #fafafa;
+    background: #fff;
 }
 
 p {
@@ -12,7 +78,14 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
-    color: #999;
+    color: #333333;
+}
+
+.signuptable {
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    border: 0px;
+    align-self: center;
 }
 
 a,
@@ -24,18 +97,12 @@ a:focus {
 }
 
 .navbar {
-    padding: 15px 10px;
-    background: #fff;
-    border: none;
-    border-radius: 0;
-    margin-bottom: 40px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-btn {
-    box-shadow: none;
-    outline: none !important;
-    border: none;
+    position: sticky !important;
+    top: 0;
+    height: 10vh;
+    width: 100%;
+    background: #000;
+    z-index: 997;
 }
 
 .line {
@@ -49,14 +116,20 @@ a:focus {
     SIDEBAR STYLE
 ----------------------------------------------------- */
 
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
 #sidebar {
     width: 250px;
     position: fixed;
     top: 0;
     left: -250px;
     height: 100vh;
-    z-index: 999;
-    background: #8d2663;
+    z-index: 1200;
+    background: #036eb7;
     color: #fff;
     transition: all 0.3s;
     overflow-y: scroll;
@@ -72,7 +145,6 @@ a:focus {
     height: 35px;
     line-height: 35px;
     text-align: center;
-    background: #2d2d2d;
     position: absolute;
     top: 10px;
     right: 10px;
@@ -83,8 +155,7 @@ a:focus {
 }
 
 #dismiss:hover {
-    background: #fff;
-    color: #2d2d2d;
+    background: #037dd0;
 }
 
 .overlay {
@@ -93,10 +164,15 @@ a:focus {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 998;
+    z-index: 1100;
     opacity: 0;
     transition: all 0.5s ease-in-out;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
+
 .overlay.active {
     display: block;
     opacity: 1;
@@ -104,15 +180,14 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #8d2663;
+    background: #036eb7;
     z-index: -1;
     position: relative;
 }
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #2d2d2d;
-    background: #2d2d2d;
+    background: #024877;
 }
 
 #sidebar ul p {
@@ -124,18 +199,18 @@ a:focus {
     padding: 10px;
     font-size: 1.1em;
     display: block;
-    color: #ababab;
+    color: #fff;
 }
 
 #sidebar ul li a:hover {
     color: #fff;
-    background: #000;
+    background: #036eb7;
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #ababab;
+    background: #036eb7;
 }
 
 a.article,
@@ -144,63 +219,34 @@ a.article:hover {
     color: #fff !important;
 }
 
+.btn-info {
+    background: #056CB7 !important;
+}
+
+.btn-info:hover {
+    background: #037dd0 !important;
+}
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
 
 #content {
     width: 100%;
-    height: 100%;
-    padding: 20px;
-    min-height: 100vh;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
     transition: all 0.3s;
-    position: absolute;
-    top: 0;
-    right: 0;
+    color: #333333;
 }
 
-/* ---------------------------------------------------
-    DROPDOWN STYLE
------------------------------------------------------ */
-
-.dropdown-menu {
-    width: 600px;
-}
-
-.dropdown-menu.columns-2 {
-	min-width: 600px;
-}
-
-.dropdown-menu li a {
-	padding: 5px 15px;
-	font-weight: 300;
-}
-
-.multi-column-dropdown {
-	list-style: none;
-    margin: 0px;
-    padding: 0px;
-}
-
-.multi-column-dropdown li a {
-	display: block;
-	clear: both;
-	line-height: 1.428571429;
-	color: #333;
-	white-space: normal;
-}
-
-.multi-column-dropdown li a:hover {
-	text-decoration: none;
-	color: #262626;
-	background-color: #999;
-}
-
-@media (max-width: 767px) {
-	.dropdown-menu.multi-column {
-		min-width: 240px !important;
-		overflow-x: hidden;
-	}
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6 {
+    color: #024877;
 }
 
 /* ---------------------------------------------------
@@ -209,13 +255,9 @@ a.article:hover {
 
 #mapid {
     width: 100%;
-    height: 100%;
-    min-height: 100vh;
+    min-height: 90vh;
     transition: all 0.3s;
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: -10;
+    margin: auto;
 }
 
 /* ---------------------------------------------------
@@ -233,47 +275,105 @@ a.article:hover {
 ----------------------------------------------------- */
 
 .apply {
-    background: #8d2663;
+    background: #036eb7;
     color: #fff;
 }
+
 .cancel {
-    background: #ababab;
+    background: #fff;
 }
+
 /* Custom, iPhone Retina */
 @media only screen and (min-width : 320px) {
     .timecontrol {
-        width: 275px;
+        width: 225px;
     }
 }
+
 /* Extra Small Devices, Phones */
 @media only screen and (min-width : 480px) {
     .timecontrol {
-        width: 375px;
+        width: 400px;
     }
 }
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
     .timecontrol {
-        width: 500px;
+        width: 550px;
     }
 }
 
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px) {
     .timecontrol {
-        width: 500px;
+        width: 550px;
     }
 }
 
 /* Large Devices, Wide Screens */
 @media only screen and (min-width : 1200px) {
     .timecontrol {
-        width: 500px;
+        width: 550px;
     }
 }
 
 #timepicker {
     width: 100%;
     text-align: right;
+}
+
+/* ---------------------------------------------------
+    CARD STYLE
+----------------------------------------------------- */
+
+#card {
+    padding: 5px;
+}
+
+.card-text {
+    line-height: 1;
+}
+
+/* ---------------------------------------------------
+    MODAL STYLE
+----------------------------------------------------- */
+
+.modal-header, .modal-footer {
+    background: #036eb7;
+}
+
+/* ---------------------------------------------------
+    INFO STYLE
+----------------------------------------------------- */
+
+.info {
+    width: 200px;
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+
+/* ---------------------------------------------------
+    LEGEND STYLE
+----------------------------------------------------- */
+
+.legend {
+    width: 100px;
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
 }
