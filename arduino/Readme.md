@@ -19,8 +19,6 @@ TODO: might need to add sensor ID to this? or TTN might track that already
 
 Fritzing diagram includes debugging LCD screen attached to DHT11 to view temperature and humidity readings directly on device
 
-
-
 ## New Device 1: (WORKING)
 
 Device Information
@@ -34,7 +32,6 @@ RX Delay 1: 1000
 RX Delay 2: 2000
 
 Use the EUI to register the device for OTAA
-
 
 
 ## New Device 2: (SAME CODE NOT WORKING)

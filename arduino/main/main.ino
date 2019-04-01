@@ -63,7 +63,7 @@ TheThingsNetwork ttn(loraSerial, debugSerial, freqPlan);
 
 // AppEUI and AppKey for The Things Network
 const char *appEui = "70B3D57ED001712B";
-const char *appKey = "748D533BFDE87C4875F4AB2EBBFA9927";
+const char *appKey = "306779362F22C597DC992AF3A128F01E";
 
 byte payload[4]; // for transmitting data
 
@@ -125,12 +125,13 @@ void resetState() {
 
 void loop() {
   // Wait a few seconds between measurements.
-  delay(TIMEDELAY);
+  // delay(TIMEDELAY);
 
   // To enter low power sleep mode call Watchdog.sleep() like below
   // and the watchdog will allow low power sleep for as long as possible.
   // The actual amount of time spent in sleep will be returned (in
   // milliseconds).
+
 
   // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
   digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
@@ -149,7 +150,6 @@ void loop() {
   }
 
   digitalWrite(LED_BUILTIN, HIGH); // indicate that the temperature is being read
-
 
   // Reading temperature or humidity takes about 250 milliseconds!
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
@@ -204,6 +204,7 @@ void loop() {
     runningState();
   }
 
+
   // Compute heat index in Fahrenheit (the default)
   // float hif = dht.computeHeatIndex(f, h);
   // Compute heat index in Celsius (isFahreheit = false)
@@ -233,4 +234,20 @@ void loop() {
   lcd.setCursor(6, 1);
   lcd.print("% humidity");
   #endif
+
+  // doing this breaks serial print functionality so be careful when debugging with this sleep function left in
+  digitalWrite(LED_BUILTIN, LOW); // indicate that the device is sleeping in low power mode
+
+  // 1 hour = 60s/min x 60min = 3600 s
+  // 14400 s / 8 s = 450
+
+  // 1/2 hour = 1800 s
+  // 1800 s / 8 s = 225
+  
+  unsigned int sleepCounter;
+  
+  for (sleepCounter = 450; sleepCounter > 0; sleepCounter--)
+  {
+    Watchdog.sleep();
+  }
 }
