@@ -1,38 +1,53 @@
 var usedIDs;
 $(document).ready(function() {
-    /**
-     * This function uses AJAX to populate a JSON array which gets used by our leaflet map
-     */
-     ajax("");
-    function ajax(params) {
-        // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
-        var httpc = new XMLHttpRequest(); // simplified for clarity
-        httpc.withCredentials = false;
-
-        var url = "validation.php";
-        httpc.open("POST", url, true);
-        httpc.setRequestHeader("Content-Type", "application/json");
-        httpc.onreadystatechange = function() { //Call a function when the state changes.
-            if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
-                usedIDs = JSON.parse(httpc.responseText);
-            }
-        };
-        httpc.send();
-    }
-    $('#sensorID').on('blur', function() {
-        var contents = $('#sensorID').val();
-
-    });
-
+     getIDs("validation.php");
 });
+function getIDs(url) {
+    // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
+    // modified a bit though
+    var httpc = new XMLHttpRequest(); // simplified for clarity
+    httpc.withCredentials = false;
+
+    httpc.open("POST", url, true);
+    httpc.setRequestHeader("Content-Type", "application/json");
+    httpc.onreadystatechange = function() { //Call a function when the state changes.
+        if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+            usedIDs = JSON.parse(httpc.responseText);
+        }
+    };
+    httpc.send();
+}
+function submitForm(url, params) {
+    // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
+    // modified a bit though
+    var httpc = new XMLHttpRequest(); // simplified for clarity
+    httpc.withCredentials = false;
+
+    httpc.open("POST", url, true);
+    httpc.setRequestHeader("Content-Type", "application/json");
+    httpc.onreadystatechange = function() { //Call a function when the state changes.
+        if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+            swal("Success", "Form submitted!", "success");
+        } else {
+            swal("Error", "form could not be submitted at this time. Please try again later.", "error");
+        }
+    };
+    httpc.send(params);
+}
 var fail = "";
-function validate(form){
+function submit(form){
     fail += validateID(form.elements.namedItem("sensorID").value)
     fail += validateLat(form.elements.namedItem("lat").value)
     fail += validateLon(form.elements.namedItem("lon").value)
     if (fail == "") {
-        console.log("FO0RM");
-        swal("Success!", "you did nothing!", "success");
+        fname = form.elements.namedItem("fname").value;
+        lname= form.elements.namedItem("lname").value;
+        email= form.elements.namedItem("email").value;
+        address= form.elements.namedItem("address").value;
+        sensor_id= form.elements.namedItem("sensorID").value;
+        sensor_lat= form.elements.namedItem("lat").value;
+        sensor_lon= form.elements.namedItem("lon").value;
+        submitForm("signup.php", "fname=fname&=lname&email=email&address=address&sensor_id=sensor_id&sensor_lat=sensor_lat&sensor_lon=sensor_lon");
         return true;
     } else {
         swal("Error", fail, "error");
