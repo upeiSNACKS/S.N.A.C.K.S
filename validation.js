@@ -1,6 +1,15 @@
 var usedIDs;
 $(document).ready(function() {
      getIDs("validation.php");
+     $('#insertForm').on('submit', function(e) {
+         e.preventDefault();
+         e.stopPropagation(); // only neccessary if something above is listening to the (default-)event too
+
+         if(validate($('#insertForm'))) {
+             $('#insertForm').reset();
+         }
+
+    });
 });
 function getIDs(url) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
@@ -8,7 +17,7 @@ function getIDs(url) {
     var httpc = new XMLHttpRequest(); // simplified for clarity
     httpc.withCredentials = false;
 
-    httpc.open("POST", url, true);
+    httpc.open("GET", url, true);
     httpc.setRequestHeader("Content-Type", "application/json");
     httpc.onreadystatechange = function() { //Call a function when the state changes.
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
@@ -24,10 +33,15 @@ function submitForm(url, params) {
     httpc.withCredentials = false;
 
     httpc.open("POST", url, true);
-    httpc.setRequestHeader("Content-Type", "application/json");
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpc.onreadystatechange = function() { //Call a function when the state changes.
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
-            swal("Success", "Form submitted!", "success");
+            var data = JSON.parse(httpc.responseText);
+            if(data.success){
+                swal("Success", "Form submitted!", "success");
+            } else {
+                swal("Error", data.error, "error");
+            }
         } else {
             swal("Error", "form could not be submitted at this time. Please try again later.", "error");
         }
@@ -35,19 +49,21 @@ function submitForm(url, params) {
     httpc.send(params);
 }
 var fail = "";
-function submit(form){
-    fail += validateID(form.elements.namedItem("sensorID").value)
-    fail += validateLat(form.elements.namedItem("lat").value)
-    fail += validateLon(form.elements.namedItem("lon").value)
+function validate(form){
+    fail += validateID(document.getElementById("sensorID").value)
+    fail += validateLat(document.getElementById("lat").value)
+    fail += validateLon(document.getElementById("lon").value)
     if (fail == "") {
-        fname = form.elements.namedItem("fname").value;
-        lname= form.elements.namedItem("lname").value;
-        email= form.elements.namedItem("email").value;
-        address= form.elements.namedItem("address").value;
-        sensor_id= form.elements.namedItem("sensorID").value;
-        sensor_lat= form.elements.namedItem("lat").value;
-        sensor_lon= form.elements.namedItem("lon").value;
-        submitForm("signup.php", "fname=fname&=lname&email=email&address=address&sensor_id=sensor_id&sensor_lat=sensor_lat&sensor_lon=sensor_lon");
+        fname = document.getElementById("fname").value;
+        lname= document.getElementById("lname").value;
+        email= document.getElementById("email").value;
+        address= document.getElementById("address").value;
+        sensor_id= document.getElementById("sensorID").value;
+        sensor_lat= document.getElementById("lat").value;
+        sensor_lon= document.getElementById("lon").value;
+        submitForm("signup.php", "fname=" + fname + "&lname=" + lname + "&email=" + email +
+                    "&address=" + address + "&sensorID=" + sensor_id + "&sensor_lat=" + sensor_lat +
+                    "&sensor_lon=" + sensor_lon);
         return true;
     } else {
         swal("Error", fail, "error");
