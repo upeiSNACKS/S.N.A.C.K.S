@@ -97,35 +97,6 @@ $(document).ready(function() {
         }
     });
 
-    var dropdown = L.control({position: 'topright'});
-    dropdown.onAdd = function(mymap) {
-        this._div = L.DomUtil.create('div', 'dropdown');
-        this._div.innerHTML = `
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" accesskey="r">
-                <span class="caret"></span>Select Time Range
-            </button>
-            <ul class="dropdown-menu multi-column columns-2">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <ul class="multi-column-dropdown">
-                            <li><input type="text" name="datetimes" id="timepicker" accesskey="t"/></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-4">
-                        <ul class="multi-column-dropdown">
-                            <li><a href="#mapid" onclick="selectedMetric='Temperature'">Temperature</a></li>
-                            <li><a href="#mapid" onclick="selectedMetric='Humidity'">Humidity</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </ul>
-        `;
-        this._div.firstChild.onmousedown = this._div.firstChild.ondblclick = L.DomEvent.stopPropagation;
-        return this._div;
-    }
-
-    dropdown.addTo(mymap);
-
     var info = L.control();
 
     info.onAdd = function(mymap) {
@@ -222,7 +193,10 @@ var globalMap;
 var globalLayer;
 var globalGeoJSON;
 var globalInfo;
-var selectedMetric = "Temperature"; // The user will select this in the dropdown
+
+// The user will select these in the query editor
+var selectedMetric = "Temperature";
+var selectedAggregate = "Average";
 
 function constructPopupHTML(feature) {
     var table = document.createElement("table");
