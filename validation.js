@@ -1,38 +1,69 @@
 var usedIDs;
 $(document).ready(function() {
-    /**
-     * This function uses AJAX to populate a JSON array which gets used by our leaflet map
-     */
-     ajax("");
-    function ajax(params) {
-        // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
-        var httpc = new XMLHttpRequest(); // simplified for clarity
-        httpc.withCredentials = false;
+     getIDs("validation.php");
+     $('#insertForm').on('submit', function(e) {
+         e.preventDefault();
+         e.stopPropagation(); // only neccessary if something above is listening to the (default-)event too
 
-        var url = "validation.php";
-        httpc.open("POST", url, true);
-        httpc.setRequestHeader("Content-Type", "application/json");
-        httpc.onreadystatechange = function() { //Call a function when the state changes.
-            if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
-                usedIDs = JSON.parse(httpc.responseText);
-            }
-        };
-        httpc.send();
-    }
-    $('#sensorID').on('blur', function() {
-        var contents = $('#sensorID').val();
+         if(validate($('#insertForm'))) {
+             $('#insertForm').reset();
+         }
 
     });
-
 });
+function getIDs(url) {
+    // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
+    // modified a bit though
+    var httpc = new XMLHttpRequest(); // simplified for clarity
+    httpc.withCredentials = false;
+
+    httpc.open("GET", url, true);
+    httpc.setRequestHeader("Content-Type", "application/json");
+    httpc.onreadystatechange = function() { //Call a function when the state changes.
+        if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+            usedIDs = JSON.parse(httpc.responseText);
+        }
+    };
+    httpc.send();
+}
+function submitForm(url, params) {
+    // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
+    // modified a bit though
+    var httpc = new XMLHttpRequest(); // simplified for clarity
+    httpc.withCredentials = false;
+
+    httpc.open("POST", url, true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.onreadystatechange = function() { //Call a function when the state changes.
+        if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+            var data = JSON.parse(httpc.responseText);
+            if(data.success){
+                swal("Success", "Form submitted!", "success");
+            } else {
+                swal("Error", data.error, "error");
+            }
+        } else {
+            swal("Error", "form could not be submitted at this time. Please try again later.", "error");
+        }
+    };
+    httpc.send(params);
+}
 var fail = "";
 function validate(form){
-    fail += validateID(form.elements.namedItem("sensorID").value)
-    fail += validateLat(form.elements.namedItem("lat").value)
-    fail += validateLon(form.elements.namedItem("lon").value)
+    fail += validateID(document.getElementById("sensorID").value)
+    fail += validateLat(document.getElementById("lat").value)
+    fail += validateLon(document.getElementById("lon").value)
     if (fail == "") {
-        console.log("FO0RM");
-        swal("Success!", "you did nothing!", "success");
+        fname = document.getElementById("fname").value;
+        lname= document.getElementById("lname").value;
+        email= document.getElementById("email").value;
+        address= document.getElementById("address").value;
+        sensor_id= document.getElementById("sensorID").value;
+        sensor_lat= document.getElementById("lat").value;
+        sensor_lon= document.getElementById("lon").value;
+        submitForm("signup.php", "fname=" + fname + "&lname=" + lname + "&email=" + email +
+                    "&address=" + address + "&sensorID=" + sensor_id + "&sensor_lat=" + sensor_lat +
+                    "&sensor_lon=" + sensor_lon);
         return true;
     } else {
         swal("Error", fail, "error");

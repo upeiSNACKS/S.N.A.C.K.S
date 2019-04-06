@@ -23,7 +23,8 @@ $(document).ready(function() {
     /*
         Map
     */
-    var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
+
+    var mymap = L.map('mapid', { dragging: !L.Browser.mobile }).setView([46.2512, -63.1350], 13);
 
     // limit zoom level since Charlottetown is not that large
     mymap.options.minZoom = 12;
@@ -73,7 +74,7 @@ $(document).ready(function() {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mymap);
-    
+
     globalMap = mymap;
     // disable clustering once zoomed in close enough
     var markers = L.markerClusterGroup({ disableClusteringAtZoom: 15 });
@@ -193,7 +194,7 @@ function highlightFeature(e) {
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         layer.bringToFront();
     }
-    
+
     globalInfo.update(layer.feature.properties);
 }
 
@@ -403,10 +404,10 @@ function ajax(params) {
             document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
             document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
             document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
-            
+
             sensors = modifiedJSON;
             var map = globalMap;
-            
+
             var all_sensors = L.geoJSON(sensors, {
                 onEachFeature: function (feature, layer) {
                     layer.setIcon(grapes_small);
@@ -415,10 +416,10 @@ function ajax(params) {
                     );
                 }
             });
-            
+
             var markers = L.markerClusterGroup({ disableClusteringAtZoom: 1 });
             map.removeLayer(globalLayer);
-            
+
             markers.addLayer(all_sensors);
             globalLayer = markers;
             map.addLayer(markers);
@@ -436,15 +437,15 @@ function ajax(params) {
 
             // Get the polygons
             var voronoiPolygons = turf.voronoi(sensors, options);
-            
+
             for(var i = 0; i < sensors.features.length; i++) {
                 sensors.features[i].geometry = voronoiPolygons.features[i].geometry;
             }
-            
+
             if(globalGeoJSON != null) {
                 map.removeLayer(globalGeoJSON);
             }
-            
+
             // Draw the polygons on the map
             globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature});
             map.addLayer(globalGeoJSON);
