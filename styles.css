@@ -35,9 +35,11 @@
   text-align: center;
   color: #FFFEFA;
 }
+
 h8 {
     align: left !important;
 }
+
 body {
     font-family: 'Poppins', sans-serif;
     background: #fff;
@@ -175,6 +177,7 @@ a:focus {
 #sidebar ul li a:hover {
     color: #fff;
     background: #036eb7;
+    text-decoration: none;
 }
 
 #sidebar ul li.active>a,
@@ -289,8 +292,9 @@ a.article:hover {
 }
 
 #timepicker {
+    margin: 10px;
     width: 100%;
-    text-align: right;
+    text-align: left;
 }
 
 /* ---------------------------------------------------
@@ -347,4 +351,54 @@ a.article:hover {
     float: left;
     margin-right: 8px;
     opacity: 0.7;
+}
+
+/* ---------------------------------------------------
+    DROPDOWN STYLE
+----------------------------------------------------- */
+
+.dropdown {
+    z-index: 900 !important;
+}
+
+.dropdown-menu {
+	min-width: 200px;
+}
+
+.dropdown-menu.columns-2 {
+    min-width: 550px;
+    background: #024877;
+    color: #fff;
+}
+
+.dropdown-menu li a {
+	padding: 5px 15px;
+	font-weight: 300;
+}
+
+.multi-column-dropdown {
+	list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.multi-column-dropdown li a {
+	display: block;
+	clear: both;
+	line-height: 1.428571429;
+    color: #fff;
+	white-space: normal;
+}
+
+.multi-column-dropdown li a:hover {
+	text-decoration: none;
+	color: #fff;
+    background: #036eb7;
+}
+ 
+@media (max-width: 767px) {
+	.dropdown-menu.multi-column {
+		min-width: 240px !important;
+		overflow-x: hidden;
+	}
 }

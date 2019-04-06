@@ -19,7 +19,7 @@ var grapes_large = L.icon({
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 });
 
-$(document).ready(function () {
+$(document).ready(function() {
     /*
         Map
     */
@@ -30,32 +30,10 @@ $(document).ready(function () {
 
     // sometimes bounce will break grouping fnctionality - so disable it
     mymap.options.bounceAtZoomLimits = false;
-
-    var timeControl = L.Control.extend({
-
-        options: {
-            position: 'topright'
-            //control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
-        },
-
-        onAdd: function (map) {
-            var navigation = L.DomUtil.create('nav');
-            var container = L.DomUtil.create('div', 'timecontrol', navigation);
-            var timepicker = L.DomUtil.create('input', '', container);
-            timepicker.name = 'datetimes';
-            timepicker.id = 'timepicker';
-            timepicker.type = 'input';
-            timepicker.accessKey = 't';
-
-            return container;
-        },
-
-    });
     
     var legend = L.control({position: 'bottomright'});
 
-    legend.onAdd = function (mymap) {
-
+    legend.onAdd = function(mymap) {
         var div = L.DomUtil.create('div', 'info legend'),
             grades = ["-40", "-30", "-20", "-10", "0", "10", "20", "30", "40"],
             labels = [];
@@ -72,8 +50,6 @@ $(document).ready(function () {
 
     legend.addTo(mymap);
 
-    mymap.addControl(new timeControl());
-
     L.Control.Watermark = L.Control.extend({
         onAdd: function(map) {
             var img = L.DomUtil.create('img');
@@ -89,7 +65,7 @@ $(document).ready(function () {
         return new L.Control.Watermark(opts);
     }
 
-    L.control.watermark({ position: 'bottomleft'}).addTo(mymap);
+    L.control.watermark({position: 'bottomleft'}).addTo(mymap);
 
     // creating custom differently sized icons
 
@@ -120,19 +96,59 @@ $(document).ready(function () {
         }
     });
 
+    var dropdown = L.control({position: 'topright'});
+    dropdown.onAdd = function(mymap) {
+        this._div = L.DomUtil.create('div', 'dropdown');
+        this._div.innerHTML = `
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" accesskey="r">
+                <span class="caret"></span>Select Time Range
+            </button>
+            <ul class="dropdown-menu multi-column columns-2">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <ul class="multi-column-dropdown">
+                            <li><input type="text" name="datetimes" id="timepicker" accesskey="t"/></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4">
+                        <ul class="multi-column-dropdown">
+                            <li><a href="#mapid" onclick="selectedMetric='Temperature'">Temperature</a></li>
+                            <li><a href="#mapid" onclick="selectedMetric='Humidity'">Humidity</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </ul>
+        `;
+        this._div.firstChild.onmousedown = this._div.firstChild.ondblclick = L.DomEvent.stopPropagation;
+        return this._div;
+    }
+
+    dropdown.addTo(mymap);
+
     var info = L.control();
 
-    info.onAdd = function (mymap) {
+    info.onAdd = function(mymap) {
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
         this.update();
         return this._div;
     };
 
     // method that we will use to update the control based on feature properties passed
-    info.update = function (props) {
-    this._div.innerHTML = '<h4>Sensor Data</h4>' +  (props ?
-                                                     '<b>' + props.name + '</b><br />' + props.readings[0].reading + '&deg;C'
-                                                     : 'Hover over a region to see it\'s data');
+    info.update = function(props) {
+        if(props != null) {
+            var selection;
+            for(var i = 0; i < props.readings.length; i++) {
+                if(props.readings[i].type == selectedMetric) {
+                    selection = props.readings[i].reading;
+                    break;
+                }
+            }
+        }
+        
+        this._div.innerHTML = '<h4>Sensor Data</h4>' + 
+            (props ?
+                '<b>' + props.name + '</b><br />' + selection + '&deg;C'
+                : 'Hover over a region to see it\'s data');
     };
 
     globalInfo = info;
@@ -205,6 +221,7 @@ var globalMap;
 var globalLayer;
 var globalGeoJSON;
 var globalInfo;
+var selectedMetric = "Temperature"; // The user will select this in the dropdown
 
 function constructPopupHTML(feature) {
     var table = document.createElement("table");
@@ -465,7 +482,7 @@ $(function() {
         applyButtonClasses: 'apply',
         cancelButtonClasses: 'cancel',
         locale: {
-            format: 'DD/MM/YYYY hh:mm A'
+            format: 'DD/MM/YYYY'
         }
     });
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
