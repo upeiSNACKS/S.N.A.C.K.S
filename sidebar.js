@@ -18,7 +18,7 @@ $(document).ready(function () {
         <ul class="list-unstyled components" id="links">
     `;
 
-    if(page == "index.html") {
+    if(page == "index.html" || page == null) {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="index.html">Home</a>
