@@ -21,7 +21,7 @@ $(document).ready(function () {
                         <span>Time Range</span>
                     </button>
 
-                    <button type="button" id="help" class="btn btn-info" data-toggle="modal" data-target="#ModalLong" accesskey="h">
+                    <button type="button" id="help" class="btn btn-info" data-toggle="modal" data-target="#ModalHelp" accesskey="h">
                         <i class="fas fa-question"></i>
                         <span>Help</span>
                     </button>
@@ -38,7 +38,7 @@ $(document).ready(function () {
                         <span>Toggle Sidebar</span>
                     </button>
                     
-                    <button type="button" id="help" class="btn btn-info" data-toggle="modal" data-target="#ModalLong" accesskey="h">
+                    <button type="button" id="help" class="btn btn-info" data-toggle="modal" data-target="#ModalHelp" accesskey="h">
                         <i class="fas fa-question"></i>
                         <span>Help</span>
                     </button>
