@@ -18,7 +18,7 @@ $(document).ready(function () {
         <ul class="list-unstyled components" id="links">
     `;
 
-    if(page == "index.html" || page == null) {
+    if(page.includes("index") || page == null) {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="index.html">Home</a>
@@ -33,7 +33,7 @@ $(document).ready(function () {
         `;
     }
 
-    if(page == "api.html") {
+    if(page.includes("api")) {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="api.html">Get Raw Data</a>
@@ -48,7 +48,7 @@ $(document).ready(function () {
         `;
     }
 
-    if(page == "signup.html") {
+    if(page.includes("signup")) {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="signup.html">Sign Up</a>
@@ -63,7 +63,7 @@ $(document).ready(function () {
         `;
     }
 
-    if(page == "contact.html") {
+    if(page.includes("contact")) {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="contact.html">Contact Us</a>
@@ -78,7 +78,7 @@ $(document).ready(function () {
         `;
     }
 
-    if(page == "about.html") {
+    if(page.includes("about")) {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="about.html">About SNACKS</a>
@@ -93,7 +93,7 @@ $(document).ready(function () {
         `;
     }
 
-    if(page == "prototype.html") {
+    if(page.includes("prototype")) {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="prototype.html">Prototype Device</a>
