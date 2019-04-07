@@ -1,6 +1,6 @@
 /**
  * Script that creates the navbar
- * Made by Alec Metcalfe
+ * Created by: Alec Metcalfe
  */
 $(document).ready(function () {
     var page = window.location.pathname;

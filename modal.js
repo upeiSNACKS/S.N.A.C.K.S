@@ -1,6 +1,6 @@
 /**
  * Script that creates modals
- * Made by Alec Metcalfe
+ * Created by: Alec Metcalfe
  */
 $(document).ready(function () {
     document.getElementById("ModalHelp").innerHTML = `
