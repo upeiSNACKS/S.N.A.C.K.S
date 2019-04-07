@@ -18,7 +18,7 @@ $(document).ready(function () {
         <ul class="list-unstyled components" id="links">
     `;
 
-    if(page.includes("index") || page == null) {
+    if(page.includes("index") || page == null || page == "") {
         document.getElementById("links").innerHTML += `
             <li class="active">
                 <a href="index.html">Home</a>
@@ -107,7 +107,7 @@ $(document).ready(function () {
             </li>
         `;
     }
-    
+
     /*
         Navbar
         Example code taken and modified from Bootstrapious
