@@ -281,7 +281,7 @@ function calcMax(json, type) {
         }
     }
 
-    if(values = 0) {
+    if(values == 0) {
         return "No values";
     }
 
@@ -313,7 +313,7 @@ function calcMin(json, type) {
         }
     }
 
-    if(values = 0) {
+    if(values == 0) {
         return "No values";
     }
 
@@ -380,7 +380,8 @@ function ajax(params) {
                     modifiedJSON.push(newObj);
                 }
             }
-
+            
+            // Setup the cards at the top of index.html
             document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
             document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
             document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";

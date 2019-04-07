@@ -71,8 +71,8 @@ $(document).ready(function () {
                         <h4>Selection Aggregation</h4>
                         <ul>
                             <li><a href="#mapid" onclick="selectedAggregate='Average'">Average</a></li>
-                            <li><a href="#mapid" onclick="selectedMetric='Maximum'">Maximum</a></li>
-                            <li><a href="#mapid" onclick="selectedMetric='Minimum'">Minimum</a></li>
+                            <li><a href="#mapid" onclick="selectedAggregate='Maximum'">Maximum</a></li>
+                            <li><a href="#mapid" onclick="selectedAggregate='Minimum'">Minimum</a></li>
                         </ul>
                     </div>
                     <div class="modal-footer">
