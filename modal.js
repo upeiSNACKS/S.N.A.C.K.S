@@ -56,7 +56,7 @@ $(document).ready(function () {
                     </div>
                     <div class="modal-body">
                         <h4>Choose your time range</h4>
-                        <input type="text" name="datetimes" id="timepicker" accesskey="t"/>
+                        <input type="text" name="datetimes" id="timepicker"/>
 
                         <div class="line"></div>
 

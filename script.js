@@ -142,14 +142,25 @@ function getColor(d) {
 }
 
 function style(feature) {
-    return {
-        fillColor: getColor(feature.properties.readings[0].reading),
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.5
-    };
+    var selection;
+    for(var i = 0; feature.properties.readings.length; i++) {
+        if(feature.properties.readings[i].type == selectedMetric)
+        {
+            selection = feature.properties.readings[i].reading;
+            break;
+        }
+    }
+
+    if(selection != null) {
+        return {
+            fillColor: getColor(selection),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.5
+        };
+    }
 }
 
 function highlightFeature(e) {
