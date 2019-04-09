@@ -439,7 +439,7 @@ function aggregate(modifiedJSON) {
 
             }
         }
-        sensor.properties.avg[]
+        //sensor.properties.avg[]
 
     }
 }
