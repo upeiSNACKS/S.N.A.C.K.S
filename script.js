@@ -107,8 +107,8 @@ $(document).ready(function() {
 
     // method that we will use to update the control based on feature properties passed
     info.update = function(props) {
+        var selection;
         if(props != null) {
-            var selection;
             for(var i = 0; i < props.readings.length; i++) {
                 if(props.readings[i].type == selectedMetric) {
                     selection = props.readings[i].reading;
