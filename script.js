@@ -281,7 +281,7 @@ function calcMax(json, type) {
         }
     }
 
-    if(values = 0) {
+    if(values == 0) {
         return "No values";
     }
 
@@ -313,7 +313,7 @@ function calcMin(json, type) {
         }
     }
 
-    if(values = 0) {
+    if(values == 0) {
         return "No values";
     }
 
