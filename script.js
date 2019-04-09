@@ -381,7 +381,8 @@ function ajax(params) {
                 }
             }
             updateCards(modifiedJSON);
-            aggregate(modifiedJSON);
+            // Yo use this for creating aggregations of the map
+            //aggregate(modifiedJSON);
             sensors = modifiedJSON;
             var map = globalMap;
 
