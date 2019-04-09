@@ -31,7 +31,7 @@ $(document).ready(function() {
 
     // sometimes bounce will break grouping fnctionality - so disable it
     mymap.options.bounceAtZoomLimits = false;
-    
+
     var legend = L.control({position: 'bottomright'});
 
     legend.onAdd = function(mymap) {
@@ -116,8 +116,8 @@ $(document).ready(function() {
                 }
             }
         }
-        
-        this._div.innerHTML = '<h4>Sensor Data</h4>' + 
+
+        this._div.innerHTML = '<h4>Sensor Data</h4>' +
             (props ?
                 '<b>' + props.name + '</b><br />' + selection + '&deg;C'
                 : 'Hover over a region to see it\'s data');
@@ -380,16 +380,8 @@ function ajax(params) {
                     modifiedJSON.push(newObj);
                 }
             }
-
-            document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
-            document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
-            document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
-            document.getElementById("temp_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Temperature") + "&deg;C";
-            document.getElementById("temp_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Temperature") + "&deg;C";
-            document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
-            document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
-            document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
-
+            updateCards(modifiedJSON);
+            aggregate(modifiedJSON);
             sensors = modifiedJSON;
             var map = globalMap;
 
@@ -438,7 +430,29 @@ function ajax(params) {
     };
     httpc.send();
 }
+function aggregate(modifiedJSON) {
+    for (var sensor in modifiedJSON) {
+        // For each sensor, create an average of each type/subtype combo
+        // need a list of all type/subtypes in the sensor.
+        for (var reading in sensor.properties.readings) {
+            if (reading.type) {
 
+            }
+        }
+        sensor.properties.avg[]
+
+    }
+}
+function updateCards(modifiedJSON) {
+    document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
+    document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
+    document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
+    document.getElementById("temp_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Temperature") + "&deg;C";
+    document.getElementById("temp_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Temperature") + "&deg;C";
+    document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
+    document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
+    document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
+}
 /*
     This function checks our list of GEOJSON objects to see if the sensorID already
     has an element. If it does we take the reading and put it in the sensorID's object
