@@ -1,3 +1,12 @@
+<!--This script gets called when a form has been successfully submitted from
+    the website. It writes an email automatically and sends it to the system
+    admin containing the information the user submitted in the form. The email
+    includes an approve button to add the sensor and user to the system. -->
+
+
+<!--IF YOU CHANGE THE EMAIL ADDRESS THE EMAIL GOES TO THE EMAIL WILL END UP
+    IN THE SPAM FOLDER ON THE FIRST TRY. YOU SIMPLY SAY IT'S NOT SPAM AND
+    EVERYTHING WORKS OUT FINE-->
 <?php
 
     use PHPMailer\PHPMailer\PHPMailer;

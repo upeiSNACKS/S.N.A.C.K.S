@@ -1,3 +1,5 @@
+<!--This script will poll the database for all the sensors
+    within and return them to the caller in JSON format-->
 <?php
     require_once 'loginPending.php';
     $connection = new mysqli($db_hostname, $db_username, $db_password, $db_database);

@@ -11,6 +11,8 @@ $(document).ready(function() {
 
     });
 });
+
+// Fetches the ID's in the database.
 function getIDs(url) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     // modified a bit though
@@ -26,6 +28,8 @@ function getIDs(url) {
     };
     httpc.send();
 }
+
+// Submits the form for approval from the system administrator
 function submitForm(url, params) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     // modified a bit though
@@ -48,8 +52,10 @@ function submitForm(url, params) {
     };
     httpc.send(params);
 }
-var fail = "";
+
+// Called when the form gets submitted. Checks for validity.
 function validate(form){
+    var fail = "";
     fail += validateID(document.getElementById("sensorID").value)
     fail += validateLat(document.getElementById("lat").value)
     fail += validateLon(document.getElementById("lon").value)
@@ -71,6 +77,9 @@ function validate(form){
         return false;
      }
 }
+
+
+// Ensures the sensor ID is not already in the database
 function validateID(field) {
     var valid = true;
     for(var i = 0;i<usedIDs.length && valid; i++) {
@@ -81,6 +90,8 @@ function validateID(field) {
     }
     return "";
 }
+
+
 // https://ruk.ca/content/prince-edward-island-gis-numbers
 // Thanks peter!
 // lonmin,latmin: -64.4534,45.9353

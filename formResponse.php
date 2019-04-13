@@ -1,3 +1,8 @@
+<!--This script gets called when the system admin hits approve in the email that
+    was sent to them. This will add the owner and sensor to the database. If
+    adding the owner fails, it's likely due to the owner already being there,
+    so we ignore it. If the sensor insert fails, we tell the system admin to
+    add the sensor manually. -->
 <?php
     require_once 'emailInfo.php';
     require_once 'loginPending.php';
