@@ -1,6 +1,6 @@
 var usedIDs;
 $(document).ready(function() {
-     getIDs("validation.php");
+     getIDs("php/validation.php");
      $('#insertForm').on('submit', function(e) {
          e.preventDefault();
          e.stopPropagation(); // only neccessary if something above is listening to the (default-)event too
@@ -67,7 +67,7 @@ function validate(form){
         sensor_id= document.getElementById("sensorID").value;
         sensor_lat= document.getElementById("lat").value;
         sensor_lon= document.getElementById("lon").value;
-        submitForm("signup.php", "fname=" + fname + "&lname=" + lname + "&email=" + email +
+        submitForm("php/signup.php", "fname=" + fname + "&lname=" + lname + "&email=" + email +
                     "&address=" + address + "&sensorID=" + sensor_id + "&sensor_lat=" + sensor_lat +
                     "&sensor_lon=" + sensor_lon);
         return true;

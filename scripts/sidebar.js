@@ -12,7 +12,7 @@ $(document).ready(function () {
         </div>
 
         <div class="sidebar-header">
-            <img src="sarahs_mix_no_background.png" class="col">
+            <img src="../img/sarahs_mix_no_background.png" class="col">
         </div>
 
         <ul class="list-unstyled components" id="links">
