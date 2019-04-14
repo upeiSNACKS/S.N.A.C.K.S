@@ -229,10 +229,14 @@ function constructPopupHTML(feature) {
         tabCell.innerHTML = feature.properties.readings[i].reading;
     }
 
+    var extraDataLink = document.createElement("a");
+    extraDataLink.href = "./extra-data.html?sensor_id="+feature.properties.name;
+    extraDataLink.innerHTML = "more details...";
     var divContainer = document.getElementById("popup_template");
     divContainer.innerHTML = "";
     divContainer.appendChild(createHeader(feature.properties.name));
     divContainer.appendChild(table);
+    divContainer.appendChild(extraDataLink);
     return $("#popup_template").html();
 }
 
@@ -241,6 +245,7 @@ function createHeader(name) {
     header.innerHTML = name;
     return header
 }
+
 
 /*
     Calculates the average value of a metric from JSON and returns it
