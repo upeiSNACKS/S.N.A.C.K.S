@@ -19,11 +19,19 @@ var grapes_large = L.icon({
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 });
 
+var globalMap;
+var globalLayer;
+var globalGeoJSON;
+var globalInfo;
+
+// The user will select these in the query editor
+var selectedMetric = "Temperature";
+var selectedAggregate = "Average";
+
 $(document).ready(function() {
     /*
         Map
     */
-
     var mymap = L.map('mapid', { dragging: !L.Browser.mobile }).setView([46.2512, -63.1350], 13);
 
     // limit zoom level since Charlottetown is not that large
@@ -200,15 +208,6 @@ function onEachFeature(feature, layer) {
     );
 }
 
-var globalMap;
-var globalLayer;
-var globalGeoJSON;
-var globalInfo;
-
-// The user will select these in the query editor
-var selectedMetric = "Temperature";
-var selectedAggregate = "Average";
-
 function constructPopupHTML(feature) {
     var table = document.createElement("table");
 
@@ -230,7 +229,7 @@ function constructPopupHTML(feature) {
     }
 
     var extraDataLink = document.createElement("a");
-    extraDataLink.href = "./extra-data.html?sensor_id="+feature.properties.name;
+    extraDataLink.href = "extra-data.html?sensor_id="+feature.properties.name;
     extraDataLink.innerHTML = "more details...";
     var divContainer = document.getElementById("popup_template");
     divContainer.innerHTML = "";
@@ -245,7 +244,6 @@ function createHeader(name) {
     header.innerHTML = name;
     return header
 }
-
 
 /*
     Calculates the average value of a metric from JSON and returns it
@@ -338,7 +336,7 @@ function calcMin(json, type) {
 
 /*
     This function uses AJAX to populate a JSON array which gets used by our leaflet map
- */
+*/
 function ajax(params) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     var httpc = new XMLHttpRequest(); // simplified for clarity
@@ -436,6 +434,7 @@ function ajax(params) {
     };
     httpc.send();
 }
+
 function aggregate(modifiedJSON) {
     for (var sensor in modifiedJSON) {
         // For each sensor, create an average of each type/subtype combo
@@ -449,6 +448,7 @@ function aggregate(modifiedJSON) {
 
     }
 }
+
 function updateCards(modifiedJSON) {
     document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
     document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
@@ -459,6 +459,7 @@ function updateCards(modifiedJSON) {
     document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
     document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
 }
+
 /*
     This function checks our list of GEOJSON objects to see if the sensorID already
     has an element. If it does we take the reading and put it in the sensorID's object
