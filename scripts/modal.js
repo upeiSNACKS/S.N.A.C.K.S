@@ -65,15 +65,6 @@ $(document).ready(function () {
                             <li><a href="#mapid" onclick="selectedMetric='Temperature'">Temperature</a></li>
                             <li><a href="#mapid" onclick="selectedMetric='Humidity'">Humidity</a></li>
                         </ul>
-
-                        <div class="line"></div>
-
-                        <h4>Selection Aggregation</h4>
-                        <ul>
-                            <li><a href="#mapid" onclick="selectedAggregate='Average'">Average</a></li>
-                            <li><a href="#mapid" onclick="selectedAggregate='Maximum'">Maximum</a></li>
-                            <li><a href="#mapid" onclick="selectedAggregate='Minimum'">Minimum</a></li>
-                        </ul>
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>

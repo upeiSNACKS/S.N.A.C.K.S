@@ -2,7 +2,7 @@
 
 Signup Page - Presents a form for interested citizens to fill out, which then
 gets emailed to an admin of the system for confirmation and further information.
-Created by: R.J. Arsenault
+Created by: Alec Metcalfe, R.J. Arsenault
 
 SNACKS - A LoRaWAN based sensor network designed to monitor environmental
 data around the City of Charlottetown, PE, Canada.
@@ -77,70 +77,76 @@ eegger@upei.ca
     <!-- Modal -->
     <div class="modal fade" id="ModalHelp" tabindex="-1" role="dialog" aria-labelledby="ModalHelpTitle" aria-hidden="true"></div>
 
+<style>
+    div {
+        text-align: left;
+    }
+</style>
+
     <div id="content">
         <h3>Sensor Application Form</h3>
         <p>Fill out this form to put in an application to receive a sensor.</p>
-        <div class="col-4 col-md-7" align="right">
+        <div>
             <table class="signuptable">
                 <tbody>
                     <tr>
                         <td>
                             <form id='insertForm' method = "POST"  class="well form-horizontal">
                                 <fieldset>
-                                    <h4 align="left">Your Information</h4>
+                                    <h4 style="text-align: left;">Your Information</h4>
                                     <div class="form-group row">
-                                        <label for="fname" class="col-4 col-form-label">First Name</label>
-                                        <div class="col-8">
+                                        <label for="fname" class="col-2 col-form-label">First Name</label>
+                                        <div class="col-10">
                                             <input id="fname" name="fname" type="text" required="required" class="form-control">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="lname" class="col-4">Last Name</label>
-                                        <div class="col-8">
+                                        <label for="lname" class="col-2 col-form-label">Last Name</label>
+                                        <div class="col-10">
                                             <input id="lname" name="lname" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="email" class="col-4 col-form-label">Email</label>
-                                        <div class="col-8">
+                                        <label for="email" class="col-2 col-form-label">Email</label>
+                                        <div class="col-10">
                                             <input id="email" name="email" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="address" class="col-4 col-form-label">Address</label>
-                                        <div class="col-8">
+                                        <label for="address" class="col-2 col-form-label">Address</label>
+                                        <div class="col-10">
                                             <input id="address" name="address" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
 
-                                    <h4 align="left">Sensor Information</h4>
+                                    <h4 style="text-align: left;">Sensor Information</h4>
                                     <div class="form-group row">
-                                        <label for="text" class="col-4 col-form-label">Desired Sensor ID</label>
-                                        <div class="col-8">
+                                        <label for="text" class="col-3 col-form-label">Desired Sensor ID</label>
+                                        <div class="col-9">
                                             <input id="sensorID" name="sensorID" type="text" class="form-control" required="required" value="">
                                         </div>
                                     </div>
 
-
-                                    <h5 align="left">    Sensor Location</h5>
-                                    <p class="text-center"> If you don't know your Latitude and Longitude, please go <a href="https://www.latlong.net" target="_blank">here</a> and find where your sensor will be, then put the corresponding latitude and longitude in the boxes below</p>
+                                    <h5 style="text-align: left;">Sensor Location</h5>
+                                    <p class="text-center">Go <a href="https://www.latlong.net" target="_blank">here</a> to find the latitude and longitude of the place where you will put your sensor</p>
                                     <div class="form-group row">
-                                        <label for="lat" class="col-4 col-form-label">Sensor Latitude</label>
-                                        <div class="col-8">
+                                        <label for="lat" class="col-3 col-form-label">Sensor Latitude</label>
+                                        <div class="col-9">
                                             <input id="lat" name="lat" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="lon" class="col-4 col-form-label">Sensor Longitude</label>
-                                        <div class="col-8">
+                                        <label for="lon" class="col-3 col-form-label">Sensor Longitude</label>
+                                        <div class="col-9">
                                             <input id="lon" name="lon" type="text" required="required" class="form-control">
                                         </div>
                                     </div>
 
-                                    <div class="checkboxpanel">
+                                    <div class="checkboxpanel" style="text-align: left;">
                                         <input id="dataconsent" type="checkbox" name="dataconsent" required="true"> I agree to have data produced by my sensor released publicly<br>
-                                        <input id="emailconsent" type="checkbox" name="emailconsent"> I agree to receive occasional, non-marketing related <br>emails pertaining to the SNACKS project<br>
+                                        <input id="emailconsent" type="checkbox" name="emailconsent"> I agree to receive occasional, non-marketing related emails pertaining to the SNACKS project
                                     </div>
+                                    <br>
                                     <div class="form-group row">
                                         <div class="offset-4 col-8">
                                             <button name="submit" type="submit" class="btn btn-primary">Submit</button>
