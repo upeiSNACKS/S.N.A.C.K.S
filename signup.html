@@ -2,7 +2,7 @@
 
 Signup Page - Presents a form for interested citizens to fill out, which then
 gets emailed to an admin of the system for confirmation and further information.
-Created by: R.J. Arsenault
+Created by: Alec Metcalfe, R.J. Arsenault
 
 SNACKS - A LoRaWAN based sensor network designed to monitor environmental
 data around the City of Charlottetown, PE, Canada.
@@ -37,7 +37,17 @@ eegger@upei.ca
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>SNACKS</title>
+
+    <!-- Favicon setup for multiple devices -->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" type="text/css" href="CSS/styles.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
@@ -52,121 +62,93 @@ eegger@upei.ca
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="validation.js" type="text/javascript"></script>
+    <script src="scripts/validation.js" type="text/javascript"></script>
 
-    <script src="sidebar-script.js" type="text/javascript"></script>
+    <script src="scripts/navbar.js" type="text/javascript"></script>
+    <script src="scripts/sidebar.js" type="text/javascript"></script>
+    <script src="scripts/modal.js" type="text/javascript"></script>
 
-    <nav id="sidebar">
-        <div id="dismiss">
-            <i class="fas fa-arrow-left"></i>
-        </div>
+    <!-- Sidebar -->
+    <nav id="sidebar"></nav>
 
-        <div class="sidebar-header">
-            <img src="sarahs_mix_no_background.png" class="col">
-        </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary" id="nav"></nav>
 
-        <ul class="list-unstyled components">
-            <li>
-                <a href="index.html">Home</a>
-            </li>
-            <li>
-                <a href="api.html">Get Raw Data</a>
-            </li>
-            <li>
-                <a href="signup.html">Sign up!</a>
-            </li>
-            <li>
-                <a href="contact.html">Contact</a>
-            </li>
-            <li>
-                <a href="about.html">About</a>
-            </li>
-            <li class="active">
-                <a href="help.html">Help</a>
-            </li>
-        </ul>
-    </nav>
+    <!-- Modal -->
+    <div class="modal fade" id="ModalHelp" tabindex="-1" role="dialog" aria-labelledby="ModalHelpTitle" aria-hidden="true"></div>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
-        <div class="container-fluid">
-            <button type="button" id="sidebarCollapse" class="btn btn-info" accesskey="q">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
-
-            <button type="button" id="help" class="btn btn-info" accesskey="h">
-                <i class="fas fa-question"></i>
-                <span>Help</span>
-            </button>
-        </div>
-    </nav>
+<style>
+    div, h4, h5 {
+        text-align: left;
+    }
+</style>
 
     <div id="content">
         <h3>Sensor Application Form</h3>
         <p>Fill out this form to put in an application to receive a sensor.</p>
-        <div class="col-4 col-md-7" align="right">
+        <div>
             <table class="signuptable">
                 <tbody>
                     <tr>
                         <td>
-                            <form id='insertForm' method = "POST"  class="well form-horizontal"  onsubmit="return submit(this)">
+                            <form id='insertForm' method="POST" class="well form-horizontal">
                                 <fieldset>
-                                    <h4 align="left">Your Information</h4>
+                                    <h4>Your Information</h4>
                                     <div class="form-group row">
-                                        <label for="fname" class="col-4 col-form-label">First Name</label>
-                                        <div class="col-8">
-                                            <input id="fname" name="fname" type="text" required="required" class="form-control">
+                                        <label for="fname" class="col-2 col-form-label">First Name</label>
+                                        <div class="col-10">
+                                            <input id="fname" name="fname" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="lname" class="col-4">Last Name</label>
-                                        <div class="col-8">
+                                        <label for="lname" class="col-2 col-form-label">Last Name</label>
+                                        <div class="col-10">
                                             <input id="lname" name="lname" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="email" class="col-4 col-form-label">Email</label>
-                                        <div class="col-8">
+                                        <label for="email" class="col-2 col-form-label">Email</label>
+                                        <div class="col-10">
                                             <input id="email" name="email" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="address" class="col-4 col-form-label">Address</label>
-                                        <div class="col-8">
+                                        <label for="address" class="col-2 col-form-label">Address</label>
+                                        <div class="col-10">
                                             <input id="address" name="address" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
 
-                                    <h4 align="left">Sensor Information</h4>
+                                    <h4>Sensor Information</h4>
                                     <div class="form-group row">
-                                        <label for="text" class="col-4 col-form-label">Desired Sensor ID</label>
-                                        <div class="col-8">
+                                        <label for="text" class="col-3 col-form-label">Desired Sensor ID</label>
+                                        <div class="col-9">
                                             <input id="sensorID" name="sensorID" type="text" class="form-control" required="required" value="">
                                         </div>
                                     </div>
 
-
-                                    <h5 align="left">    Sensor Location</h5>
-                                    <p class="text-center"> If you don't know your Latitude and Longitude, please go <a href="https://www.latlong.net" target="_blank">here</a> and find where your sensor will be, then put the corresponding latitude and longitude in the boxes below</p>
+                                    <h5>Sensor Location</h5>
+                                    <p class="text-center">Go <a href="https://www.latlong.net" target="_blank">here</a> to find the latitude and longitude of the place where you will put your sensor</p>
                                     <div class="form-group row">
-                                        <label for="lat" class="col-4 col-form-label">Sensor Latitude</label>
-                                        <div class="col-8">
+                                        <label for="lat" class="col-3 col-form-label">Sensor Latitude</label>
+                                        <div class="col-9">
                                             <input id="lat" name="lat" type="text" class="form-control" required="required">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="lon" class="col-4 col-form-label">Sensor Longitude</label>
-                                        <div class="col-8">
+                                        <label for="lon" class="col-3 col-form-label">Sensor Longitude</label>
+                                        <div class="col-9">
                                             <input id="lon" name="lon" type="text" required="required" class="form-control">
                                         </div>
                                     </div>
 
                                     <div class="checkboxpanel">
                                         <input id="dataconsent" type="checkbox" name="dataconsent" required="true"> I agree to have data produced by my sensor released publicly<br>
-                                        <input id="emailconsent" type="checkbox" name="emailconsent"> I agree to receive occasional, non-marketing related <br>emails pertaining to the SNACKS project<br>
+                                        <input id="emailconsent" type="checkbox" name="emailconsent"> I agree to receive occasional, non-marketing related emails pertaining to the SNACKS project
                                     </div>
+                                    <br>
                                     <div class="form-group row">
-                                        <div class="offset-4 col-8">
+                                        <div class="col-12">
                                             <button name="submit" type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>

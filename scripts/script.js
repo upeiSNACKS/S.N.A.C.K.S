@@ -1,64 +1,38 @@
-/*
-
-JavaScript functions and data we use for the map, and for general design elements
-on the website.
-
-SNACKS - A LoRaWAN based sensor network designed to monitor environmental
-data around the City of Charlottetown, PE, Canada.
-
-Copyright (C) 2019 Jeremy Thompson, R.J. Arsenault, Alec Metcalfe, Eduardo Egger
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-The best way to contact a developer is by email or via a pull request
-on the GitHub page:
-
-https://github.com/upeiSNACKS/snacks
-
-jhthompson@upei.ca
-rparsenault@upei.ca
-almetcalfe@upei.ca
-eegger@upei.ca
-
-*/
-
 var grapes_small = L.icon({
-    iconUrl: 'map-icon.png',
+    iconUrl: '../img/map-icon.png',
     iconSize:     [20, 20], // size of the icon
     iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 });
 
 var grapes_medium = L.icon({
-    iconUrl: 'map-icon.png',
+    iconUrl: '../img/map-icon.png',
     iconSize:     [40, 40], // size of the icon
     iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 });
 
 var grapes_large = L.icon({
-    iconUrl: 'map-icon.png',
+    iconUrl: '../img/map-icon.png',
     iconSize:     [60, 60], // size of the icon
     iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 });
 
-$(document).ready(function () {
+var globalMap;
+var globalLayer;
+var globalGeoJSON;
+var globalInfo;
+
+// The user will select these in the query editor
+var selectedMetric = "Temperature";
+var selectedAggregate = "Average";
+
+$(document).ready(function() {
     /*
         Map
     */
-    var mymap = L.map('mapid').setView([46.2512, -63.1350], 13);
+    var mymap = L.map('mapid', { dragging: !L.Browser.mobile }).setView([46.2512, -63.1350], 13);
 
     // limit zoom level since Charlottetown is not that large
     mymap.options.minZoom = 12;
@@ -66,31 +40,9 @@ $(document).ready(function () {
     // sometimes bounce will break grouping fnctionality - so disable it
     mymap.options.bounceAtZoomLimits = false;
 
-    var timeControl = L.Control.extend({
-
-        options: {
-            position: 'topright'
-            //control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
-        },
-
-        onAdd: function (map) {
-            var navigation = L.DomUtil.create('nav');
-            var container = L.DomUtil.create('div', 'timecontrol', navigation);
-            var timepicker = L.DomUtil.create('input', '', container);
-            timepicker.name = 'datetimes';
-            timepicker.id = 'timepicker';
-            timepicker.type = 'input';
-            timepicker.accessKey = 't';
-
-            return container;
-        },
-
-    });
-
     var legend = L.control({position: 'bottomright'});
 
-    legend.onAdd = function (mymap) {
-
+    legend.onAdd = function(mymap) {
         var div = L.DomUtil.create('div', 'info legend'),
             grades = ["-40", "-30", "-20", "-10", "0", "10", "20", "30", "40"],
             labels = [];
@@ -107,13 +59,11 @@ $(document).ready(function () {
 
     legend.addTo(mymap);
 
-    mymap.addControl(new timeControl());
-
     L.Control.Watermark = L.Control.extend({
         onAdd: function(map) {
             var img = L.DomUtil.create('img');
 
-            img.src = 'Charlottetown_Logo.png';
+            img.src = '../img/Charlottetown_Logo.png';
             img.style.width = '200px';
 
             return img;
@@ -124,7 +74,7 @@ $(document).ready(function () {
         return new L.Control.Watermark(opts);
     }
 
-    L.control.watermark({ position: 'bottomleft'}).addTo(mymap);
+    L.control.watermark({position: 'bottomleft'}).addTo(mymap);
 
     // creating custom differently sized icons
 
@@ -157,17 +107,28 @@ $(document).ready(function () {
 
     var info = L.control();
 
-    info.onAdd = function (mymap) {
+    info.onAdd = function(mymap) {
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
         this.update();
         return this._div;
     };
 
     // method that we will use to update the control based on feature properties passed
-    info.update = function (props) {
-    this._div.innerHTML = '<h4>Sensor Data</h4>' +  (props ?
-                                                     '<b>' + props.name + '</b><br />' + props.readings[1].reading + '&deg;C'
-                                                     : 'Hover over a region to see it\'s data');
+    info.update = function(props) {
+        var selection;
+        if(props != null) {
+            for(var i = 0; i < props.readings.length; i++) {
+                if(props.readings[i].type == selectedMetric) {
+                    selection = props.readings[i].reading;
+                    break;
+                }
+            }
+        }
+
+        this._div.innerHTML = '<h4>Sensor Data</h4>' +
+            (props ?
+                '<b>' + props.name + '</b><br />' + selection + '&deg;C'
+                : 'Hover over a region to see it\'s data');
     };
 
     globalInfo = info;
@@ -189,14 +150,25 @@ function getColor(d) {
 }
 
 function style(feature) {
-    return {
-        fillColor: getColor(feature.properties.readings[1].reading),
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.5
-    };
+    var selection;
+    for(var i = 0; feature.properties.readings.length; i++) {
+        if(feature.properties.readings[i].type == selectedMetric)
+        {
+            selection = feature.properties.readings[i].reading;
+            break;
+        }
+    }
+
+    if(selection != null) {
+        return {
+            fillColor: getColor(selection),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.5
+        };
+    }
 }
 
 function highlightFeature(e) {
@@ -231,12 +203,10 @@ function onEachFeature(feature, layer) {
         mouseout: resetHighlight,
         click: zoomToFeature
     });
+    layer.bindPopup(
+        constructPopupHTML(feature)
+    );
 }
-
-var globalMap;
-var globalLayer;
-var globalGeoJSON;
-var globalInfo;
 
 function constructPopupHTML(feature) {
     var table = document.createElement("table");
@@ -258,10 +228,14 @@ function constructPopupHTML(feature) {
         tabCell.innerHTML = feature.properties.readings[i].reading;
     }
 
+    var extraDataLink = document.createElement("a");
+    extraDataLink.href = "extra-data.html?sensor_id="+feature.properties.name;
+    extraDataLink.innerHTML = "more details...";
     var divContainer = document.getElementById("popup_template");
     divContainer.innerHTML = "";
     divContainer.appendChild(createHeader(feature.properties.name));
     divContainer.appendChild(table);
+    divContainer.appendChild(extraDataLink);
     return $("#popup_template").html();
 }
 
@@ -310,7 +284,7 @@ function calcMax(json, type) {
         }
     }
 
-    if(values = 0) {
+    if(values == 0) {
         return "No values";
     }
 
@@ -342,7 +316,7 @@ function calcMin(json, type) {
         }
     }
 
-    if(values = 0) {
+    if(values == 0) {
         return "No values";
     }
 
@@ -362,7 +336,7 @@ function calcMin(json, type) {
 
 /*
     This function uses AJAX to populate a JSON array which gets used by our leaflet map
- */
+*/
 function ajax(params) {
     // From StackOverflow: https://stackoverflow.com/questions/406316/how-to-pass-data-from-javascript-to-php-and-vice-versa
     var httpc = new XMLHttpRequest(); // simplified for clarity
@@ -409,18 +383,12 @@ function ajax(params) {
                     modifiedJSON.push(newObj);
                 }
             }
-
-            document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
-            document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
-            document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
-            document.getElementById("temp_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Temperature") + "&deg;C";
-            document.getElementById("temp_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Temperature") + "&deg;C";
-            document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
-            document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
-            document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
-
+            updateCards(modifiedJSON);
+            // Yo use this for creating aggregations of the map
+            //aggregate(modifiedJSON);
             sensors = modifiedJSON;
             var map = globalMap;
+
             var all_sensors = L.geoJSON(sensors, {
                 onEachFeature: function (feature, layer) {
                     layer.setIcon(grapes_small);
@@ -455,11 +423,41 @@ function ajax(params) {
                 sensors.features[i].geometry = voronoiPolygons.features[i].geometry;
             }
 
+            if(globalGeoJSON != null) {
+                map.removeLayer(globalGeoJSON);
+            }
+
             // Draw the polygons on the map
-            globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature}).addTo(map);
+            globalGeoJSON = L.geoJSON(sensors, {style: style, onEachFeature: onEachFeature});
+            map.addLayer(globalGeoJSON);
         }
     };
     httpc.send();
+}
+
+function aggregate(modifiedJSON) {
+    for (var sensor in modifiedJSON) {
+        // For each sensor, create an average of each type/subtype combo
+        // need a list of all type/subtypes in the sensor.
+        for (var reading in sensor.properties.readings) {
+            if (reading.type) {
+
+            }
+        }
+        //sensor.properties.avg[]
+
+    }
+}
+
+function updateCards(modifiedJSON) {
+    document.getElementById("num_sensors").innerHTML = modifiedJSON.length;
+    document.getElementById("last_reading").innerHTML = modifiedJSON[0].properties.reading_time;
+    document.getElementById("temp_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Temperature") + "&deg;C";
+    document.getElementById("temp_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Temperature") + "&deg;C";
+    document.getElementById("temp_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Temperature") + "&deg;C";
+    document.getElementById("hum_avg").innerHTML = "Average: " + calcAverage(modifiedJSON, "Humidity") + "%";
+    document.getElementById("hum_max").innerHTML = "Maximum: " + calcMax(modifiedJSON, "Humidity") + "%";
+    document.getElementById("hum_min").innerHTML = "Minimum: " + calcMin(modifiedJSON, "Humidity") + "%";
 }
 
 /*
@@ -491,7 +489,7 @@ $(function() {
         applyButtonClasses: 'apply',
         cancelButtonClasses: 'cancel',
         locale: {
-            format: 'DD/MM/YYYY hh:mm A'
+            format: 'DD/MM/YYYY'
         }
     });
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {

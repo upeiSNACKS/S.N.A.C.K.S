@@ -33,6 +33,10 @@ eegger@upei.ca
 
 -->
 
+<!--This script is designed to generate random sensors and readings and
+    enter them into the database from login.php. It is assumed that there is
+    already sensor owners, and reading types in the database, as these could
+    not be easily generated. -->
 <?php
     /*
      * login.php contains:
@@ -47,6 +51,7 @@ eegger@upei.ca
     $min_lon = -63.140189;
     $max_lat = -63.092608;
 
+    $result->data_seek($j);
     $owners = array();
     $types = array();
     $subtypes = array();
@@ -57,7 +62,6 @@ eegger@upei.ca
     /*
      * OWNERS GETTING
      */
-     /*
     $owners_q = "SELECT email FROM Owners";
     $result = $connection->query($owners_q);
     if(!$result) echo "SELECT failed: $owners_q<br>" . $connection->error . "<br><br>";
@@ -65,7 +69,6 @@ eegger@upei.ca
     $owners_count = $result->num_rows;
     echo "getting owners <br>";
     for($j = 0; $j <$rows; ++$j){
-        $result->data_seek($j);
         $row = $result->fetch_array(MYSQLI_NUM);
         $owners[$j] = $row[0];
     }
@@ -73,7 +76,7 @@ eegger@upei.ca
     echo "generating sensors <br>";
     for($j = 0; $j<30; $j++) {
         $email = $owners[rand()%$owners_count];
-        $id = rand(10, 9999) . '-' . generateRandomString() . '-' . rand(100, 99999);
+        $id = generateRandomID();
         $lat = '46.' . rand(2268, 3065);
         $lon = rand(811, 1977);
         if($lon < 1000) { $lon = "0" . $lon;}
@@ -82,11 +85,12 @@ eegger@upei.ca
         $result = $connection->query($sensor_in);
         if(!$result) echo "INSERT INTO failed: $sensor_in<br>" . $connection->error . "<br><br>";
         else echo "Successfully inserted $id, $email, $lat, $lon<br>";
-    } */
+    }
     /*
      * SENSOR_ID GETTING
      */
     echo "getting sensor ID's -------------------------------------------------<br>";
+    * TYPE GETTING
     $sensors_q = "SELECT sensor_id FROM Sensors where sensor_id not like '%uno&'";
     $result = $connection->query($sensors_q);
     if(!$result) echo "SELECT failed: $sensors_q<br>" . $connection->error . "<br><br>";
@@ -98,7 +102,6 @@ eegger@upei.ca
          $sensors[$j] = $row[0];
     }
      /*
-      * TYPE GETTING
       */
      echo "getting types <br>";
      $types_q = "SELECT sensor_type, sensor_subtype FROM Types";
@@ -130,7 +133,10 @@ eegger@upei.ca
          }
      }
 
-    $connection->close();
+    $connection->close
+    // generates a random date in YYYY-MM-DD HH: format
+    // (this is so that we can guarantee every sensor
+    // is submitted in the same hour)
     function generateRandomDate() {
         $dateformat = '2019-01-31 18:19:31';
         $year = rand(2010, 2018);
@@ -157,6 +163,7 @@ eegger@upei.ca
 
         return $year . '-' . $month . '-' . $day . ' ' . $hour . ':';
     }
+    // generates a minute/second combo in 00:00 format
     function generateRandomMinute() {
         $minute = rand(0, 59);
         $sec = rand(0, 59);
@@ -172,5 +179,9 @@ eegger@upei.ca
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+    // creates a random ID in the format ((\d\d)?\d\d)-[a-zA-Z0-9]*-((\d\d)?\d\d\d)
+    function generateRandomID() {
+        rand(10, 9999) . '-' . generateRandomString() . '-' . rand(100, 99999);
     }
 ?>

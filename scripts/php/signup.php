@@ -30,6 +30,15 @@ eegger@upei.ca
 
 -->
 
+<!--This script gets called when a form has been successfully submitted from
+    the website. It writes an email automatically and sends it to the system
+    admin containing the information the user submitted in the form. The email
+    includes an approve button to add the sensor and user to the system. -->
+
+
+<!--IF YOU CHANGE THE EMAIL ADDRESS THE EMAIL GOES TO THE EMAIL WILL END UP
+    IN THE SPAM FOLDER ON THE FIRST TRY. YOU SIMPLY SAY IT'S NOT SPAM AND
+    EVERYTHING WORKS OUT FINE-->
 <?php
 
     use PHPMailer\PHPMailer\PHPMailer;
@@ -57,7 +66,7 @@ eegger@upei.ca
      * $db_username - username for db
      */
     require_once 'loginPending.php';
-
+    $error = array("success" => true, "error" => "");
     $connection = new mysqli($db_hostname, $db_username, $db_password, $db_database);
     if($connection->connect_error) die($connection->connect_error);
     $fname = mysqli_real_escape_string($connection, $_POST['fname']);
@@ -69,9 +78,15 @@ eegger@upei.ca
     $sensor_lon = mysqli_real_escape_string($connection, $_POST['sensor_lon']);
     $query = "INSERT INTO Pending_insert SET fname='$fname', lname='$lname', email='$email', address='$address', sensor_id='$sensor_id', sensor_lat='$sensor_lat', sensor_lon='$sensor_lon'";
     $result = $connection->query($query);
-    if(!$result) echo "INSERT INTO failed: $types_q<br>" . $connection->error . "<br><br>";
+    if(!$result) {
+        $error["success"] = false;
+        $error["error"] .= "INSERT failed: $query<br>" . $connection->error . "<br>";
+    }
     $result = $connection->query("SELECT LAST_INSERT_ID()");
-    if(!$result) echo "SELECT  failed: $types_q<br>" . $connection->error . "<br><br>";
+    if(!$result) {
+        $error["success"] = false;
+        $error["error"] .= "SELECT failed: SELECT LAST_INSERT_ID()<br>" . $connection->error . "<br>";
+    }
     $insertID = $result->fetch_array(MYSQLI_NUM)[0];
     // Instantiation and passing `true` enables exceptions
     $mail = new PHPMailer(true);
@@ -120,10 +135,8 @@ eegger@upei.ca
         <p>You will also have to add this sensor to the Things Network as well before it becomes active.</p>
 __END;
     if(!$mail->send()) {
-      echo 'Message was not sent.';
-      echo 'Mailer error: ' . $mail->ErrorInfo;
-    } else {
-        echo "Successfully submitted form. Waiting for approval from an Administrator. Thanks :-) ";
+      $error["success"] = false;
+      $error["error"] .= $mail->ErrorInfo . "<br>";
     }
-
+    echo json_encode($error);
  ?>

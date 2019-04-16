@@ -1,6 +1,4 @@
-/*
-
-Repeated JavaScript code for the sidebar.
+<!--
 
 SNACKS - A LoRaWAN based sensor network designed to monitor environmental
 data around the City of Charlottetown, PE, Canada.
@@ -30,26 +28,23 @@ rparsenault@upei.ca
 almetcalfe@upei.ca
 eegger@upei.ca
 
-*/
+-->
 
-$(document).ready(function () {
-    /*
-        Navbar
-        Example code taken and modified from Bootstrapious
-    */
-    $("#sidebar").mCustomScrollbar({
-        theme: "minimal"
-    });
+<!--This script will poll the database for all the sensors
+    within and return them to the caller in JSON format-->
+<?php
+    require_once 'loginPending.php';
+    $connection = new mysqli($db_hostname, $db_username, $db_password, $db_database);
 
-    $('#dismiss, .overlay').on('click', function () {
-        $('#sidebar').removeClass('active');
-        $('.overlay').removeClass('active');
-    });
+  	$query = "SELECT sensor_id FROM Sensors";
+  	$result = $connection->query($query);
 
-    $('#sidebarCollapse').on('click', function () {
-        $('#sidebar').toggleClass('active');
-        $('.overlay').toggleClass('active');
-        $('.collapse.in').toggleClass('in');
-        $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-    });
-  });
+    $out = array();
+    for($j = 0; $j <$result->num_rows; ++$j){
+         $result->data_seek($j);
+         $row = $result->fetch_array(MYSQLI_NUM);
+         $out[$j]= $row[0];
+    }
+
+    echo json_encode($out);
+ ?>
