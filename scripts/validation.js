@@ -1,6 +1,6 @@
 var usedIDs;
 $(document).ready(function() {
-     getIDs("php/validation.php");
+     getIDs("scripts/php/validation.php");
      $('#insertForm').on('submit', function(e) {
          e.preventDefault();
          e.stopPropagation(); // only neccessary if something above is listening to the (default-)event too
@@ -23,6 +23,7 @@ function getIDs(url) {
     httpc.setRequestHeader("Content-Type", "application/json");
     httpc.onreadystatechange = function() { //Call a function when the state changes.
         if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+            console.log(httpc.responseText);
             usedIDs = JSON.parse(httpc.responseText);
         }
     };
@@ -67,7 +68,7 @@ function validate(form){
         sensor_id= document.getElementById("sensorID").value;
         sensor_lat= document.getElementById("lat").value;
         sensor_lon= document.getElementById("lon").value;
-        submitForm("php/signup.php", "fname=" + fname + "&lname=" + lname + "&email=" + email +
+        submitForm("scripts/php/signup.php", "fname=" + fname + "&lname=" + lname + "&email=" + email +
                     "&address=" + address + "&sensorID=" + sensor_id + "&sensor_lat=" + sensor_lat +
                     "&sensor_lon=" + sensor_lon);
         return true;

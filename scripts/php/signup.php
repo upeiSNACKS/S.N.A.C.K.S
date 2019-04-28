@@ -1,4 +1,5 @@
-<!--
+<?php
+/*
 
 SNACKS - A LoRaWAN based sensor network designed to monitor environmental
 data around the City of Charlottetown, PE, Canada.
@@ -28,18 +29,18 @@ rparsenault@upei.ca
 almetcalfe@upei.ca
 eegger@upei.ca
 
--->
 
-<!--This script gets called when a form has been successfully submitted from
+
+this script gets called when a form has been successfully submitted from
     the website. It writes an email automatically and sends it to the system
     admin containing the information the user submitted in the form. The email
     includes an approve button to add the sensor and user to the system. -->
 
 
-<!--IF YOU CHANGE THE EMAIL ADDRESS THE EMAIL GOES TO THE EMAIL WILL END UP
+IF YOU CHANGE THE EMAIL ADDRESS THE EMAIL GOES TO THE EMAIL WILL END UP
     IN THE SPAM FOLDER ON THE FIRST TRY. YOU SIMPLY SAY IT'S NOT SPAM AND
-    EVERYTHING WORKS OUT FINE-->
-<?php
+    EVERYTHING WORKS OUT FINE
+    */
 
     use PHPMailer\PHPMailer\PHPMailer;
 

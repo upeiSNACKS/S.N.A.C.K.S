@@ -1,4 +1,5 @@
-<!--
+<?php
+/*
 
 SNACKS - A LoRaWAN based sensor network designed to monitor environmental
 data around the City of Charlottetown, PE, Canada.
@@ -28,11 +29,12 @@ rparsenault@upei.ca
 almetcalfe@upei.ca
 eegger@upei.ca
 
--->
 
-<!--This script will poll the database for all the sensors
-    within and return them to the caller in JSON format-->
-<?php
+
+
+This script will poll the database for all the sensors
+within and return them to the caller in JSON format
+    */
     require_once 'loginPending.php';
     $connection = new mysqli($db_hostname, $db_username, $db_password, $db_database);
 
